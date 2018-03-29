@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package>
+  <name>abb_librws</name>
+  <version>1.0.0</version>
+  <description>The abb_librws package for easing the use of ABB Robot Web Services (RWS) feature</description>
+
+  <maintainer email="jon.tjerngren@se.abb.com">Jon Tjerngren</maintainer>
+
+  <license>BSD 3-Clause</license>
+
+  <author email="jon.tjerngren@se.abb.com">Jon Tjerngren</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>
