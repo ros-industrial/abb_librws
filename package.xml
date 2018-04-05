@@ -11,4 +11,7 @@
   <author email="jon.tjerngren@se.abb.com">Jon Tjerngren</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>cmake_modules</build_depend>
+  <build_depend version_gte="1.4.3">libpoco-dev</build_depend>
 </package>

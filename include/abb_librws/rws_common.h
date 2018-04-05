@@ -38,6 +38,7 @@
 #define RWS_COMMON_H
 
 #include <string>
+#include <vector>
 
 #include "Poco/DOM/AutoPtr.h"
 #include "Poco/DOM/Document.h"

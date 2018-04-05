@@ -1,26 +1,13 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(abb_librws)
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS cmake_modules)
 
 ########################
 ## POCO C++ Libraries ##
 ########################
-set(Poco_HINT /usr/local)
-find_path(Poco_INCLUDE_DIRS Poco/Poco.h HINTS Poco_HINT)
-find_library(Poco_NET PocoNet HINTS Poco_HINT)
-find_library(Poco_UTIL PocoUtil HINTS Poco_HINT)
-find_library(Poco_FOUNDATION PocoFoundation HINTS Poco_HINT)
-find_library(Poco_XML PocoXML HINTS Poco_HINT)
-set(Poco_LIBRARIES ${Poco_NET} ${Poco_UTIL} ${Poco_FOUNDATION} ${Poco_XML})
-
-if(NOT Poco_INCLUDE_DIRS)
-  message(FATAL_ERROR "Cannot find required 'POCO C++ Libraries' include directory. Aborting.")
-endif()
-
-if(NOT Poco_NET OR NOT Poco_UTIL OR NOT Poco_FOUNDATION OR NOT Poco_XML)
-  message(FATAL_ERROR "Cannot find required 'POCO C++ Libraries'. Aborting.")
-endif()
+# we need at least 1.4.3 because of websocket support
+find_package(Poco 1.4.3 REQUIRED COMPONENTS Net Util Foundation XML)
 
 ###################################
 ## catkin specific configuration ##
