@@ -167,7 +167,7 @@ std::string POCOClient::POCOResult::mapWebSocketOpcode() const
   return result;
 }
 
-std::string POCOClient::POCOResult::toString(size_t indent) const
+std::string POCOClient::POCOResult::toString(const bool verbose, const size_t indent) const
 {
   std::stringstream ss;
   
@@ -182,7 +182,12 @@ std::string POCOClient::POCOResult::toString(size_t indent) const
     if (status == OK)
     {
       ss << seperator << "HTTP Response: " << poco_info.http.response.status << " - "
-         <<  HTTPResponse::getReasonForStatus(poco_info.http.response.status);
+         << HTTPResponse::getReasonForStatus(poco_info.http.response.status);
+
+      if (verbose)
+      {
+        ss << seperator << "HTTP Response Content: " << poco_info.http.response.content;
+      }
     }
   }
   else if (status == OK)
@@ -239,7 +244,7 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
   HTTPRequest request(method, uri, HTTPRequest::HTTP_1_1);
   request.setCookies(cookies_);
   request.setContentLength(content.length());
-  if (!content.empty())
+  if (method == HTTPRequest::HTTP_POST || !content.empty())
   {
     request.setContentType("application/x-www-form-urlencoded");
   }
@@ -270,6 +275,7 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
 
   if (result.status != POCOResult::OK)
   {
+    cookies_.clear();
     client_session_.reset();
   }
 
