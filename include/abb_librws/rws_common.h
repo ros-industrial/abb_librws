@@ -154,14 +154,29 @@ struct SystemConstants
   struct General
   {
     /**
+     * \brief Default name of an application using RWS.
+     */
+    static const std::string EXTERNAL_APPLICATION;
+    
+    /**
+     * \brief Default location of an application using RWS.
+     */
+    static const std::string EXTERNAL_LOCATION;
+
+    /**
+     * \brief Default password (for unconfigured robot controller systems).
+     */
+    static const std::string DEFAULT_PASSWORD;
+    
+    /**
+     * \brief Default username (for unconfigured robot controller systems).
+     */
+    static const std::string DEFAULT_USERNAME;
+
+    /**
      * \brief Local user.
      */
     static const std::string LOCAL;
-
-    /**
-     * \brief Remote user.
-     */
-    static const std::string REMOTE;
 
     /**
      * \brief Mechanical unit name for ROB_1.
@@ -192,6 +207,11 @@ struct SystemConstants
      * \brief Mechanical unit name for ROB_R.
      */
     static const std::string MECHANICAL_UNIT_ROB_R;
+    
+    /**
+     * \brief Remote user.
+     */
+    static const std::string REMOTE;
   };
 
   /**

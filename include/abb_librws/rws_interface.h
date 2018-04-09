@@ -523,9 +523,9 @@ public:
    *
    * \return bool indicating if the communication was successful or not.
    */
-  bool registerLocalUser(std::string username = "Default User",
-                         std::string application = "ExternalApplication",
-                         std::string location = "ExternalLocation");
+  bool registerLocalUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
+                         std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
+                         std::string location = SystemConstants::General::EXTERNAL_LOCATION);
   
   /**
    * \brief A method for registering a user as remote.
@@ -536,9 +536,9 @@ public:
    *
    * \return bool indicating if the communication was successful or not.
    */
-  bool registerRemoteUser(std::string username = "Default User",
-                          std::string application = "ExternalApplication",
-                          std::string location = "ExternalLocation");
+  bool registerRemoteUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
+                          std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
+                          std::string location = SystemConstants::General::EXTERNAL_LOCATION);
 
   /**
    * \brief A method for retrieving the internal log as a text string.

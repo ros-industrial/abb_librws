@@ -283,8 +283,8 @@ public:
    */
   RWSClient(const std::string ip_address,
             const Poco::UInt16 port = 80,
-            const std::string user = "Default User",
-            const std::string password = "robotics")
+            const std::string user = SystemConstants::General::DEFAULT_USERNAME,
+            const std::string password = SystemConstants::General::DEFAULT_PASSWORD)
   :
   POCOClient(ip_address, port, user, password) {}
 
@@ -521,9 +521,9 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult registerLocalUser(std::string username = "Default User",
-                              std::string application = "ExternalApplication",
-                              std::string location = "ExternalLocation");
+  RWSResult registerLocalUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
+                              std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
+                              std::string location = SystemConstants::General::EXTERNAL_LOCATION);
   
   /**
    * \brief A method for registering a user as remote.
@@ -534,9 +534,9 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult registerRemoteUser(std::string username = "Default User",
-                               std::string application = "ExternalApplication",
-                               std::string location = "ExternalLocation");
+  RWSResult registerRemoteUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
+                               std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
+                               std::string location = SystemConstants::General::EXTERNAL_LOCATION);
 
   /**
    * \brief Method for parsing a communication result into a XML document.
