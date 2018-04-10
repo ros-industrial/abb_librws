@@ -476,6 +476,46 @@ RWSClient::RWSResult RWSClient::logout()
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
+RWSClient::RWSResult RWSClient::registerLocalUser(std::string username,
+                                                  std::string application,
+                                                  std::string location)
+{
+  uri_ = Services::USERS;
+  content_ = "username=" + username +
+             "&application=" + application +
+             "&location=" + location +
+             "&ulocale=" + SystemConstants::General::LOCAL;
+  
+  evaluation_conditions_.reset();
+  evaluation_conditions_.parse_message_into_xml = false;
+  evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+  evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
+
+  RWSResult result = evaluatePOCOResult(httpPost(uri_, content_), evaluation_conditions_);
+  
+  return result;
+}
+
+RWSClient::RWSResult RWSClient::registerRemoteUser(std::string username,
+                                                   std::string application,
+                                                   std::string location)
+{
+  uri_ = Services::USERS;
+  content_ = "username=" + username +
+             "&application=" + application +
+             "&location=" + location +
+             "&ulocale=" + SystemConstants::General::REMOTE;
+
+  evaluation_conditions_.reset();
+  evaluation_conditions_.parse_message_into_xml = false;
+  evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+  evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
+
+  RWSResult result = evaluatePOCOResult(httpPost(uri_, content_), evaluation_conditions_);
+
+  return result;
+}
+
 /************************************************************
  * Auxiliary methods
  */
@@ -494,9 +534,9 @@ RWSClient::RWSResult RWSClient::evaluatePOCOResult(const POCOResult& poco_result
 
   if (log_.size() >= LOG_SIZE)
   {
-    log_.pop_front();
+    log_.pop_back();
   }
-  log_.push_back(poco_result);
+  log_.push_front(poco_result);
 
   return result;
 }
@@ -553,7 +593,7 @@ void RWSClient::parseMessage(RWSResult* result, const POCOResult& poco_result)
   }
 }
 
-std::string RWSClient::getLogText()
+std::string RWSClient::getLogText(const bool verbose)
 {
   std::stringstream ss;
 
@@ -566,7 +606,7 @@ std::string RWSClient::getLogText()
   {
     std::stringstream temp;
     temp << i + 1 << ". ";
-    ss << temp.str() << log_[i].toString(temp.str().size()) << std::endl;
+    ss << temp.str() << log_[i].toString(verbose, temp.str().size()) << std::endl;
   }
 
   return ss.str();

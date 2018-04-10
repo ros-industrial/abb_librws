@@ -154,6 +154,31 @@ struct SystemConstants
   struct General
   {
     /**
+     * \brief Default name of an application using RWS.
+     */
+    static const std::string EXTERNAL_APPLICATION;
+    
+    /**
+     * \brief Default location of an application using RWS.
+     */
+    static const std::string EXTERNAL_LOCATION;
+
+    /**
+     * \brief Default password (for unconfigured robot controller systems).
+     */
+    static const std::string DEFAULT_PASSWORD;
+    
+    /**
+     * \brief Default username (for unconfigured robot controller systems).
+     */
+    static const std::string DEFAULT_USERNAME;
+
+    /**
+     * \brief Local user.
+     */
+    static const std::string LOCAL;
+
+    /**
      * \brief Mechanical unit name for ROB_1.
      */
     static const std::string MECHANICAL_UNIT_ROB_1;
@@ -182,6 +207,11 @@ struct SystemConstants
      * \brief Mechanical unit name for ROB_R.
      */
     static const std::string MECHANICAL_UNIT_ROB_R;
+    
+    /**
+     * \brief Remote user.
+     */
+    static const std::string REMOTE;
   };
 
   /**
@@ -481,6 +511,16 @@ struct SystemConstants
     struct Queries
     {
       /**
+       * \brief Release action query.
+       */
+      static const std::string ACTION_RELEASE;
+      
+      /**
+       * \brief Request action query.
+       */
+      static const std::string ACTION_REQUEST;
+      
+      /**
        * \brief Reset program pointer action query.
        */
       static const std::string ACTION_RESETPP;
@@ -489,6 +529,16 @@ struct SystemConstants
        * \brief Set action query.
        */
       static const std::string ACTION_SET;
+      
+      /**
+       * \brief Set controller state action query.
+       */
+      static const std::string ACTION_SETCTRLSTATE;
+
+      /**
+       * \brief Set locale.
+       */
+      static const std::string ACTION_SET_LOCALE;
 
       /**
        * \brief Start action query.
@@ -499,11 +549,6 @@ struct SystemConstants
        * \brief Stop action query.
        */
       static const std::string ACTION_STOP;
-      
-      /**
-       * \brief Set controller state action query.
-       */
-      static const std::string ACTION_SETCTRLSTATE;
     };
 
     /**
@@ -530,6 +575,11 @@ struct SystemConstants
        * \brief Signals.
        */
       static const std::string RW_IOSYSTEM_SIGNALS;
+
+      /**
+       * \brief Mastership.
+       */
+      static const std::string RW_MASTERSHIP;
       
       /**
        * \brief Mechanical units.
@@ -596,6 +646,11 @@ struct SystemConstants
        * \brief Subscription service.
        */
       static const std::string SUBSCRIPTION;
+
+      /**
+       * \brief User service.
+       */
+      static const std::string USERS;
     };
   };
 };

@@ -513,13 +513,41 @@ public:
    * \return bool indicating if the communication was successful or not.
    */
   bool endSubscription();
+
+  /**
+   * \brief A method for registering a user as local.
+   *
+   * \param username specifying the user name.
+   * \param application specifying the external application.
+   * \param location specifying the location.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */
+  bool registerLocalUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
+                         std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
+                         std::string location = SystemConstants::General::EXTERNAL_LOCATION);
   
+  /**
+   * \brief A method for registering a user as remote.
+   *
+   * \param username specifying the user name.
+   * \param application specifying the external application.
+   * \param location specifying the location.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */
+  bool registerRemoteUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
+                          std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
+                          std::string location = SystemConstants::General::EXTERNAL_LOCATION);
+
   /**
    * \brief A method for retrieving the internal log as a text string.
    *
+   * \param verbose indicating if the log text should be verbose or not.
+   *
    * \return std::string containing the log text.
    */
-  std::string getLogText();
+  std::string getLogText(const bool verbose = false);
 
 protected:
   /**

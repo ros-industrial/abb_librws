@@ -283,8 +283,8 @@ public:
    */
   RWSClient(const std::string ip_address,
             const Poco::UInt16 port = 80,
-            const std::string user = "Default User",
-            const std::string password = "robotics")
+            const std::string user = SystemConstants::General::DEFAULT_USERNAME,
+            const std::string password = SystemConstants::General::DEFAULT_PASSWORD)
   :
   POCOClient(ip_address, port, user, password) {}
 
@@ -513,6 +513,32 @@ public:
   RWSResult logout();
 
   /**
+   * \brief A method for registering a user as local.
+   *
+   * \param username specifying the user name.
+   * \param application specifying the external application.
+   * \param location specifying the location.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult registerLocalUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
+                              std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
+                              std::string location = SystemConstants::General::EXTERNAL_LOCATION);
+  
+  /**
+   * \brief A method for registering a user as remote.
+   *
+   * \param username specifying the user name.
+   * \param application specifying the external application.
+   * \param location specifying the location.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult registerRemoteUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
+                               std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
+                               std::string location = SystemConstants::General::EXTERNAL_LOCATION);
+
+  /**
    * \brief Method for parsing a communication result into a XML document.
    *
    * \param result containing the result of the parsing.
@@ -523,9 +549,11 @@ public:
   /**
    * \brief Method for retrieving the internal log as a text string.
    *
+   * \param verbose indicating if the log text should be verbose or not.
+   *
    * \return std::string containing the log text.
    */
-  std::string getLogText();
+  std::string getLogText(const bool verbose = false);
 
 private:
   /**
@@ -625,7 +653,7 @@ private:
   /**
    * \brief Static constant for the log's size.
    */
-  static const size_t LOG_SIZE = 10;
+  static const size_t LOG_SIZE = 20;
 
   /**
    * \brief Container for logging communication results.

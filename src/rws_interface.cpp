@@ -318,9 +318,23 @@ bool RWSInterface::endSubscription()
   return rws_client_.endSubscription().success;
 }
 
-std::string RWSInterface::getLogText()
+bool RWSInterface::registerLocalUser(std::string username,
+                                     std::string application,
+                                     std::string location)
 {
-  return rws_client_.getLogText();
+  return rws_client_.registerLocalUser(username, application, location).success;
+}
+
+bool RWSInterface::registerRemoteUser(std::string username,
+                                      std::string application,
+                                      std::string location)
+{
+  return rws_client_.registerRemoteUser(username, application, location).success;
+}
+
+std::string RWSInterface::getLogText(const bool verbose)
+{
+  return rws_client_.getLogText(verbose);
 }
 
 /************************************************************

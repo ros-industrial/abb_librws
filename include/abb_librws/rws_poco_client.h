@@ -232,11 +232,12 @@ public:
     /**
      * \brief A method to construct a text representation of the result.
      *
+     * \param verbose indicating if the log text should be verbose or not.
      * \param indent for indentation.
      *
      * \return std::string containing the text representation.
      */
-    std::string toString(size_t indent = 0) const;
+    std::string toString(const bool verbose = false, const size_t indent = 0) const;
   };
 
   /**
@@ -256,7 +257,7 @@ public:
   digest_credentials_(user, password)
   {
     client_session_.setKeepAlive(true);
-    client_session_.setTimeout(Poco::Timespan(400000));
+    client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT));
   }
 
   /**
@@ -302,6 +303,16 @@ public:
    */
   POCOResult httpDelete(const std::string uri);
   
+  /**
+   * \brief A method for resetting the timeout to the default value.
+   */
+  void resetTimeout() { client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT)); }
+  
+  /**
+   * \brief A method for setting the timeout to a long value.
+   */
+  void setLongTimeout() { client_session_.setTimeout(Poco::Timespan(LONG_TIMEOUT)); }
+
   /**
    * \brief A method for checking if the WebSocket exist.
    *
@@ -387,7 +398,17 @@ private:
   void extractAndStoreCookie(const std::string cookie_string);
 
   /**
-   * \brief Static constant for the websocket's buffer size.
+   * \brief Static constant for the default timeout for HTTP requests, in microseconds.
+   */
+  static const Poco::Int64 DEFAULT_TIMEOUT = 400000;
+  
+  /**
+   * \brief Static constant for a long timeout for HTTP requests, in microseconds.
+   */
+  static const Poco::Int64 LONG_TIMEOUT = 10000000;
+
+  /**
+   * \brief Static constant for the socket's buffer size.
    */
   static const size_t BUFFER_SIZE = 1024;
 
