@@ -177,6 +177,14 @@ bool RWSInterface::getMechanicalUnitRobTarget(const std::string mechunit, RobTar
 }
 
 bool RWSInterface::setRAPIDSymbolData(const std::string task,
+                                      const std::string module,
+                                      const std::string name,
+                                      RAPIDSymbolDataAbstract& data)
+{
+  return rws_client_.setRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), data).success;
+}
+
+bool RWSInterface::setRAPIDSymbolData(const std::string task,
                                       const RWSClient::RAPIDSymbolResource symbol,
                                       RAPIDSymbolDataAbstract& data)
 {
@@ -266,6 +274,14 @@ RWSInterface::TriBool RWSInterface::isRAPIDRunning()
 bool RWSInterface::setIOSignal(const std::string iosignal, const std::string value)
 {
   return rws_client_.setIOSignal(iosignal, value).success;
+}
+
+bool RWSInterface::getRAPIDSymbolData(const std::string task,
+                                      const std::string module,
+                                      const std::string name,
+                                      RAPIDSymbolDataAbstract* p_data)
+{
+  return rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), p_data).success;
 }
 
 bool RWSInterface::getRAPIDSymbolData(const std::string task,

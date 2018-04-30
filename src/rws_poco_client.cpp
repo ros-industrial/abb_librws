@@ -109,6 +109,10 @@ std::string POCOClient::POCOResult::mapGeneralStatus() const
       result = "WEBSOCKET_NOT_ALLOCATED";
     break;
 
+    case POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT:
+      result = "EXCEPTION_POCO_INVALID_ARGUMENT";
+    break;
+
     case POCOResult::EXCEPTION_POCO_TIMEOUT:
       result = "EXCEPTION_POCO_TIMEOUT";
     break;
@@ -262,6 +266,11 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
 
     result.status = POCOResult::OK;
   }
+  catch (InvalidArgumentException& e)
+  {
+    result.status = POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT;
+    result.exception_message = e.displayText();
+  }
   catch (TimeoutException& e)
   {
     result.status = POCOResult::EXCEPTION_POCO_TIMEOUT;
@@ -305,6 +314,11 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri, const
       
     result.addHTTPResponseInfo(response);
     result.status = POCOResult::OK;
+  }
+  catch (InvalidArgumentException& e)
+  {
+    result.status = POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT;
+    result.exception_message = e.displayText();
   }
   catch (TimeoutException& e)
   {
@@ -382,6 +396,11 @@ POCOClient::POCOResult POCOClient::webSocketRecieveFrame()
     {
       result.status = POCOResult::WEBSOCKET_NOT_ALLOCATED;
     }
+  }
+  catch (InvalidArgumentException& e)
+  {
+    result.status = POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT;
+    result.exception_message = e.displayText();
   }
   catch (TimeoutException& e)
   {

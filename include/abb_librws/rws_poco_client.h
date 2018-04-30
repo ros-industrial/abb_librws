@@ -63,12 +63,13 @@ public:
      */
     enum GeneralStatus
     {
-      UNKNOWN,                 ///< Unknown status.
-      OK,                      ///< Ok status.
-      WEBSOCKET_NOT_ALLOCATED, ///< The WebSocket has not been allocated.
-      EXCEPTION_POCO_TIMEOUT,  ///< POCO timeout exception.
-      EXCEPTION_POCO_NET,      ///< POCO net exception.
-      EXCEPTION_POCO_WEBSOCKET ///< POCO WebSocket exception.
+      UNKNOWN,                         ///< Unknown status.
+      OK,                              ///< Ok status.
+      WEBSOCKET_NOT_ALLOCATED,         ///< The WebSocket has not been allocated.
+      EXCEPTION_POCO_INVALID_ARGUMENT, ///< POCO invalid argument exception
+      EXCEPTION_POCO_TIMEOUT,          ///< POCO timeout exception.
+      EXCEPTION_POCO_NET,              ///< POCO net exception.
+      EXCEPTION_POCO_WEBSOCKET         ///< POCO WebSocket exception.
     };
     
     /**

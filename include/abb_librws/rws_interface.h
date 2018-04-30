@@ -351,6 +351,21 @@ public:
    * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
    */
   bool getMechanicalUnitRobTarget(const std::string mechunit, RobTarget* p_robtarget);
+  
+  /**
+   * \brief A method for retriving the data of an RAPID symbol (parsed into a struct representing the RAPID data).
+   *
+   * \param task for the name of the RAPID task containing the RAPID symbol.
+   * \param module for the name of the RAPID module containing the RAPID symbol.
+   * \param name for the name of the RAPID symbol.
+   * \param p_data for storing the retrived RAPID symbol data.
+   *
+   * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
+   */
+  bool getRAPIDSymbolData(const std::string task,
+                          const std::string module,
+                          const std::string name,
+                          RAPIDSymbolDataAbstract* p_data);
 
   /**
    * \brief A method for retriving the data of an RAPID symbol (parsed into a struct representing the RAPID data).
@@ -410,6 +425,21 @@ public:
    */
   bool setIOSignal(const std::string iosignal, const std::string value);
   
+  /**
+   * \brief A method for setting the data of an RAPID symbol.
+   *
+   * \param task for the name of the RAPID task containing the RAPID symbol.
+   * \param module for the name of the RAPID module containing the RAPID symbol.
+   * \param name for the name of the RAPID symbol.
+   * \param data containing the RAPID symbol's new data.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */
+  bool setRAPIDSymbolData(const std::string task,
+                          const std::string module,
+                          const std::string name,
+                          RAPIDSymbolDataAbstract& data);
+
   /**
    * \brief A method for setting the data of an RAPID symbol.
    *
