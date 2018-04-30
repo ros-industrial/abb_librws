@@ -339,7 +339,7 @@ public:
   POCOResult webSocketRecieveFrame();
 
   /**
-   * \brief A method for retriving a substring in a string.
+   * \brief A method for retrieving a substring in a string.
    *
    * \param whole_string for the string containing the substring.
    * \param substring_start start of the substring.

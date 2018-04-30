@@ -324,7 +324,7 @@ public:
   StaticInfo collectStaticInfo();
   
   /**
-   * \brief A method for retriving the value if an IO signal.
+   * \brief A method for retrieving the value if an IO signal.
    *
    * \param iosignal for the name of the IO signal.
    *
@@ -333,34 +333,34 @@ public:
   std::string getIOSignal(const std::string iosignal);
   
   /**
-   * \brief A method for retriving the current jointtarget values of a mechanical unit.
+   * \brief A method for retrieving the current jointtarget values of a mechanical unit.
    * 
    * \param mechunit for the mechanical unit's name.
-   * \param p_jointtarget for storing the retrived jointtarget data.
+   * \param p_jointtarget for storing the retrieved jointtarget data.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getMechanicalUnitJointTarget(const std::string mechunit, JointTarget* p_jointtarget);
   
   /**
-   * \brief A method for retriving the current robtarget values of a mechanical unit.
+   * \brief A method for retrieving the current robtarget values of a mechanical unit.
    * 
    * \param mechunit for the mechanical unit's name.
-   * \param p_robtarget for storing the retrived robtarget data.
+   * \param p_robtarget for storing the retrieved robtarget data.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getMechanicalUnitRobTarget(const std::string mechunit, RobTarget* p_robtarget);
   
   /**
-   * \brief A method for retriving the data of an RAPID symbol (parsed into a struct representing the RAPID data).
+   * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
-   * \param p_data for storing the retrived RAPID symbol data.
+   * \param p_data for storing the retrieved RAPID symbol data.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getRAPIDSymbolData(const std::string task,
                           const std::string module,
@@ -368,27 +368,27 @@ public:
                           RAPIDSymbolDataAbstract* p_data);
 
   /**
-   * \brief A method for retriving the data of an RAPID symbol (parsed into a struct representing the RAPID data).
+   * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param symbol indicating the RAPID symbol resource (name and module).
-   * \param p_data for storing the retrived RAPID symbol data.
+   * \param p_data for storing the retrieved RAPID symbol data.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getRAPIDSymbolData(const std::string task,
                           const RWSClient::RAPIDSymbolResource symbol,
                           RAPIDSymbolDataAbstract* p_data);
 
   /**
-   * \brief A method for retriving information about the RAPID tasks defined in the robot controller.
+   * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
    *
    * \return std::vector<RAPIDTask> container for the RAPID tasks information.
    */
   std::vector<RAPIDTask> getRAPIDTasks();
   
   /**
-   * \brief A method for retriving some system information from the robot controller.
+   * \brief A method for retrieving some system information from the robot controller.
    *
    * \return SystemInfo containing the system information.
    */
@@ -426,7 +426,7 @@ public:
   bool setIOSignal(const std::string iosignal, const std::string value);
   
   /**
-   * \brief A method for setting the data of an RAPID symbol.
+   * \brief A method for setting the data of a RAPID symbol.
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param module for the name of the RAPID module containing the RAPID symbol.
@@ -441,7 +441,7 @@ public:
                           RAPIDSymbolDataAbstract& data);
 
   /**
-   * \brief A method for setting the data of an RAPID symbol.
+   * \brief A method for setting the data of a RAPID symbol.
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param symbol indicating the RAPID symbol resource (name and module).
@@ -489,12 +489,12 @@ public:
   bool setMotorsOff();
 
   /**
-   * \brief A method for retriving a file from the robot controller.
+   * \brief A method for retrieving a file from the robot controller.
    *
    * Note: Depending on the file, then the content can be in text or binary format.
    *
    * \param resource specifying the file's directory and name.
-   * \param p_file_content for containing the retrived file content.
+   * \param p_file_content for containing the retrieved file content.
    *
    * \return bool indicating if the communication was successful or not.
    */

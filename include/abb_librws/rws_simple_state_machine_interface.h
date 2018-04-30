@@ -421,32 +421,32 @@ public:
   }
   
   /**
-   * \brief A method for retriving the current jointtarget values of the robot.
+   * \brief A method for retrieving the current jointtarget values of the robot.
    *
    * \param task for the name of the RAPID task containing the symbol.
-   * \param p_current_jointtarget for storing the retrived data.
+   * \param p_current_jointtarget for storing the retrieved data.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getCurrentJointTarget(const std::string task, JointTarget* p_current_jointtarget);
   
   /**
-   * \brief A method for retriving the current robtarget values of the robot.
+   * \brief A method for retrieving the current robtarget values of the robot.
    *
    * \param task for the name of the RAPID task containing the symbol.
-   * \param p_current_robtarget for storing the retrived data.
+   * \param p_current_robtarget for storing the retrieved data.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getCurrentRobTarget(const std::string task, RobTarget* p_current_robtarget);
 
   /**
-   * \brief A method for retriving the data of a RAPID symbol (of the RECORD type EGMRuntimeArgs).
+   * \brief A method for retrieving the data of a RAPID symbol (of the RECORD type EGMRuntimeArgs).
    *
    * \param task for the name of the RAPID task containing the symbol.
-   * \param p_egm_runtime_arguments for storing the retrived data.
+   * \param p_egm_runtime_arguments for storing the retrieved data.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was parsed correctly.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getEGMRecord(const std::string task, EGMRuntimeArgs* p_egm_runtime_arguments);
   
@@ -455,7 +455,7 @@ public:
    *
    * \param task for the name of the RAPID task containing the symbol.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was set correctly in the robot.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "action started".
    */
   bool goToCalibrationPosition(const std::string task);
   
@@ -464,7 +464,7 @@ public:
    *
    * \param task for the name of the RAPID task containing the symbol.
    *
-   * \return bool indicating if the communication was successful or not. Note: NOT if it was set correctly in the robot.
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "action started".
    */
   bool goToHomePosition(const std::string task);
 
@@ -491,7 +491,7 @@ public:
   TriBool isStationary(const std::string mechanical_unit);
 
   /**
-   * \brief A method for setting the data of an RAPID symbol (of the RECORD type EGM_RECORD).
+   * \brief A method for setting the data of a RAPID symbol (of the RECORD type EGM_RECORD).
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param egm_runtime_arguments containing the symbol's new data.

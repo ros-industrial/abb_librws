@@ -260,7 +260,7 @@ public:
     void addRAPIDPersistantVariable(const RAPIDResource resource, const Priority priority);
   
     /**
-     * \brief A method for retriving the contained subscription resources information.
+     * \brief A method for retrieving the contained subscription resources information.
      *
      * \return std::vector<SubscriptionResource> containing information of the subscription resources.
      */
@@ -297,7 +297,7 @@ public:
   }
 
   /**
-   * \brief A method for retriving the value of an IO signal.
+   * \brief A method for retrieving the value of an IO signal.
    * 
    * \param iosignal for the IO signal's name.
    *
@@ -306,7 +306,7 @@ public:
   RWSResult getIOSignal(const std::string iosignal);
   
   /**
-   * \brief A method for retriving the current jointtarget values of a mechanical unit.
+   * \brief A method for retrieving the current jointtarget values of a mechanical unit.
    * 
    * \param mechunit for the mechanical unit's name.
    *
@@ -315,7 +315,7 @@ public:
   RWSResult getMechanicalUnitJointTarget(const std::string mechunit);
   
   /**
-   * \brief A method for retriving the current robtarget values of a mechanical unit.
+   * \brief A method for retrieving the current robtarget values of a mechanical unit.
    * 
    * \param mechunit for the mechanical unit's name.
    *
@@ -324,7 +324,7 @@ public:
   RWSResult getMechanicalUnitRobTarget(const std::string mechunit);
 
   /**
-   * \brief A method for retriving the data of a RAPID symbol.
+   * \brief A method for retrieving the data of a RAPID symbol.
    * 
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
    *
@@ -333,17 +333,17 @@ public:
   RWSResult getRAPIDSymbolData(const RAPIDResource resource);
 
   /**
-   * \brief A method for retriving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
+   * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
-   * \param p_data for containing the retrived data.
+   * \param p_data for containing the retrieved data.
    *
    * \return RWSResult containing the result.
    */
   RWSResult getRAPIDSymbolData(const RAPIDResource resource, RAPIDSymbolDataAbstract* p_data);
 
   /**
-   * \brief A method for retriving the properties of a RAPID symbol.
+   * \brief A method for retrieving the properties of a RAPID symbol.
    * 
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
    *
@@ -352,35 +352,35 @@ public:
   RWSResult getRAPIDSymbolProperties(const RAPIDResource resource);
 
   /**
-   * \brief A method for retriving the execution state of RAPID.
+   * \brief A method for retrieving the execution state of RAPID.
    * 
    * \return RWSResult containing the result.
    */
   RWSResult getRAPIDExecution();
   
   /**
-   * \brief A method for retriving the RAPID tasks that are defined in the robot controller system.
+   * \brief A method for retrieving the RAPID tasks that are defined in the robot controller system.
    * 
    * \return RWSResult containing the result.
    */
   RWSResult getRAPIDTasks();
   
   /**
-   * \brief A method for retriving info about the current robot controller system.
+   * \brief A method for retrieving info about the current robot controller system.
    * 
    * \return RWSResult containing the result.
    */
   RWSResult getRobotWareSystem();
 
   /**
-   * \brief A method for retriving the controller state.
+   * \brief A method for retrieving the controller state.
    * 
    * \return RWSResult containing the result.
    */
   RWSResult getPanelControllerState();
 
   /**
-   * \brief A method for retriving the operation mode of the controller.
+   * \brief A method for retrieving the operation mode of the controller.
    * 
    * \return RWSResult containing the result.
    */
@@ -452,12 +452,12 @@ public:
   RWSResult setMotorsOff();
 
   /**
-   * \brief A method for retriving a file from the robot controller.
+   * \brief A method for retrieving a file from the robot controller.
    *
    * Note: Depending on the file, then the content can be in text or binary format.
    *
    * \param resource specifying the file's directory and name.
-   * \param p_file_content for containing the retrived file content.
+   * \param p_file_content for containing the retrieved file content.
    *
    * \return RWSResult containing the result.
    */
