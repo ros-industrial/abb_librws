@@ -7,3 +7,5 @@
 ## Overview
 
 A C++ library for interfacing with ABB robot controllers supporting Robot Web Services
+
+See [abb_libegm](https://github.com/ros-industrial/abb_libegm) for a companion library that interfaces with EGM.
