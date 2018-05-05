@@ -63,12 +63,13 @@ public:
      */
     enum GeneralStatus
     {
-      UNKNOWN,                 ///< Unknown status.
-      OK,                      ///< Ok status.
-      WEBSOCKET_NOT_ALLOCATED, ///< The WebSocket has not been allocated.
-      EXCEPTION_POCO_TIMEOUT,  ///< POCO timeout exception.
-      EXCEPTION_POCO_NET,      ///< POCO net exception.
-      EXCEPTION_POCO_WEBSOCKET ///< POCO WebSocket exception.
+      UNKNOWN,                         ///< Unknown status.
+      OK,                              ///< Ok status.
+      WEBSOCKET_NOT_ALLOCATED,         ///< The WebSocket has not been allocated.
+      EXCEPTION_POCO_INVALID_ARGUMENT, ///< POCO invalid argument exception
+      EXCEPTION_POCO_TIMEOUT,          ///< POCO timeout exception.
+      EXCEPTION_POCO_NET,              ///< POCO net exception.
+      EXCEPTION_POCO_WEBSOCKET         ///< POCO WebSocket exception.
     };
     
     /**
@@ -338,7 +339,7 @@ public:
   POCOResult webSocketRecieveFrame();
 
   /**
-   * \brief A method for retriving a substring in a string.
+   * \brief A method for retrieving a substring in a string.
    *
    * \param whole_string for the string containing the substring.
    * \param substring_start start of the substring.

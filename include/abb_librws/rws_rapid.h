@@ -64,7 +64,7 @@ struct RAPIDSymbolDataAbstract
 {
 public:
   /**
-   * \brief Pure virtual method for retriving the name of the symbol's data type.
+   * \brief Pure virtual method for retrieving the name of the symbol's data type.
    *
    * \return std::string containing the data type name.
    */
@@ -136,7 +136,7 @@ struct RAPIDAtomic<RAPID_BOOL> : public RAPIDAtomicTemplate<bool>
   RAPIDAtomic(const bool value = false) : RAPIDAtomicTemplate(value) {}
   
   /**
-   * \brief A method for retriving the name of the symbol's data type.
+   * \brief A method for retrieving the name of the symbol's data type.
    *
    * \return std::string containing the data type name.
    */
@@ -171,7 +171,7 @@ struct RAPIDAtomic<RAPID_NUM> : public RAPIDAtomicTemplate<float>
   RAPIDAtomic(const float value = (float) 0.0) : RAPIDAtomicTemplate(value) {}
   
   /**
-   * \brief A method for retriving the name of the symbol's data type.
+   * \brief A method for retrieving the name of the symbol's data type.
    *
    * \return std::string containing the data type name.
    */
@@ -199,7 +199,7 @@ struct RAPIDAtomic<RAPID_DNUM> : public RAPIDAtomicTemplate<double>
   RAPIDAtomic(const double value = (double) 0.0) : RAPIDAtomicTemplate(value) {}
   
   /**
-   * \brief A method for retriving the name of the symbol's data type.
+   * \brief A method for retrieving the name of the symbol's data type.
    *
    * \return std::string containing the data type name.
    */
@@ -227,7 +227,7 @@ struct RAPIDAtomic<RAPID_STRING> : public RAPIDAtomicTemplate<std::string>
   RAPIDAtomic(const std::string value = "") : RAPIDAtomicTemplate(value) {}
   
   /**
-   * \brief A method for retriving the name of the symbol's data type.
+   * \brief A method for retrieving the name of the symbol's data type.
    *
    * \return std::string containing the data type name.
    */
