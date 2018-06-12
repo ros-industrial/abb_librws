@@ -6,7 +6,7 @@
 
 ## Overview
 
-A C++ library for interfacing with ABB robot controllers supporting Robot Web Services (RWS). See the online ([documentation](http://developercenter.robotstudio.com/webservice/api_reference)  for a detailed description of RWS.
+A C++ library for interfacing with ABB robot controllers supporting Robot Web Services (RWS). See the online [documentation](http://developercenter.robotstudio.com/webservice/api_reference)  for a detailed description of RWS.
 
 See [abb_libegm](https://github.com/ros-industrial/abb_libegm) for a companion library that interfaces with EGM.
 
