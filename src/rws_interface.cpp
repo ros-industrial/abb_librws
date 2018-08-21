@@ -57,14 +57,6 @@ typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
  * Primary methods
  */
 
-RWSInterface::RWSInterface(const std::string ip_address, const unsigned short port)
-:
-rws_client_(ip_address, port)
-{
-  collectStaticInfo();
-  collectRuntimeInfo();
-}
-
 RWSInterface::RuntimeInfo RWSInterface::collectRuntimeInfo()
 {
   RuntimeInfo runtime_info;

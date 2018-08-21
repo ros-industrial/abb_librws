@@ -305,10 +305,63 @@ public:
    * \brief A constructor.
    *
    * \param ip_address specifying the robot controller's IP address.
-   * \param port specifying the robot controller's RWS server's port number.
    */
-  RWSInterface(const std::string ip_address, const unsigned short port = 80);
+  RWSInterface(const std::string ip_address)
+  :
+  rws_client_(ip_address,
+              SystemConstants::General::DEFAULT_PORT_NUMBER,
+              SystemConstants::General::DEFAULT_USERNAME,
+              SystemConstants::General::DEFAULT_PASSWORD)
+  {}
   
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   * \param username for the username to the RWS authentication process.
+   * \param password for the password to the RWS authentication process.
+   */
+  RWSInterface(const std::string ip_address, const std::string username, const std::string password)
+  :
+  rws_client_(ip_address,
+              SystemConstants::General::DEFAULT_PORT_NUMBER,
+              username,
+              password)
+  {}
+
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   * \param port for the port used by the RWS server.
+   */
+  RWSInterface(const std::string ip_address, const unsigned short port)
+  :
+  rws_client_(ip_address,
+              port,
+              SystemConstants::General::DEFAULT_USERNAME,
+              SystemConstants::General::DEFAULT_PASSWORD)
+  {}
+
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   * \param port for the port used by the RWS server.
+   * \param username for the username to the RWS authentication process.
+   * \param password for the password to the RWS authentication process.
+   */
+  RWSInterface(const std::string ip_address,
+               const unsigned short port,
+               const std::string username,
+               const std::string password)
+  :
+  rws_client_(ip_address,
+              port,
+              username,
+              password)
+  {}
+
   /**
    * \brief A method for collecting runtime information of the robot controller.
    *

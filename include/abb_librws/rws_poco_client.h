@@ -39,6 +39,7 @@
 
 #include "Poco/Mutex.h"
 #include "Poco/Net/HTTPClientSession.h"
+#include "Poco/Net/HTTPCredentials.h"
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/WebSocket.h"
 #include "Poco/SharedPtr.h"
@@ -246,16 +247,16 @@ public:
    *
    * \param ip_address for the remote server's IP address.
    * \param port for the remote server's port.
-   * \param user for the remote server's authentication (assumed to be Digest).
-   * \param password for the remote server's authentication (assumed to be Digest).
+   * \param username for the username to the remote server's authentication process.
+   * \param password for the password to the remote server's authentication process.
    */
   POCOClient(const std::string ip_address,
              const Poco::UInt16 port,
-             const std::string user,
+             const std::string username,
              const std::string password)
   :
   client_session_(ip_address, port),
-  digest_credentials_(user, password)
+  http_credentials_(username, password)
   {
     client_session_.setKeepAlive(true);
     client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT));
@@ -424,10 +425,10 @@ private:
   Poco::Mutex websocket_mutex_;
 
   /**
-   * \brief Digest authentication credentials.
+   * \brief HTTP credentials for the remote server's access authentication process.
    */
-  Poco::Net::HTTPDigestCredentials digest_credentials_;
-  
+  Poco::Net::HTTPCredentials http_credentials_;
+
   /**
    * \brief A container for cookies received from a server.
    */
