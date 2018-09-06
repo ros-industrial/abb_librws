@@ -258,7 +258,30 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
   {
     sendAndReceive(result, request, response, content);
 
-    // Check if the request was approved, else add credentials.
+    // Check if the server has sent an update for the cookies.
+    std::vector<HTTPCookie> temp_cookies;
+    response.getCookies(temp_cookies);
+    for (size_t i = 0; i < temp_cookies.size(); ++i)
+    {
+      if (cookies_.find(temp_cookies[i].getName()) != cookies_.end())
+      {
+        cookies_.set(temp_cookies[i].getName(), temp_cookies[i].getValue());
+      }
+      else
+      {
+        cookies_.add(temp_cookies[i].getName(), temp_cookies[i].getValue());
+      }
+    }
+
+    // Check if there was a server error, if so, make another attempt with a clean sheet.
+    if (response.getStatus() >= HTTPResponse::HTTP_INTERNAL_SERVER_ERROR)
+    {
+      client_session_.reset();
+      request.erase(HTTPRequest::COOKIE);
+      sendAndReceive(result, request, response, content);
+    }
+
+    // Check if the request was unauthorized, if so add credentials.
     if (response.getStatus() == HTTPResponse::HTTP_UNAUTHORIZED)
     {
       authenticate(result, request, response, content);
@@ -452,9 +475,11 @@ void POCOClient::authenticate(POCOResult& result,
                               HTTPResponse& response,
                               const std::string request_content)
 {
-  // Remove any old cookies and add credentials.
+  // Remove any old cookies.
   cookies_.clear();
-  digest_credentials_.authenticate(request, response);
+
+  // Authenticate with the provided credentials.
+  http_credentials_.authenticate(request, response);
 
   // Contact the server, and extract and store the received cookies.
   sendAndReceive(result, request, response, request_content);

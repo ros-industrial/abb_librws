@@ -272,21 +272,67 @@ public:
      */
     std::vector<SubscriptionResource> resources_;
   };
+  
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   */
+  RWSClient(const std::string ip_address)
+  :
+  POCOClient(ip_address,
+             SystemConstants::General::DEFAULT_PORT_NUMBER,
+             SystemConstants::General::DEFAULT_USERNAME,
+             SystemConstants::General::DEFAULT_PASSWORD)
+  {}
+  
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   * \param username for the username to the RWS authentication process.
+   * \param password for the password to the RWS authentication process.
+   */
+  RWSClient(const std::string ip_address, const std::string username, const std::string password)
+  :
+  POCOClient(ip_address,
+             SystemConstants::General::DEFAULT_PORT_NUMBER,
+             username,
+             password)
+  {}
 
   /**
    * \brief A constructor.
    *
-   * \param ip_address for the remote server's IP address.
-   * \param port for the remote server's port.
-   * \param user for the remote server's authentication (assumed to be Digest).
-   * \param password for the remote server's authentication (assumed to be Digest).
+   * \param ip_address specifying the robot controller's IP address.
+   * \param port for the port used by the RWS server.
+   */
+  RWSClient(const std::string ip_address, const unsigned short port)
+  :
+  POCOClient(ip_address,
+             port,
+             SystemConstants::General::DEFAULT_USERNAME,
+             SystemConstants::General::DEFAULT_PASSWORD)
+  {}
+
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   * \param port for the port used by the RWS server.
+   * \param username for the username to the RWS authentication process.
+   * \param password for the password to the RWS authentication process.
    */
   RWSClient(const std::string ip_address,
-            const Poco::UInt16 port = 80,
-            const std::string user = SystemConstants::General::DEFAULT_USERNAME,
-            const std::string password = SystemConstants::General::DEFAULT_PASSWORD)
+            const unsigned short port,
+            const std::string username,
+            const std::string password)
   :
-  POCOClient(ip_address, port, user, password) {}
+  POCOClient(ip_address,
+             port,
+             username,
+             password)
+  {}
 
   /**
    * \brief A destructor.

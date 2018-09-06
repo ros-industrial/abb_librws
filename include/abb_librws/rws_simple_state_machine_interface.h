@@ -411,15 +411,64 @@ public:
   /**
    * \brief A constructor.
    *
-   * \param ip_address for the remote server's IP address.
-   * \param port for the remote server's port.
+   * \param ip_address specifying the robot controller's IP address.
    */
-  RWSSimpleStateMachineInterface(const std::string ip_address, const unsigned short port = 80)
+  RWSSimpleStateMachineInterface(const std::string ip_address)
   :
-  RWSInterface(ip_address, port)
-  {
-  }
+  RWSInterface(ip_address,
+               SystemConstants::General::DEFAULT_PORT_NUMBER,
+               SystemConstants::General::DEFAULT_USERNAME,
+               SystemConstants::General::DEFAULT_PASSWORD)
+  {}
   
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   * \param username for the username to the RWS authentication process.
+   * \param password for the password to the RWS authentication process.
+   */
+  RWSSimpleStateMachineInterface(const std::string ip_address, const std::string username, const std::string password)
+  :
+  RWSInterface(ip_address,
+               SystemConstants::General::DEFAULT_PORT_NUMBER,
+               username,
+               password)
+  {}
+
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   * \param port for the port used by the RWS server.
+   */
+  RWSSimpleStateMachineInterface(const std::string ip_address, const unsigned short port)
+  :
+  RWSInterface(ip_address,
+               port,
+               SystemConstants::General::DEFAULT_USERNAME,
+               SystemConstants::General::DEFAULT_PASSWORD)
+  {}
+
+  /**
+   * \brief A constructor.
+   *
+   * \param ip_address specifying the robot controller's IP address.
+   * \param port for the port used by the RWS server.
+   * \param username for the username to the RWS authentication process.
+   * \param password for the password to the RWS authentication process.
+   */
+  RWSSimpleStateMachineInterface(const std::string ip_address,
+                                 const unsigned short port,
+                                 const std::string username,
+                                 const std::string password)
+  :
+  RWSInterface(ip_address,
+               port,
+               username,
+               password)
+  {}
+
   /**
    * \brief A method for retrieving the current jointtarget values of the robot.
    *
