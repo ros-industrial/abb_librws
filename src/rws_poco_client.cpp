@@ -333,7 +333,7 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri, const
   {
     result.addHTTPRequestInfo(request);
     p_websocket_ = new WebSocket(client_session_, request, response);
-    p_websocket_->setReceiveTimeout(Poco::Timespan(60000000));
+    p_websocket_->setReceiveTimeout(Poco::Timespan(LONG_TIMEOUT));
       
     result.addHTTPResponseInfo(response);
     result.status = POCOResult::OK;

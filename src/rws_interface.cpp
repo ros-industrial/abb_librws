@@ -242,21 +242,21 @@ RWSInterface::SystemInfo RWSInterface::getSystemInfo()
   return result;
 }
 
-RWSInterface::TriBool RWSInterface::isAutoMode()
+TriBool RWSInterface::isAutoMode()
 {
   return compareSingleContent(rws_client_.getPanelOperationMode(),
                               XMLAttributes::CLASS_OPMODE,
                               ContollerStates::PANEL_OPERATION_MODE_AUTO);
 }
 
-RWSInterface::TriBool RWSInterface::isMotorOn()
+TriBool RWSInterface::isMotorOn()
 {
   return compareSingleContent(rws_client_.getPanelControllerState(),
                               XMLAttributes::CLASS_CTRLSTATE,
                               ContollerStates::CONTROLLER_MOTOR_ON);
 }
 
-RWSInterface::TriBool RWSInterface::isRAPIDRunning()
+TriBool RWSInterface::isRAPIDRunning()
 {
   return compareSingleContent(rws_client_.getRAPIDExecution(),
                               XMLAttributes::CLASS_CTRLEXECSTATE,
@@ -301,6 +301,13 @@ bool RWSInterface::deleteFile(const RWSClient::FileResource resource)
 bool RWSInterface::startSubscription (RWSClient::SubscriptionResources resources)
 {
   return rws_client_.startSubscription(resources).success;
+}
+
+bool RWSInterface::waitForSubscriptionEvent()
+{
+  RWSClient::RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
+
+  return (rws_result.success && !rws_result.p_xml_document.isNull());
 }
 
 bool RWSInterface::waitForSubscriptionEvent(Poco::AutoPtr<Poco::XML::Document>* p_xml_document)
@@ -349,9 +356,9 @@ std::string RWSInterface::getLogText(const bool verbose)
  * Auxiliary methods
  */
 
-RWSInterface::TriBool RWSInterface::compareSingleContent(const RWSClient::RWSResult& rws_result,
-                                                         const XMLAttribute& attribute,
-                                                         const std::string& compare_string)
+TriBool RWSInterface::compareSingleContent(const RWSClient::RWSResult& rws_result,
+                                           const XMLAttribute& attribute,
+                                           const std::string& compare_string)
 {
   TriBool result;
 
