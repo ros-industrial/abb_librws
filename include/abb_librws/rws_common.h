@@ -661,7 +661,7 @@ struct SystemConstants
 };
 
 /**
- * \brief A class for a tri value bool.
+ * \brief A class for a three-valued boolean.
  */
 class TriBool
 {
