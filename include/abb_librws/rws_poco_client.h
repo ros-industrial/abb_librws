@@ -326,7 +326,7 @@ public:
    * \brief A method for connecting a WebSocket.
    *
    * \param uri for the URI (path and query).
-   * \param uri for the WebSocket protocol.
+   * \param protocol for the WebSocket protocol.
    *
    * \return POCOResult containing the result.
    */

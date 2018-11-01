@@ -107,9 +107,9 @@ bool RWSSimpleStateMachineInterface::goToHomePosition(const std::string task)
   return signalRunRAPIDRoutine(task, "goToHomePosition");
 }
 
-RWSInterface::TriBool RWSSimpleStateMachineInterface::isStateIdle(const std::string task)
+TriBool RWSSimpleStateMachineInterface::isStateIdle(const std::string task)
 {
-  RWSInterface::TriBool result;
+  TriBool result;
 
   RAPIDAtomic<RAPID_NUM> current_state;
   if(getRAPIDSymbolData(task, ProgramConstants::RAPID::Symbols::CURRENT_STATE, &current_state))
@@ -120,9 +120,9 @@ RWSInterface::TriBool RWSSimpleStateMachineInterface::isStateIdle(const std::str
   return result;
 }
 
-RWSInterface::TriBool RWSSimpleStateMachineInterface::isStationary(const std::string mechanical_unit)
+TriBool RWSSimpleStateMachineInterface::isStationary(const std::string mechanical_unit)
 {
-  RWSInterface::TriBool result;
+  TriBool result;
 
   std::string temp = getIOSignal(ProgramConstants::IOSignals::OUTPUT_STATIONARY + "_" + mechanical_unit);
 
@@ -178,7 +178,7 @@ bool RWSSimpleStateMachineInterface::toggleIOSignal(const std::string iosignal)
   bool result = false;
   int max_number_of_attempts = 5;
 
-  if (isAutoMode())
+  if (isAutoMode().isTrue())
   {
     for (int i = 0; i < max_number_of_attempts && !result; ++i)
     {
