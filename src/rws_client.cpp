@@ -224,7 +224,7 @@ RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource resource,
 
           if (!value.empty())
           {
-            p_data->parseRWSValueString(value);
+            p_data->parseValueString(value);
           }
           else
           {
@@ -275,7 +275,7 @@ RWSClient::RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource resource,
 
 RWSClient::RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource resource, RAPIDSymbolDataAbstract& data)
 {
-  return setRAPIDSymbolData(resource, data.constructRWSValueString());
+  return setRAPIDSymbolData(resource, data.constructValueString());
 }
 
 RWSClient::RWSResult RWSClient::startRAPIDExecution()

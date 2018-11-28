@@ -71,18 +71,18 @@ public:
   virtual std::string getType() const = 0;
   
   /**
-   * \brief Pure virtual method for parsing a RWS RAPID symbol data value string.
+   * \brief Pure virtual method for parsing a RAPID symbol data value string.
    * 
    * \param value_string containing the string to parse.
    */
-  virtual void parseRWSValueString(const std::string&  value_string) = 0;
+  virtual void parseValueString(const std::string&  value_string) = 0;
 
   /**
-   * \brief Pure virtual method for constructing a RWS symbol data value string.
+   * \brief Pure virtual method for constructing a RAPID symbol data value string.
    * 
    * \return std::string containing the constructed string.
    */
-  virtual std::string constructRWSValueString() const = 0;
+  virtual std::string constructValueString() const = 0;
 };
 
 /**
@@ -93,11 +93,11 @@ struct RAPIDAtomicTemplate : public RAPIDSymbolDataAbstract
 {
 public:
   /**
-   * \brief A method for parsing a RWS RAPID symbol data value string.
+   * \brief A method for parsing a RAPID symbol data value string.
    * 
    * \param value_string containing the string to parse.
    */
-  void parseRWSValueString(const std::string& value_string)
+  void parseValueString(const std::string& value_string)
   {
     std::stringstream ss(value_string);
     ss >> value;
@@ -141,20 +141,20 @@ struct RAPIDAtomic<RAPID_BOOL> : public RAPIDAtomicTemplate<bool>
    * \return std::string containing the data type name.
    */
   std::string getType() const;
-  
+
   /**
-   * \brief A method for parsing a RWS RAPID symbol data value string.
-   * 
+   * \brief A method for parsing a RAPID symbol data value string.
+   *
    * \param value_string containing the string to parse.
    */
-  void parseRWSValueString(const std::string& value_string);
+  void parseValueString(const std::string& value_string);
   
   /**
-   * \brief A method for constructing a RWS symbol data value string.
-   * 
+   * \brief A method for constructing a RAPID symbol data value string.
+   *
    * \return std::string containing the constructed string.
    */
-  std::string constructRWSValueString() const;
+  std::string constructValueString() const;
 };
 
 /**
@@ -178,11 +178,11 @@ struct RAPIDAtomic<RAPID_NUM> : public RAPIDAtomicTemplate<float>
   std::string getType() const;
   
   /**
-   * \brief A method for constructing a RWS symbol data value string.
-   * 
+   * \brief A method for constructing a RAPID symbol data value string.
+   *
    * \return std::string containing the constructed string.
    */
-  std::string constructRWSValueString() const;
+  std::string constructValueString() const;
 };
 
 /**
@@ -204,13 +204,13 @@ struct RAPIDAtomic<RAPID_DNUM> : public RAPIDAtomicTemplate<double>
    * \return std::string containing the data type name.
    */
   std::string getType() const;
-  
+
   /**
-   * \brief A method for constructing a RWS symbol data value string.
-   * 
+   * \brief A method for constructing a RAPID symbol data value string.
+   *
    * \return std::string containing the constructed string.
    */
-  std::string constructRWSValueString() const;
+  std::string constructValueString() const;
 };
 
 /**
@@ -234,18 +234,18 @@ struct RAPIDAtomic<RAPID_STRING> : public RAPIDAtomicTemplate<std::string>
   std::string getType() const;
   
   /**
-   * \brief A method for parsing a RWS RAPID symbol data value string.
-   * 
+   * \brief A method for parsing a RAPID symbol data value string.
+   *
    * \param value_string containing the string to parse.
    */
-  void parseRWSValueString(const std::string& value_string);
+  void parseValueString(const std::string& value_string);
 
   /**
-   * \brief A method for constructing a RWS symbol data value string.
-   * 
+   * \brief A method for constructing a RAPID symbol data value string.
+   *
    * \return std::string containing the constructed string.
    */
-  std::string constructRWSValueString() const;
+  std::string constructValueString() const;
 };
 
 /**
@@ -282,18 +282,18 @@ public:
   RAPIDRecord(const std::string record_type_name);
   
   /**
-   * \brief A method for constructing the RWS value string for the record. E.g. for sending to the controller via RWS.
+   * \brief A method for constructing a RAPID symbol data value string.
    *
-   * \return std::string containing the RWS value string.
+   * \return std::string containing the constructed string.
    */
-  std::string constructRWSValueString() const;
+  std::string constructValueString() const;
   
   /**
-   * \brief A method for parsing a received RAPID value string.
-   * 
-   * \param value_string containing the received RWS value string.
+   * \brief A method for parsing a RAPID symbol data value string.
+   *
+   * \param value_string containing the string to parse.
    */
-  void parseRWSValueString(const std::string& value_string);
+  void parseValueString(const std::string& value_string);
   
   /**
    * \brief A method for getting the type of the RAPID record.
@@ -786,6 +786,46 @@ public:
   * \brief Object frame.
   */
   Pose oframe;
+};
+
+/**
+ * \brief A struct, for representing a RAPID speeddata record.
+ */
+struct SpeedData : public RAPIDRecord
+{
+public:
+  /**
+   * \brief A default constructor.
+   */
+  SpeedData()
+  :
+  RAPIDRecord("speeddata")
+  {
+    components_.push_back(&v_tcp);
+    components_.push_back(&v_ori);
+    components_.push_back(&v_leax);
+    components_.push_back(&v_reax);
+  }
+
+  /**
+   * \brief The speed [mm/s] of the tool center point (TCP).
+   */
+  RAPIDNum v_tcp;
+
+  /**
+   * \brief The reorientation speed [deg/s] of the tool center point (TCP).
+   */
+  RAPIDNum v_ori;
+
+  /**
+   * \brief The linear speed [mm/s] of external axes.
+   */
+  RAPIDNum v_leax;
+
+  /**
+   * \brief The rotational speed [degrees/s] of external axes.
+   */
+  RAPIDNum v_reax;
 };
 
 } // end namespace rws
