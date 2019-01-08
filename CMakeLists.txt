@@ -25,7 +25,7 @@ set(SRC_FILES
     src/rws_interface.cpp
     src/rws_poco_client.cpp
     src/rws_rapid.cpp
-    src/rws_simple_state_machine_interface.cpp)
+    src/rws_state_machine_interface.cpp)
 
 include_directories(include
                     ${Poco_INCLUDE_DIRS}

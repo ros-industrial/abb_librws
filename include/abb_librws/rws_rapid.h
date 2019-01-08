@@ -788,6 +788,46 @@ public:
   Pose oframe;
 };
 
+/**
+ * \brief A struct, for representing a RAPID speeddata record.
+ */
+struct SpeedData : public RAPIDRecord
+{
+public:
+  /**
+   * \brief A default constructor.
+   */
+  SpeedData()
+  :
+  RAPIDRecord("speeddata")
+  {
+    components_.push_back(&v_tcp);
+    components_.push_back(&v_ori);
+    components_.push_back(&v_leax);
+    components_.push_back(&v_reax);
+  }
+
+  /**
+   * \brief The speed [mm/s] of the tool center point (TCP).
+   */
+  RAPIDNum v_tcp;
+
+  /**
+   * \brief The reorientation speed [deg/s] of the tool center point (TCP).
+   */
+  RAPIDNum v_ori;
+
+  /**
+   * \brief The linear speed [mm/s] of external axes.
+   */
+  RAPIDNum v_leax;
+
+  /**
+   * \brief The rotational speed [degrees/s] of external axes.
+   */
+  RAPIDNum v_reax;
+};
+
 } // end namespace rws
 } // end namespace abb
 
