@@ -135,7 +135,7 @@ public:
     TriBool rapid_running;
     
     /**
-     * \brief Indicator for RWS is connected to the robot controller system.
+     * \brief Indicator for if RWS is connected to the robot controller system.
      */
     bool rws_connected;
   };

@@ -122,7 +122,7 @@ bool RWSInterface::getMechanicalUnitJointTarget(const std::string mechunit, Join
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_e")) << ","
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_f")) << "]]";
 
-      p_jointtarget->parseRWSValueString(ss.str());
+      p_jointtarget->parseString(ss.str());
     }
   }
 
@@ -161,7 +161,7 @@ bool RWSInterface::getMechanicalUnitRobTarget(const std::string mechunit, RobTar
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_e")) << ","
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_f")) << "]]";
 
-      p_robtarget->parseRWSValueString(ss.str());
+      p_robtarget->parseString(ss.str());
     }
   }
 
