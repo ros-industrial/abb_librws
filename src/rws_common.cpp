@@ -101,20 +101,20 @@ std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute
       bool found = false;
       if (p_node->hasChildNodes())
       {
-        Poco::XML::NodeList* children = p_node->childNodes();
+        Poco::AutoPtr<Poco::XML::NodeList> p_children(p_node->childNodes());
 
-        for (unsigned long i = 0; i < children->length() && !found; i++)
+        for (unsigned long i = 0; i < p_children->length() && !found; i++)
         {
-          Poco::XML::Node* child = children->item(i);
+          Poco::XML::Node* p_child = p_children->item(i);
 
-          if (child->nodeType() == Poco::XML::Node::TEXT_NODE && xmlNodeHasAttribute(child->parentNode(), attribute))
+          if (p_child->nodeType() == Poco::XML::Node::TEXT_NODE && xmlNodeHasAttribute(p_child->parentNode(), attribute))
           {
             found = true;
-            result = child->nodeValue();
+            result = p_child->nodeValue();
           }
           else
           {
-            result = xmlFindTextContent(child, attribute);
+            result = xmlFindTextContent(p_child, attribute);
             found = !result.empty();
           }
         }
@@ -131,13 +131,13 @@ bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute attri
 
   if(!found && p_node && p_node->hasAttributes())
   {
-    Poco::XML::NamedNodeMap* attributes = p_node->attributes();
+    Poco::AutoPtr<Poco::XML::NamedNodeMap> p_attributes(p_node->attributes());
 
-    for (unsigned long i = 0; i < attributes->length() && !found; i++)
+    for (unsigned long i = 0; i < p_attributes->length() && !found; i++)
     {
-      Poco::XML::Node* temp_attribute = attributes->item(i);
+      Poco::XML::Node* p_attribute = p_attributes->item(i);
 
-      if (temp_attribute->nodeName() == attribute.name && temp_attribute->nodeValue() == attribute.value)
+      if (p_attribute->nodeName() == attribute.name && p_attribute->nodeValue() == attribute.value)
       {
         found = true;
       }
