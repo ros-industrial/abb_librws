@@ -74,12 +74,12 @@ std::string RAPIDAtomic<RAPID_STRING>::getType() const
   return RAPID::TYPE_STRING;
 }
 
-std::string RAPIDAtomic<RAPID_BOOL>::constructRWSValueString() const
+std::string RAPIDAtomic<RAPID_BOOL>::constructString() const
 {
   return (value ? RAPID::RAPID_TRUE : RAPID::RAPID_FALSE);
 }
 
-std::string RAPIDAtomic<RAPID_NUM>::constructRWSValueString() const
+std::string RAPIDAtomic<RAPID_NUM>::constructString() const
 {
   std::string result("9000000000");
 
@@ -93,7 +93,7 @@ std::string RAPIDAtomic<RAPID_NUM>::constructRWSValueString() const
   return result;
 }
 
-std::string RAPIDAtomic<RAPID_DNUM>::constructRWSValueString() const
+std::string RAPIDAtomic<RAPID_DNUM>::constructString() const
 {
   std::string result("9000000000");
 
@@ -107,17 +107,17 @@ std::string RAPIDAtomic<RAPID_DNUM>::constructRWSValueString() const
   return result;
 }
 
-std::string RAPIDAtomic<RAPID_STRING>::constructRWSValueString() const
+std::string RAPIDAtomic<RAPID_STRING>::constructString() const
 {
   return "\"" + value + "\"";
 }
 
-void RAPIDAtomic<RAPID_BOOL>::parseRWSValueString(const std::string& value_string)
+void RAPIDAtomic<RAPID_BOOL>::parseString(const std::string& value_string)
 {
   value = value_string.compare(RAPID::RAPID_TRUE) == 0 ? true : false;
 }
 
-void RAPIDAtomic<RAPID_STRING>::parseRWSValueString(const std::string& value_string)
+void RAPIDAtomic<RAPID_STRING>::parseString(const std::string& value_string)
 {
   std::string temp = value_string;
 
@@ -157,7 +157,7 @@ std::string RAPIDRecord::getType() const
   return record_type_name_;
 }
 
-void RAPIDRecord::parseRWSValueString(const std::string& value_string)
+void RAPIDRecord::parseString(const std::string& value_string)
 {
   std::vector<std::string> substrings = extractDelimitedSubstrings(value_string);
 
@@ -165,12 +165,12 @@ void RAPIDRecord::parseRWSValueString(const std::string& value_string)
   {
     for (size_t i = 0; i < components_.size(); ++i)
     {
-      components_.at(i)->parseRWSValueString(substrings.at(i));
+      components_.at(i)->parseString(substrings.at(i));
     }
   }
 }
 
-std::string RAPIDRecord::constructRWSValueString() const
+std::string RAPIDRecord::constructString() const
 {
   std::stringstream ss;
 
@@ -178,7 +178,7 @@ std::string RAPIDRecord::constructRWSValueString() const
 
   for (size_t i = 0; i < components_.size(); ++i)
   {
-    ss << components_.at(i)->constructRWSValueString();
+    ss << components_.at(i)->constructString();
 
     if (i != components_.size() - 1)
     {
@@ -201,7 +201,7 @@ RAPIDRecord& RAPIDRecord::operator=(const RAPIDRecord& other)
       {
         for (size_t i = 0; i < components_.size(); ++i)
         {
-          components_.at(i)->parseRWSValueString(other.components_.at(i)->constructRWSValueString());
+          components_.at(i)->parseString(other.components_.at(i)->constructString());
         }
       }
     }
