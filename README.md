@@ -50,7 +50,7 @@ RWS provides access to several services and resources in the robot controller, a
 
 ## Usage Hints
 
-This is a generic library, which and can be used together with any RAPID program and system configurations. The library's primary classes are:
+This is a generic library, which can be used together with any RAPID program and system configuration. The library's primary classes are:
 
 * [POCOClient](include/abb_librws/rws_poco_client.h): Sets up and manages HTTP and WebSocket communication and is unaware of the RWS protocol.
 * [RWSClient](include/abb_librws/rws_client.h): Inherits from `POCOClient` and provides interaction methods for using the RWS services and resources.
