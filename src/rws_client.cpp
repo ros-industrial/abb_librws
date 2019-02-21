@@ -229,6 +229,7 @@ RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource resource,
           else
           {
             result.success = false;
+            result.error_message = "getRAPIDSymbolData(...): RAPID value string was empty";
           }
         }
       }
@@ -554,6 +555,11 @@ void RWSClient::checkAcceptedOutcomes(RWSResult* result,
       {
         result->success = (poco_result.poco_info.http.response.status == conditions.accepted_outcomes.at(i));
       }
+
+      if (!result->success)
+      {
+        result->error_message = "checkAcceptedOutcomes(...): RWS response status not accepted";
+      }
     }
   }
 }
@@ -576,6 +582,7 @@ void RWSClient::parseMessage(RWSResult* result, const POCOResult& poco_result)
     {
       // XML parsing: Missing message
       result->success = false;
+      result->error_message = "parseMessage(...): RWS response was empty";
     }
 
     if (result->success)
@@ -589,6 +596,7 @@ void RWSClient::parseMessage(RWSResult* result, const POCOResult& poco_result)
       {
         // XML parsing: Failed
         result->success = false;
+        result->error_message = "parseMessage(...): XML parser failed to parse RWS response";
       }
     }
   }
