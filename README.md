@@ -1,7 +1,7 @@
 # abb_librws
 
 [![Travis CI Status](https://travis-ci.org/ros-industrial/abb_librws.svg?branch=master)](https://travis-ci.org/ros-industrial/abb_librws)
-
+[![license - bsd 3 clause](https://img.shields.io/:license-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![support level: vendor](https://img.shields.io/badge/support%20level-vendor-brightgreen.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 
 ## Overview
