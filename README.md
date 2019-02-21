@@ -43,7 +43,7 @@ RWS provides access to several services and resources in the robot controller, a
 
 ### Recommendations
 
-* This library has been verified to work with RobotWare `6.06.01`. Other versions are expected to work, but this cannot be guaranteed at the moment.
+* This library has been verified to work with RobotWare `6.08.00.01`. Other versions are expected to work, but this cannot be guaranteed at the moment.
 * It is a good idea to perform RobotStudio simulations before working with a real robot.
 * It is prudent to familiarize oneself with general safety regulations (e.g. described in ABB manuals).
 * Consider cyber security aspects, before connecting robot controllers to networks.
