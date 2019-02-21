@@ -179,8 +179,8 @@ public:
     GeneralStatus status;
 
     /**
-    * \brief Container for an exception message (if one occured).
-    */
+     * \brief Container for an exception message (if one occured).
+     */
     std::string exception_message;
 
     /**

@@ -382,6 +382,7 @@ RWSClient::RWSResult RWSClient::deleteFile(const FileResource resource)
   evaluation_conditions_.reset();
   evaluation_conditions_.parse_message_into_xml = false;
   evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+  evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
   return evaluatePOCOResult(httpDelete(uri_), evaluation_conditions_);
 }
