@@ -255,11 +255,11 @@ public:
              const std::string username,
              const std::string password)
   :
-  client_session_(ip_address, port),
+  http_client_session_(ip_address, port),
   http_credentials_(username, password)
   {
-    client_session_.setKeepAlive(true);
-    client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT));
+    http_client_session_.setKeepAlive(true);
+    http_client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT));
   }
 
   /**
@@ -308,12 +308,12 @@ public:
   /**
    * \brief A method for resetting the timeout to the default value.
    */
-  void resetTimeout() { client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT)); }
+  void resetTimeout() { http_client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT)); }
   
   /**
    * \brief A method for setting the timeout to a long value.
    */
-  void setLongTimeout() { client_session_.setTimeout(Poco::Timespan(LONG_TIMEOUT)); }
+  void setLongTimeout() { http_client_session_.setTimeout(Poco::Timespan(LONG_TIMEOUT)); }
 
   /**
    * \brief A method for checking if the WebSocket exist.
@@ -437,7 +437,7 @@ private:
   /**
    * \brief A HTTP client session.
    */
-  Poco::Net::HTTPClientSession client_session_;
+  Poco::Net::HTTPClientSession http_client_session_;
   
   /**
    * \brief A buffer for a WebSocket.

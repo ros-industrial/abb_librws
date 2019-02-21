@@ -276,7 +276,7 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
     // Check if there was a server error, if so, make another attempt with a clean sheet.
     if (response.getStatus() >= HTTPResponse::HTTP_INTERNAL_SERVER_ERROR)
     {
-      client_session_.reset();
+      http_client_session_.reset();
       request.erase(HTTPRequest::COOKIE);
       sendAndReceive(result, request, response, content);
     }
@@ -308,7 +308,7 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
   if (result.status != POCOResult::OK)
   {
     cookies_.clear();
-    client_session_.reset();
+    http_client_session_.reset();
   }
 
   return result;
@@ -332,7 +332,7 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri, const
   try
   {
     result.addHTTPRequestInfo(request);
-    p_websocket_ = new WebSocket(client_session_, request, response);
+    p_websocket_ = new WebSocket(http_client_session_, request, response);
     p_websocket_->setReceiveTimeout(Poco::Timespan(LONG_TIMEOUT));
       
     result.addHTTPResponseInfo(response);
@@ -361,7 +361,7 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri, const
 
   if (result.status != POCOResult::OK)
   {
-    client_session_.reset();
+    http_client_session_.reset();
   }
 
   return result;
@@ -443,7 +443,7 @@ POCOClient::POCOResult POCOClient::webSocketRecieveFrame()
 
   if (result.status != POCOResult::OK)
   {
-    client_session_.reset();
+    http_client_session_.reset();
   }
 
   return result;
@@ -463,8 +463,8 @@ void POCOClient::sendAndReceive(POCOResult& result,
 
   // Contact the server.
   std::string response_content;
-  client_session_.sendRequest(request) << request_content;
-  StreamCopier::copyToString(client_session_.receiveResponse(response), response_content);
+  http_client_session_.sendRequest(request) << request_content;
+  StreamCopier::copyToString(http_client_session_.receiveResponse(response), response_content);
 
   // Add response info to the result.
   result.addHTTPResponseInfo(response, response_content);
