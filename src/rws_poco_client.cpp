@@ -314,7 +314,9 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
   return result;
 }
 
-POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri, const std::string protocol)
+POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri,
+                                                    const std::string protocol,
+                                                    const Poco::Int64 timeout)
 {
   // Lock the object's mutex. It is released when the method goes out of scope.
   ScopedLock<Mutex> lock(http_mutex_);
@@ -333,7 +335,7 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri, const
   {
     result.addHTTPRequestInfo(request);
     p_websocket_ = new WebSocket(http_client_session_, request, response);
-    p_websocket_->setReceiveTimeout(Poco::Timespan(LONG_TIMEOUT));
+    p_websocket_->setReceiveTimeout(Poco::Timespan(timeout));
       
     result.addHTTPResponseInfo(response);
     result.status = POCOResult::OK;

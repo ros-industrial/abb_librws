@@ -707,6 +707,11 @@ private:
   static const size_t LOG_SIZE = 20;
 
   /**
+   * \brief Static constant for the default RWS subscription timeout [microseconds].
+   */
+  static const Poco::Int64 DEFAULT_SUBSCRIPTION_TIMEOUT = 40000000;
+
+  /**
    * \brief Container for logging communication results.
    */
   std::deque<POCOResult> log_;

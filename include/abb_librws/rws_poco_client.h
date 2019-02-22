@@ -328,10 +328,11 @@ public:
    *
    * \param uri for the URI (path and query).
    * \param protocol for the WebSocket protocol.
+   * \param timeout for the WebSocket communication timeout [microseconds].
    *
    * \return POCOResult containing the result.
    */
-  POCOResult webSocketConnect(const std::string uri, const std::string protocol);
+  POCOResult webSocketConnect(const std::string uri, const std::string protocol, const Poco::Int64 timeout);
   
   /**
    * \brief A method for receiving a WebSocket frame.
