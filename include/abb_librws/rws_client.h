@@ -709,7 +709,7 @@ private:
   /**
    * \brief Static constant for the default RWS subscription timeout [microseconds].
    */
-  static const Poco::Int64 DEFAULT_SUBSCRIPTION_TIMEOUT = 40000000;
+  static const Poco::Int64 DEFAULT_SUBSCRIPTION_TIMEOUT = 40e6;
 
   /**
    * \brief Container for logging communication results.
