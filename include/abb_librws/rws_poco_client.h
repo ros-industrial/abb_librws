@@ -404,7 +404,7 @@ private:
   /**
    * \brief Static constant for the default HTTP communication timeout [microseconds].
    */
-  static const Poco::Int64 DEFAULT_HTTP_TIMEOUT = 400000;
+  static const Poco::Int64 DEFAULT_HTTP_TIMEOUT = 400e3;
 
   /**
    * \brief Static constant for the socket's buffer size.
