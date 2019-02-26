@@ -259,7 +259,7 @@ public:
   http_credentials_(username, password)
   {
     http_client_session_.setKeepAlive(true);
-    http_client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT));
+    http_client_session_.setTimeout(Poco::Timespan(DEFAULT_HTTP_TIMEOUT));
   }
 
   /**
@@ -306,14 +306,19 @@ public:
   POCOResult httpDelete(const std::string uri);
   
   /**
-   * \brief A method for resetting the timeout to the default value.
+   * \brief A method for setting the HTTP communication timeout.
+   *
+   * \note This method resets the internal HTTP client session, causing the
+   *       RWS server (robot controller) to send a new cookie. The RWS
+   *       session id is not changed.
+   *
+   * \param timeout for the HTTP communication timeout [microseconds].
    */
-  void resetTimeout() { http_client_session_.setTimeout(Poco::Timespan(DEFAULT_TIMEOUT)); }
-  
-  /**
-   * \brief A method for setting the timeout to a long value.
-   */
-  void setLongTimeout() { http_client_session_.setTimeout(Poco::Timespan(LONG_TIMEOUT)); }
+  void setHTTPTimeout(const Poco::Int64 timeout)
+  {
+    http_client_session_.setTimeout(Poco::Timespan(timeout));
+    http_client_session_.reset();
+  }
 
   /**
    * \brief A method for checking if the WebSocket exist.
@@ -327,10 +332,11 @@ public:
    *
    * \param uri for the URI (path and query).
    * \param protocol for the WebSocket protocol.
+   * \param timeout for the WebSocket communication timeout [microseconds].
    *
    * \return POCOResult containing the result.
    */
-  POCOResult webSocketConnect(const std::string uri, const std::string protocol);
+  POCOResult webSocketConnect(const std::string uri, const std::string protocol, const Poco::Int64 timeout);
   
   /**
    * \brief A method for receiving a WebSocket frame.
@@ -400,14 +406,9 @@ private:
   void extractAndStoreCookie(const std::string cookie_string);
 
   /**
-   * \brief Static constant for the default timeout for HTTP requests, in microseconds.
+   * \brief Static constant for the default HTTP communication timeout [microseconds].
    */
-  static const Poco::Int64 DEFAULT_TIMEOUT = 400000;
-  
-  /**
-   * \brief Static constant for a long timeout for HTTP requests, in microseconds.
-   */
-  static const Poco::Int64 LONG_TIMEOUT = 10000000;
+  static const Poco::Int64 DEFAULT_HTTP_TIMEOUT = 400e3;
 
   /**
    * \brief Static constant for the socket's buffer size.

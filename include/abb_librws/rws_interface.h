@@ -478,6 +478,16 @@ public:
    */
   std::string getLogText(const bool verbose = false);
 
+  /**
+   * \brief A method for setting the HTTP communication timeout.
+   *
+   * \param timeout for the HTTP communication timeout [microseconds].
+   */
+  void setHTTPTimeout(const Poco::Int64 timeout)
+  {
+    rws_client_.setHTTPTimeout(timeout);
+  }
+
 protected:
   /**
    * \brief A method for comparing a single text content (from a XML document node) with a specific string value.

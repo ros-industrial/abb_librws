@@ -425,7 +425,8 @@ RWSClient::RWSResult RWSClient::startSubscription(SubscriptionResources resource
       evaluation_conditions_.reset();
       evaluation_conditions_.parse_message_into_xml = false;
       evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_SWITCHING_PROTOCOLS);
-      result = evaluatePOCOResult(webSocketConnect(poll, "robapi2_subscription"), evaluation_conditions_);
+      result = evaluatePOCOResult(webSocketConnect(poll, "robapi2_subscription", DEFAULT_SUBSCRIPTION_TIMEOUT),
+                                  evaluation_conditions_);
 
       if(!result.success)
       {
