@@ -312,7 +312,9 @@ public:
    */
   void setHTTPTimeout(const Poco::Int64 timeout)
   {
-    http_client_session_.setTimeout(Poco::Timespan(timeout));                              
+    http_client_session_.setTimeout(Poco::Timespan(timeout));
+
+    // Note: The new timeout does not seem to be applied without a reset.                     
     http_client_session_.reset();
   }
 
