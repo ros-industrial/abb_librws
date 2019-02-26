@@ -308,13 +308,13 @@ public:
   /**
    * \brief A method for setting the HTTP communication timeout.
    *
+   * \note This method resets the internal HTTP client session.
+   *
    * \param timeout for the HTTP communication timeout [microseconds].
    */
   void setHTTPTimeout(const Poco::Int64 timeout)
   {
     http_client_session_.setTimeout(Poco::Timespan(timeout));
-
-    // Note: The new timeout does not seem to be applied without a reset.                     
     http_client_session_.reset();
   }
 
