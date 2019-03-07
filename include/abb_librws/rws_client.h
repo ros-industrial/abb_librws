@@ -348,6 +348,16 @@ public:
   }
 
   /**
+   * \brief A method for retrieving the configuration instances of a type, belonging to a specific configuration topic.
+   *
+   * \param topic specifying the configuration topic.
+   * \param type specifying the type in the configuration topic.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult getConfigurationInstances(const std::string topic, const std::string type);
+
+  /**
    * \brief A method for retrieving the value of an IO signal.
    * 
    * \param iosignal for the IO signal's name.
@@ -408,7 +418,16 @@ public:
    * \return RWSResult containing the result.
    */
   RWSResult getRAPIDExecution();
-  
+
+  /**
+   * \brief A method for retrieving information about the RAPID modules of a RAPID task.
+   *
+   * \param task specifying the RAPID task.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult getRAPIDModulesInfo(const std::string task);
+
   /**
    * \brief A method for retrieving the RAPID tasks that are defined in the robot controller system.
    * 
@@ -655,6 +674,16 @@ private:
    * \return RWSResult containing the evaluated result.
    */
   RWSResult evaluatePOCOResult(const POCOResult& poco_result, const EvaluationConditions& conditions);
+
+  /**
+   * \brief Method for generating a configuration URI path.
+   *
+   * \param topic for the configuration topic.
+   * \param type for the configuration type (belonging to the topic).
+   *
+   * \return std::string containing the path.
+   */
+  std::string generateConfigurationPath(const std::string& topic, const std::string& type);
 
   /**
    * \brief Method for generating an IO signal URI path.

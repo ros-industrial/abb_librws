@@ -64,11 +64,67 @@ public:
      */
     std::string system_name;
   };
-  
+
   /**
-   * \brief A struct for containing information about the RAPID tasks defined in the robot controller.
+   * \brief A struct for containing information about a RobotWare option.
    */
-  struct RAPIDTask
+  struct RobotWareOptionInfo
+  {
+    /**
+     * \brief A constructor.
+     *
+     * \param name for the name of the option.
+     * \param description for the description of the option.
+     */
+    RobotWareOptionInfo(std::string name, std::string description)
+    :
+    name(name),
+    description(description)
+    {}
+
+    /**
+     * \brief The option's name.
+     */
+    std::string name;
+
+    /**
+     * \brief The options's description.
+     */
+    std::string description;
+  };
+
+  /**
+   * \brief A struct for containing information about a RAPID module.
+   */
+  struct RAPIDModuleInfo
+  {
+    /**
+     * \brief A constructor.
+     *
+     * \param name for the name of the module.
+     * \param type for the type of the module.
+     */
+    RAPIDModuleInfo(std::string name, std::string type)
+    :
+    name(name),
+    type(type)
+    {}
+
+    /**
+     * \brief The module's name.
+     */
+    std::string name;
+
+    /**
+     * \brief The module's type.
+     */
+    std::string type;
+  };
+
+  /**
+   * \brief A struct for containing information about a RAPID task.
+   */
+  struct RAPIDTaskInfo
   {
     /**
      * \brief A constructor.
@@ -76,7 +132,7 @@ public:
      * \param name for the name of the task.
      * \param is_motion_task indicating if the task is a motion task or not.
      */
-    RAPIDTask(std::string name, bool is_motion_task)
+    RAPIDTaskInfo(std::string name, bool is_motion_task)
     :
     name(name),
     is_motion_task(is_motion_task)
@@ -101,7 +157,7 @@ public:
     /**
      * \brief Information about the defined RAPID tasks.
      */
-    std::vector<RAPIDTask> rapid_tasks;
+    std::vector<RAPIDTaskInfo> rapid_tasks;
 
     /**
      * \brief System information.
@@ -204,17 +260,24 @@ public:
   /**
    * \brief A method for collecting runtime information of the robot controller.
    *
-   * \return RuntimeInfo container for the runtime information.
+   * \return RuntimeInfo containing the runtime information.
    */
   RuntimeInfo collectRuntimeInfo();
   
   /**
    * \brief A method for collecting static information (at least during runtime) of the robot controller.
    *
-   * \return StaticInfo container for the static information (at least during runtime).
+   * \return StaticInfo containing the static information (at least during runtime).
    */
   StaticInfo collectStaticInfo();
-  
+
+  /**
+   * \brief A method for retrieving the RobotWare options present in the active robot controller system.
+   *
+   * \return std::vector<OptionInfo> containing a list of the present RobotWare options.
+   */
+  std::vector<RobotWareOptionInfo> getPresentRobotWareOptions();
+
   /**
    * \brief A method for retrieving the value if an IO signal.
    *
@@ -271,13 +334,19 @@ public:
   bool getRAPIDSymbolData(const std::string task,
                           const RWSClient::RAPIDSymbolResource symbol,
                           RAPIDSymbolDataAbstract* p_data);
+  /**
+   * \brief A method for retrieving information about the RAPID modules of a RAPID task defined in the robot controller.
+   *
+   * \return std::vector<RAPIDModuleInfo> containing the RAPID modules information.
+   */
+  std::vector<RAPIDModuleInfo> getRAPIDModulesInfo(const std::string task);
 
   /**
    * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
    *
-   * \return std::vector<RAPIDTask> container for the RAPID tasks information.
+   * \return std::vector<RAPIDTaskInfo> containing the RAPID tasks information.
    */
-  std::vector<RAPIDTask> getRAPIDTasks();
+  std::vector<RAPIDTaskInfo> getRAPIDTasks();
   
   /**
    * \brief A method for retrieving some system information from the robot controller.

@@ -102,6 +102,17 @@ void RWSClient::SubscriptionResources::add(const std::string resource_uri, const
  * Primary methods
  */
 
+RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string topic, const std::string type)
+{
+  uri_ = generateConfigurationPath(topic, type) + Resources::INSTANCES;
+
+  evaluation_conditions_.reset();
+  evaluation_conditions_.parse_message_into_xml = true;
+  evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
+}
+
 RWSClient::RWSResult RWSClient::getIOSignal(const std::string iosignal)
 {
   uri_ = generateIOSignalPath(iosignal);
@@ -139,6 +150,17 @@ RWSClient::RWSResult RWSClient::getRAPIDExecution()
 {
   uri_ = Resources::RW_RAPID_EXECUTION;
   
+  evaluation_conditions_.reset();
+  evaluation_conditions_.parse_message_into_xml = true;
+  evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
+}
+
+RWSClient::RWSResult RWSClient::getRAPIDModulesInfo(const std::string task)
+{
+  uri_ = Resources::RW_RAPID_MODULES + "?" + Queries::TASK + task;
+
   evaluation_conditions_.reset();
   evaluation_conditions_.parse_message_into_xml = true;
   evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
@@ -620,6 +642,11 @@ std::string RWSClient::getLogText(const bool verbose)
   }
 
   return ss.str();
+}
+
+std::string RWSClient::generateConfigurationPath(const std::string& topic, const std::string& type)
+{
+  return Resources::RW_CFG + "/" + topic + "/" + type;
 }
 
 std::string RWSClient::generateIOSignalPath(const std::string& iosignal)
