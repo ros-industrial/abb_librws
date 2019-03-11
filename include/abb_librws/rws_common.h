@@ -520,7 +520,7 @@ struct SystemConstants
       static const std::string STATE;
 
       /**
-       * \brief Sys.
+       * \brief Controller topic in the system configurations (abbreviated as sys).
        */
       static const std::string SYS;
       
