@@ -495,7 +495,7 @@ struct SystemConstants
       static const std::string OPMODE;
 
       /**
-       * \brief Present options.
+       * \brief Options present on the controller.
        */
       static const std::string PRESENT_OPTIONS;
 
