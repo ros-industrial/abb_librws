@@ -272,7 +272,7 @@ public:
   StaticInfo collectStaticInfo();
 
   /**
-   * \brief A method for retrieving the RobotWare options present in the active robot controller system.
+   * \brief A method for retrieving the RobotWare options present on the active robot controller system.
    *
    * \return std::vector<OptionInfo> containing a list of the present RobotWare options.
    */
