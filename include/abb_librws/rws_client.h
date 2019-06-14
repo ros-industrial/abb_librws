@@ -625,6 +625,15 @@ public:
    */
   std::string getLogText(const bool verbose = false);
 
+  /**
+   * \brief Method for retrieving only the most recently logged event as a text string.
+   *
+   * \param verbose indicating if the log text should be verbose or not.
+   *
+   * \return std::string containing the log text.
+   */
+  std::string getLogTextLatestEvent(const bool verbose = false);
+
 private:
   /**
    * \brief A struct for representing conditions, for the evaluation of an attempted RWS communication.

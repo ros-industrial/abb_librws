@@ -644,6 +644,11 @@ std::string RWSClient::getLogText(const bool verbose)
   return ss.str();
 }
 
+std::string RWSClient::getLogTextLatestEvent(const bool verbose)
+{
+  return (log_.size() == 0 ? "Log is empty." : log_[0].toString(verbose, 0));
+}
+
 std::string RWSClient::generateConfigurationPath(const std::string& topic, const std::string& type)
 {
   return Resources::RW_CFG + "/" + topic + "/" + type;
