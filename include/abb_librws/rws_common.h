@@ -354,6 +354,11 @@ struct SystemConstants
     struct XMLAttributes
     {
       /**
+       * \brief Class & cfg-ia-t-li.
+       */
+      static const XMLAttribute CLASS_CFG_IA_T_LI;
+
+      /**
        * \brief Class & controller execution state.
        */
       static const XMLAttribute CLASS_CTRLEXECSTATE;
@@ -394,10 +399,15 @@ struct SystemConstants
       static const XMLAttribute CLASS_OPMODE;
       
       /**
+       * \brief Class & rap-module-info-li.
+       */
+      static const XMLAttribute CLASS_RAP_MODULE_INFO_LI;
+
+      /**
        * \brief Class & rap-task-li.
        */
       static const XMLAttribute CLASS_RAP_TASK_LI;
-      
+
       /**
        * \brief Class & RobotWare version name.
        */
@@ -435,10 +445,15 @@ struct SystemConstants
       static const std::string CLASS;
 
       /**
+       * \brief Configuration list item.
+       */
+      static const std::string CFG_IA_T_LI;
+
+      /**
        * \brief Controller execution state.
        */
       static const std::string CTRLEXECSTATE;
-
+      
       /**
        * \brief Controller state.
        */
@@ -480,6 +495,16 @@ struct SystemConstants
       static const std::string OPMODE;
 
       /**
+       * \brief Options present on the controller.
+       */
+      static const std::string PRESENT_OPTIONS;
+
+      /**
+       * \brief RAPID module info list item.
+       */
+      static const std::string RAP_MODULE_INFO_LI;
+
+      /**
        * \brief RAPID task list item.
        */
       static const std::string RAP_TASK_LI;
@@ -493,6 +518,11 @@ struct SystemConstants
        * \brief State.
        */
       static const std::string STATE;
+
+      /**
+       * \brief Controller topic in the system configurations (abbreviated as sys).
+       */
+      static const std::string SYS;
       
       /**
        * \brief Sys system list item.
@@ -554,6 +584,11 @@ struct SystemConstants
        * \brief Stop action query.
        */
       static const std::string ACTION_STOP;
+
+      /**
+       * \brief Task query.
+       */
+      static const std::string TASK;
     };
 
     /**
@@ -561,6 +596,11 @@ struct SystemConstants
      */
     struct Resources
     {
+      /**
+       * \brief Instances.
+       */
+      static const std::string INSTANCES;
+
       /**
        * \brief Jointtarget.
        */
@@ -575,6 +615,11 @@ struct SystemConstants
        * \brief Robtarget.
        */
       static const std::string ROBTARGET;
+
+      /**
+       * \brief Configurations.
+       */
+      static const std::string RW_CFG;
 
       /**
        * \brief Signals.
@@ -605,6 +650,11 @@ struct SystemConstants
        * \brief RAPID execution.
        */
       static const std::string RW_RAPID_EXECUTION;
+
+      /**
+       * \brief RAPID modules.
+       */
+      static const std::string RW_RAPID_MODULES;
 
       /**
        * \brief RAPID symbol data.

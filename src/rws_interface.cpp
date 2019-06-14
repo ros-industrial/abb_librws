@@ -47,6 +47,7 @@ namespace rws
 
 typedef SystemConstants::ContollerStates ContollerStates;
 typedef SystemConstants::RAPID RAPID;
+typedef SystemConstants::RWS::Identifiers Identifiers;
 typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
 
 /***********************************************************************************************************************
@@ -79,6 +80,27 @@ RWSInterface::StaticInfo RWSInterface::collectStaticInfo()
   static_info.system_info = getSystemInfo();
 
   return static_info;
+}
+
+std::vector<RWSInterface::RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
+{
+  std::vector<RobotWareOptionInfo> result;
+
+  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS,
+                                                                          Identifiers::PRESENT_OPTIONS);
+
+  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_IA_T_LI);
+
+  for (size_t i = 0; i < node_list.size(); i+=2)
+  {
+    if (i + 1 < node_list.size())
+    {
+      result.push_back(RobotWareOptionInfo(xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_VALUE),
+                                           xmlFindTextContent(node_list.at(i+1), XMLAttributes::CLASS_VALUE)));
+    }
+  }
+  
+  return result;
 }
 
 std::string RWSInterface::getIOSignal(const std::string iosignal)
@@ -208,9 +230,28 @@ bool RWSInterface::setMotorsOff()
   return rws_client_.setMotorsOff().success;
 }
 
-std::vector<RWSInterface::RAPIDTask> RWSInterface::getRAPIDTasks()
+std::vector<RWSInterface::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string task)
 {
-  std::vector<RAPIDTask> result;
+  std::vector<RAPIDModuleInfo> result;
+
+  RWSClient::RWSResult rws_result = rws_client_.getRAPIDModulesInfo(task);
+  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document,
+                                                         XMLAttributes::CLASS_RAP_MODULE_INFO_LI);
+
+  for (size_t i = 0; i < node_list.size(); ++i)
+  {
+    std::string name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
+    std::string type = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_TYPE);
+
+    result.push_back(RAPIDModuleInfo(name, type));
+  }
+
+  return result;
+}
+
+std::vector<RWSInterface::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
+{
+  std::vector<RAPIDTaskInfo> result;
 
   RWSClient::RWSResult rws_result = rws_client_.getRAPIDTasks();
   std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_RAP_TASK_LI);
@@ -220,7 +261,7 @@ std::vector<RWSInterface::RAPIDTask> RWSInterface::getRAPIDTasks()
     std::string name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
     bool is_motion_task = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_MOTIONTASK) == RAPID::RAPID_TRUE;
 
-    result.push_back(RAPIDTask(name, is_motion_task));
+    result.push_back(RAPIDTaskInfo(name, is_motion_task));
   }
 
   return result;
