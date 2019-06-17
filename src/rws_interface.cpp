@@ -393,6 +393,11 @@ std::string RWSInterface::getLogText(const bool verbose)
   return rws_client_.getLogText(verbose);
 }
 
+std::string RWSInterface::getLogTextLatestEvent(const bool verbose)
+{
+  return rws_client_.getLogTextLatestEvent(verbose);
+}
+
 /************************************************************
  * Auxiliary methods
  */
