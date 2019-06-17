@@ -621,7 +621,7 @@ public:
    *
    * \param verbose indicating if the log text should be verbose or not.
    *
-   * \return std::string containing the log text.
+   * \return std::string containing the log text. An empty text string is returned if the log is empty.
    */
   std::string getLogText(const bool verbose = false);
 
@@ -630,7 +630,7 @@ public:
    *
    * \param verbose indicating if the log text should be verbose or not.
    *
-   * \return std::string containing the log text.
+   * \return std::string containing the log text. An empty text string is returned if the log is empty.
    */
   std::string getLogTextLatestEvent(const bool verbose = false);
 

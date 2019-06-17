@@ -627,13 +627,13 @@ void RWSClient::parseMessage(RWSResult* result, const POCOResult& poco_result)
 
 std::string RWSClient::getLogText(const bool verbose)
 {
-  std::stringstream ss;
-
   if (log_.size() == 0)
   {
-    ss << "Log is empty.";
+    return "";
   }
-
+  
+  std::stringstream ss;
+  
   for (size_t i = 0; i < log_.size(); ++i)
   {
     std::stringstream temp;
@@ -646,7 +646,7 @@ std::string RWSClient::getLogText(const bool verbose)
 
 std::string RWSClient::getLogTextLatestEvent(const bool verbose)
 {
-  return (log_.size() == 0 ? "Log is empty." : log_[0].toString(verbose, 0));
+  return (log_.size() == 0 ? "" : log_[0].toString(verbose, 0));
 }
 
 std::string RWSClient::generateConfigurationPath(const std::string& topic, const std::string& type)
