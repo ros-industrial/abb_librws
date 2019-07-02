@@ -1,12 +1,12 @@
-sudo: required
 language: generic
-dist: trusty
+services:
+  - docker
 
 env:
   global:
-    - BEFORE_SCRIPT='./setup_poco_ppa.sh'
+    - AFTER_INIT='./setup_poco_ppa.sh'
   matrix:
-    - ROS_DISTRO="kinetic" ROS_REPO=ros NOT_TEST_INSTALL=true CATKIN_LINT=true
+    - ROS_DISTRO="kinetic" ROS_REPO=ros CATKIN_LINT=true
 
 install:
   - git clone --depth=1 https://github.com/ros-industrial/industrial_ci.git .ci_config
