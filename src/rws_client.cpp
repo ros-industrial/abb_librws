@@ -431,7 +431,7 @@ RWSClient::RWSResult RWSClient::startSubscription(const SubscriptionResources& r
 
     // Generate content for a subscription HTTP post request.
     subscription_content_.str(std::string());
-    for (int i = 0; i < temp.size(); ++i)
+    for (std::size_t i = 0; i < temp.size(); ++i)
     {
       subscription_content_ << "resources=" << i
                             << "&"
