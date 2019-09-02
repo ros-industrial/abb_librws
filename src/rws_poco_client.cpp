@@ -58,7 +58,7 @@ namespace rws
  */
 
 void POCOClient::POCOResult::addHTTPRequestInfo(const Poco::Net::HTTPRequest& request,
-                                                const std::string request_content)
+                                                const std::string& request_content)
 {
   poco_info.http.request.method = request.getMethod();
   poco_info.http.request.uri = request.getURI();
@@ -66,7 +66,7 @@ void POCOClient::POCOResult::addHTTPRequestInfo(const Poco::Net::HTTPRequest& re
 }
 
 void POCOClient::POCOResult::addHTTPResponseInfo(const Poco::Net::HTTPResponse& response,
-                                                 const std::string response_content)
+                                                 const std::string& response_content)
 {
   std::string header_info;
 
@@ -81,7 +81,7 @@ void POCOClient::POCOResult::addHTTPResponseInfo(const Poco::Net::HTTPResponse& 
 }
 
 void POCOClient::POCOResult::addWebSocketFrameInfo(const int flags,
-                                                   const std::string frame_content)
+                                                   const std::string& frame_content)
 {
   poco_info.websocket.flags = flags;
   poco_info.websocket.frame_content = frame_content;
@@ -213,29 +213,29 @@ std::string POCOClient::POCOResult::toString(const bool verbose, const size_t in
  * Primary methods
  */
 
-POCOClient::POCOResult POCOClient::httpGet(const std::string uri)
+POCOClient::POCOResult POCOClient::httpGet(const std::string& uri)
 {
   return makeHTTPRequest(HTTPRequest::HTTP_GET, uri);
 }
 
-POCOClient::POCOResult POCOClient::httpPost(const std::string uri, const std::string content)
+POCOClient::POCOResult POCOClient::httpPost(const std::string& uri, const std::string& content)
 {
   return makeHTTPRequest(HTTPRequest::HTTP_POST, uri, content);
 }
 
-POCOClient::POCOResult POCOClient::httpPut(const std::string uri, const std::string content)
+POCOClient::POCOResult POCOClient::httpPut(const std::string& uri, const std::string& content)
 {
   return makeHTTPRequest(HTTPRequest::HTTP_PUT, uri, content);
 }
 
-POCOClient::POCOResult POCOClient::httpDelete(const std::string uri)
+POCOClient::POCOResult POCOClient::httpDelete(const std::string& uri)
 {
   return makeHTTPRequest(HTTPRequest::HTTP_DELETE, uri);
 }
 
-POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
-                                                   const std::string uri,
-                                                   const std::string content)
+POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string& method,
+                                                   const std::string& uri,
+                                                   const std::string& content)
 {
   // Lock the object's mutex. It is released when the method goes out of scope.
   ScopedLock<Mutex> lock(http_mutex_);
@@ -314,8 +314,8 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
   return result;
 }
 
-POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri,
-                                                    const std::string protocol,
+POCOClient::POCOResult POCOClient::webSocketConnect(const std::string& uri,
+                                                    const std::string& protocol,
                                                     const Poco::Int64 timeout)
 {
   // Lock the object's mutex. It is released when the method goes out of scope.
@@ -489,7 +489,7 @@ void POCOClient::webSocketShutdown()
 void POCOClient::sendAndReceive(POCOResult& result,
                                 HTTPRequest& request,
                                 HTTPResponse& response,
-                                const std::string request_content)
+                                const std::string& request_content)
 {
   // Add request info to the result.
   result.addHTTPRequestInfo(request, request_content);
@@ -506,7 +506,7 @@ void POCOClient::sendAndReceive(POCOResult& result,
 void POCOClient::authenticate(POCOResult& result,
                               HTTPRequest& request,
                               HTTPResponse& response,
-                              const std::string request_content)
+                              const std::string& request_content)
 {
   // Remove any old cookies.
   cookies_.clear();
@@ -525,7 +525,7 @@ void POCOClient::authenticate(POCOResult& result,
   }
 }
 
-void POCOClient::extractAndStoreCookie(const std::string cookie_string)
+void POCOClient::extractAndStoreCookie(const std::string& cookie_string)
 {
   // Find the positions of the cookie delimiters.
   size_t position_1 = cookie_string.find_first_of("=");
@@ -541,9 +541,9 @@ void POCOClient::extractAndStoreCookie(const std::string cookie_string)
   }
 }
 
-std::string POCOClient::findSubstringContent(const std::string whole_string,
-                                             const std::string substring_start,
-                                             const std::string substring_end)
+std::string POCOClient::findSubstringContent(const std::string& whole_string,
+                                             const std::string& substring_start,
+                                             const std::string& substring_end)
 {
   std::string result;
   size_t start_postion = whole_string.find(substring_start);

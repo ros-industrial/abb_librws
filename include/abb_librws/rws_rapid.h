@@ -39,6 +39,7 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "Poco/SharedPtr.h"
 
@@ -114,7 +115,7 @@ protected:
    *
    * \param value specifying the value of the data.
    */
-  RAPIDAtomicTemplate(const T value) : value(value) {}
+  RAPIDAtomicTemplate(const T& value) : value(value) {}
 };
 
 /**
@@ -224,7 +225,7 @@ struct RAPIDAtomic<RAPID_STRING> : public RAPIDAtomicTemplate<std::string>
    *
    * \param value specifying the value of the data.
    */
-  RAPIDAtomic(const std::string value = "") : RAPIDAtomicTemplate(value) {}
+  RAPIDAtomic(const std::string& value = "") : RAPIDAtomicTemplate(value) {}
 
   /**
    * \brief A method for retrieving the name of the symbol's data type.
@@ -279,7 +280,7 @@ public:
    *
    * \param record_type_name specifying the name of the RAPID record type (i.e. its name in the RAPID code).
    */
-  RAPIDRecord(const std::string record_type_name);
+  RAPIDRecord(const std::string& record_type_name);
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
@@ -313,14 +314,14 @@ public:
 
 protected:
   /**
-   * \brief A method to count the number of times a character occurs in a string.
+   * \brief A method to remove a character from a string and count the number of times it occurred.
    *
    * \param input for the string to search.
    * \param character specifying the character to search for.
    *
    * \return unsigned int containing the number of times the character occurs.
    */
-  unsigned int countCharInString(std::string input, const char character);
+  unsigned int countCharInString(std::string& input, const char character);
 
   /**
    * \brief A method to extract delimited substrings in a string.
@@ -329,7 +330,7 @@ protected:
    *
    * \return std::vector<std::string> containing the extracted substrings.
    */
-  std::vector<std::string> extractDelimitedSubstrings(const std::string input);
+  std::vector<std::string> extractDelimitedSubstrings(const std::string& input);
 
   /**
    * \brief The record's type name.

@@ -63,7 +63,7 @@ struct XMLAttribute
    * \param name for the attribute's name.
    * \param value for the attribute's value.
    */
-  XMLAttribute(std::string name, std::string value) : name(name), value(value) {}
+  XMLAttribute(const std::string& name, const std::string& value) : name(name), value(value) {}
 
   /**
    * \brief The name of the attribute.
@@ -85,7 +85,7 @@ struct XMLAttribute
  * \return std::vector<Poco::XML::Node*> containing the found nodes.
  */
 std::vector<Poco::XML::Node*> xmlFindNodes(Poco::AutoPtr<Poco::XML::Document> p_xml_document,
-                                           const XMLAttribute attribute);
+                                           const XMLAttribute& attribute);
 
 /**
  * \brief A method for finding the text content of a XML node in a XML document. It stops after the first hit.
@@ -95,7 +95,7 @@ std::vector<Poco::XML::Node*> xmlFindNodes(Poco::AutoPtr<Poco::XML::Document> p_
  *
  * \return std::string containing the text content. Empty if none were found.
  */
-std::string xmlFindTextContent(Poco::AutoPtr<Poco::XML::Document> p_xml_document, const XMLAttribute attribute);
+std::string xmlFindTextContent(Poco::AutoPtr<Poco::XML::Document> p_xml_document, const XMLAttribute& attribute);
 
 /**
  * \brief A method for finding the text content of a XML node. If not found, then it checks the node's children as well.
@@ -105,7 +105,7 @@ std::string xmlFindTextContent(Poco::AutoPtr<Poco::XML::Document> p_xml_document
  *
  * \return std::string containing the text content. Empty if none were found.
  */
-std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute attribute);
+std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute& attribute);
 
 /**
  * \brief A method for checking if a XML node has the specified attribute.
@@ -115,7 +115,7 @@ std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute
  *
  * \return bool indicating if the attribute was found or not.
  */
-bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute attribute);
+bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute& attribute);
 
 /**
  * \brief Struct containing various constant values defined by default robot controller systems.

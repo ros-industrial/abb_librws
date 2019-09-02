@@ -199,7 +199,7 @@ public:
      * \param request for the HTTP request.
      * \param request_content for the HTTP request's content.
      */
-    void addHTTPRequestInfo(const Poco::Net::HTTPRequest& request, const std::string request_content = "");
+    void addHTTPRequestInfo(const Poco::Net::HTTPRequest& request, const std::string& request_content = "");
 
     /**
      * \brief A method for adding info from a HTTP response.
@@ -207,7 +207,7 @@ public:
      * \param response for the HTTP response.
      * \param response_content for the HTTP response's content.
      */
-    void addHTTPResponseInfo(const Poco::Net::HTTPResponse& response, const std::string response_content = "");
+    void addHTTPResponseInfo(const Poco::Net::HTTPResponse& response, const std::string& response_content = "");
 
     /**
      * \brief A method for adding info from a received WebSocket frame.
@@ -215,7 +215,7 @@ public:
      * \param flags for the received WebSocket frame's flags.
      * \param frame_content for the received WebSocket frame's content.
      */
-    void addWebSocketFrameInfo(const int flags, const std::string frame_content);
+    void addWebSocketFrameInfo(const int flags, const std::string& frame_content);
 
     /**
      * \brief A method to map the general status to a std::string.
@@ -250,10 +250,10 @@ public:
    * \param username for the username to the remote server's authentication process.
    * \param password for the password to the remote server's authentication process.
    */
-  POCOClient(const std::string ip_address,
+  POCOClient(const std::string& ip_address,
              const Poco::UInt16 port,
-             const std::string username,
-             const std::string password)
+             const std::string& username,
+             const std::string& password)
   :
   http_client_session_(ip_address, port),
   http_credentials_(username, password)
@@ -274,7 +274,7 @@ public:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpGet(const std::string uri);
+  POCOResult httpGet(const std::string& uri);
 
   /**
    * \brief A method for sending a HTTP POST request.
@@ -284,7 +284,7 @@ public:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpPost(const std::string uri, const std::string content = "");
+  POCOResult httpPost(const std::string& uri, const std::string& content = "");
 
   /**
    * \brief A method for sending a HTTP PUT request.
@@ -294,7 +294,7 @@ public:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpPut(const std::string uri, const std::string content = "");
+  POCOResult httpPut(const std::string& uri, const std::string& content = "");
 
   /**
    * \brief A method for sending a HTTP DELETE request.
@@ -303,7 +303,7 @@ public:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpDelete(const std::string uri);
+  POCOResult httpDelete(const std::string& uri);
 
   /**
    * \brief A method for setting the HTTP communication timeout.
@@ -336,7 +336,7 @@ public:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult webSocketConnect(const std::string uri, const std::string protocol, const Poco::Int64 timeout);
+  POCOResult webSocketConnect(const std::string& uri, const std::string& protocol, const Poco::Int64 timeout);
 
   /**
    * \brief A method for receiving a WebSocket frame.
@@ -367,9 +367,9 @@ public:
    *
    * \return string containing the substring.
    */
-  std::string findSubstringContent(const std::string whole_string,
-                                   const std::string substring_start,
-                                   const std::string substring_end);
+  std::string findSubstringContent(const std::string& whole_string,
+                                   const std::string& substring_start,
+                                   const std::string& substring_end);
 
 private:
   /**
@@ -381,9 +381,9 @@ private:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult makeHTTPRequest(const std::string method,
-                             const std::string uri = "/",
-                             const std::string content = "");
+  POCOResult makeHTTPRequest(const std::string& method,
+                             const std::string& uri = "/",
+                             const std::string& content = "");
 
   /**
    * \brief A method for sending and receiving HTTP messages.
@@ -396,7 +396,7 @@ private:
   void sendAndReceive(POCOResult& result,
                       Poco::Net::HTTPRequest& request,
                       Poco::Net::HTTPResponse& response,
-                      const std::string request_content);
+                      const std::string& request_content);
 
   /**
    * \brief A method for performing authentication.
@@ -409,14 +409,14 @@ private:
   void authenticate(POCOResult& result,
                     Poco::Net::HTTPRequest& request,
                     Poco::Net::HTTPResponse& response,
-                    const std::string request_content);
+                    const std::string& request_content);
 
   /**
    * \brief A method for extracting and storing information from a cookie string.
    *
    * \param cookie_string for the cookie string.
    */
-  void extractAndStoreCookie(const std::string cookie_string);
+  void extractAndStoreCookie(const std::string& cookie_string);
 
   /**
    * \brief Static constant for the default HTTP communication timeout [microseconds].
@@ -457,6 +457,11 @@ private:
   Poco::Mutex websocket_use_mutex_;
 
   /**
+   * \brief A HTTP client session.
+   */
+  Poco::Net::HTTPClientSession http_client_session_;
+
+  /**
    * \brief HTTP credentials for the remote server's access authentication process.
    */
   Poco::Net::HTTPCredentials http_credentials_;
@@ -466,11 +471,6 @@ private:
    */
   Poco::Net::NameValueCollection cookies_;
 
-  /**
-   * \brief A HTTP client session.
-   */
-  Poco::Net::HTTPClientSession http_client_session_;
-  
   /**
    * \brief A buffer for a WebSocket.
    */

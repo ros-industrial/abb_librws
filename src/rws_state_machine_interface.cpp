@@ -105,7 +105,7 @@ const RAPIDSymbolResource Symbols::WATCHDOG_CHECK_EXTERNAL_STATUS(Modules::T_ROB
  * Primary methods
  */
 
-EGMActions RWSStateMachineInterface::Services::EGM::getCurrentAction(const std::string task) const
+EGMActions RWSStateMachineInterface::Services::EGM::getCurrentAction(const std::string& task) const
 {
   EGMActions result;
   RAPIDNum temp_current_action;
@@ -139,12 +139,12 @@ EGMActions RWSStateMachineInterface::Services::EGM::getCurrentAction(const std::
   return result;
 }
 
-bool RWSStateMachineInterface::Services::EGM::getSettings(const std::string task, EGMSettings* p_settings) const
+bool RWSStateMachineInterface::Services::EGM::getSettings(const std::string& task, EGMSettings* p_settings) const
 {
   return p_rws_interface_->getRAPIDSymbolData(task, Symbols::EGM_SETTINGS, p_settings);
 }
 
-bool RWSStateMachineInterface::Services::EGM::setSettings(const std::string task, EGMSettings settings) const
+bool RWSStateMachineInterface::Services::EGM::setSettings(const std::string& task, const EGMSettings& settings) const
 {
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::EGM_SETTINGS, settings);
 }
@@ -175,7 +175,7 @@ bool RWSStateMachineInterface::Services::EGM::signalEGMStop() const
  * Primary methods
  */
 
-States RWSStateMachineInterface::Services::Main::getCurrentState(const std::string task) const
+States RWSStateMachineInterface::Services::Main::getCurrentState(const std::string& task) const
 {
   States result;
   RAPIDNum temp_current_state;
@@ -214,7 +214,8 @@ States RWSStateMachineInterface::Services::Main::getCurrentState(const std::stri
 }
 
 
-TriBool RWSStateMachineInterface::Services::Main::isStateIdle(const std::string task) const
+TriBool RWSStateMachineInterface::Services::Main::isStateIdle(const std::string& task) const
+
 {
   TriBool result;
   States temp_current_state = getCurrentState(task);
@@ -227,7 +228,7 @@ TriBool RWSStateMachineInterface::Services::Main::isStateIdle(const std::string 
   return result;
 }
 
-TriBool RWSStateMachineInterface::Services::Main::isStationary(const std::string mechanical_unit) const
+TriBool RWSStateMachineInterface::Services::Main::isStationary(const std::string& mechanical_unit) const
 {
   TriBool result;
 
@@ -252,8 +253,8 @@ TriBool RWSStateMachineInterface::Services::Main::isStationary(const std::string
  * Primary methods
  */
 
-bool RWSStateMachineInterface::Services::RAPID::runCallByVar(const std::string task,
-                                                             const std::string routine_name,
+bool RWSStateMachineInterface::Services::RAPID::runCallByVar(const std::string& task,
+                                                             const std::string& routine_name,
                                                              const unsigned int routine_number) const
 {
   RAPIDString temp_routine_name(routine_name);
@@ -263,45 +264,45 @@ bool RWSStateMachineInterface::Services::RAPID::runCallByVar(const std::string t
          setRoutineName(task, Procedures::RUN_CALL_BY_VAR) && signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runModuleLoad(const std::string task, const std::string file_path) const
+bool RWSStateMachineInterface::Services::RAPID::runModuleLoad(const std::string& task, const std::string& file_path) const
 {
   RAPIDString temp_file_path(file_path);
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MODULE_FILE_PATH_INPUT, temp_file_path) &&
          setRoutineName(task, Procedures::RUN_MODULE_LOAD) && signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runModuleUnload(const std::string task,
-                                                                const std::string file_path) const
+bool RWSStateMachineInterface::Services::RAPID::runModuleUnload(const std::string& task,
+                                                                const std::string& file_path) const
 {
   RAPIDString temp_file_path(file_path);
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MODULE_FILE_PATH_INPUT, temp_file_path) &&
          setRoutineName(task, Procedures::RUN_MODULE_UNLOAD) && signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runMoveAbsJ(const std::string task, JointTarget joint_target) const
+bool RWSStateMachineInterface::Services::RAPID::runMoveAbsJ(const std::string& task, const JointTarget& joint_target) const
 {
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MOVE_JOINT_TARGET_INPUT, joint_target) &&
          setRoutineName(task, Procedures::RUN_MOVE_ABS_J) && signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runMoveJ(const std::string task, RobTarget rob_target) const
+bool RWSStateMachineInterface::Services::RAPID::runMoveJ(const std::string& task, const RobTarget& rob_target) const
 {
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MOVE_ROB_TARGET_INPUT, rob_target) &&
          setRoutineName(task, Procedures::RUN_MOVE_J) && signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runMoveToCalibrationPosition(const std::string task) const
+bool RWSStateMachineInterface::Services::RAPID::runMoveToCalibrationPosition(const std::string& task) const
 {
   return setRoutineName(task, Procedures::RUN_MOVE_TO_CALIBRATION_POSITION) && signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::setMoveSpeed(const std::string task, SpeedData speed_data) const
+bool RWSStateMachineInterface::Services::RAPID::setMoveSpeed(const std::string& task, const SpeedData& speed_data) const
 {
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MOVE_SPEED_INPUT, speed_data);
 }
 
-bool RWSStateMachineInterface::Services::RAPID::setRoutineName(const std::string task,
-                                                               const std::string routine_name) const
+bool RWSStateMachineInterface::Services::RAPID::setRoutineName(const std::string& task,
+                                                               const std::string& routine_name) const
 {
   RAPIDString temp_routine_name(routine_name);
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_ROUTINE_NAME_INPUT, temp_routine_name);
@@ -395,7 +396,7 @@ bool RWSStateMachineInterface::Services::SG::dualMoveTo(const float left_positio
          signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualSetSettings(SGSettings left_settings, SGSettings right_settings) const
+bool RWSStateMachineInterface::Services::SG::dualSetSettings(const SGSettings& left_settings, const SGSettings& right_settings) const
 {
   return setSettings(SystemConstants::RAPID::TASK_ROB_L, left_settings) &&
          setSettings(SystemConstants::RAPID::TASK_ROB_R, right_settings);
@@ -498,7 +499,7 @@ bool RWSStateMachineInterface::Services::SG::leftMoveTo(const float position) co
          signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftSetSettings(SGSettings settings) const
+bool RWSStateMachineInterface::Services::SG::leftSetSettings(const SGSettings& settings) const
 {
   return setSettings(SystemConstants::RAPID::TASK_ROB_L, settings);
 }
@@ -600,7 +601,7 @@ bool RWSStateMachineInterface::Services::SG::rightMoveTo(const float position) c
          signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightSetSettings(SGSettings settings) const
+bool RWSStateMachineInterface::Services::SG::rightSetSettings(const SGSettings& settings) const
 {
   return setSettings(SystemConstants::RAPID::TASK_ROB_R, settings);
 }
@@ -642,23 +643,23 @@ bool RWSStateMachineInterface::Services::SG::signalRunSGRoutine() const
  * Auxiliary methods
  */
 
-bool RWSStateMachineInterface::Services::SG::getSettings(const std::string task, SGSettings* p_settings) const
+bool RWSStateMachineInterface::Services::SG::getSettings(const std::string& task, SGSettings* p_settings) const
 {
   return p_rws_interface_->getRAPIDSymbolData(task, Symbols::SG_SETTINGS, p_settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::setCommandInput(const std::string task, const SGCommands command) const
+bool RWSStateMachineInterface::Services::SG::setCommandInput(const std::string& task, const SGCommands& command) const
 {
   RAPIDNum temp_command(command);
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::SG_COMMAND_INPUT, temp_command);
 }
 
-bool RWSStateMachineInterface::Services::SG::setSettings(const std::string task, SGSettings settings) const
+bool RWSStateMachineInterface::Services::SG::setSettings(const std::string& task, const SGSettings& settings) const
 {
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::SG_SETTINGS, settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::setTargetPositionInput(const std::string task, const float position) const
+bool RWSStateMachineInterface::Services::SG::setTargetPositionInput(const std::string& task, const float position) const
 {
   RAPIDNum temp_position(position);
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::SG_TARGET_POSTION_INPUT, temp_position);
@@ -675,12 +676,12 @@ bool RWSStateMachineInterface::Services::SG::setTargetPositionInput(const std::s
  * Primary methods
  */
 
-bool RWSStateMachineInterface::Services::Utility::getBaseFrame(const std::string task, Pose* p_base_frame) const
+bool RWSStateMachineInterface::Services::Utility::getBaseFrame(const std::string& task, Pose* p_base_frame) const
 {
   return p_rws_interface_->getRAPIDSymbolData(task, Symbols::UTILITY_BASE_FRAME, p_base_frame);
 }
 
-bool RWSStateMachineInterface::Services::Utility::getCalibrationTarget(const std::string task,
+bool RWSStateMachineInterface::Services::Utility::getCalibrationTarget(const std::string& task,
                                                                        JointTarget* p_calibration_joint_target) const
 {
   return p_rws_interface_->getRAPIDSymbolData(task, Symbols::UTILITY_CALIBRATION_TARGET, p_calibration_joint_target);
@@ -697,7 +698,7 @@ bool RWSStateMachineInterface::Services::Utility::getCalibrationTarget(const std
  * Primary methods
  */
 
-TriBool RWSStateMachineInterface::Services::Watchdog::isActive(const std::string task) const
+TriBool RWSStateMachineInterface::Services::Watchdog::isActive(const std::string& task) const
 {
   TriBool result;
   RAPIDBool temp_active;
@@ -710,7 +711,7 @@ TriBool RWSStateMachineInterface::Services::Watchdog::isActive(const std::string
   return result;
 }
 
-TriBool RWSStateMachineInterface::Services::Watchdog::isCheckingExternalStatus(const std::string task) const
+TriBool RWSStateMachineInterface::Services::Watchdog::isCheckingExternalStatus(const std::string& task) const
 {
   TriBool result;
   RAPIDBool temp_check_external_status;
@@ -744,7 +745,7 @@ bool RWSStateMachineInterface::Services::Watchdog::signalStopRequest() const
  * Auxiliary methods
  */
 
-bool RWSStateMachineInterface::toggleIOSignal(const std::string iosignal)
+bool RWSStateMachineInterface::toggleIOSignal(const std::string& iosignal)
 {
   bool result = false;
   int max_number_of_attempts = 5;

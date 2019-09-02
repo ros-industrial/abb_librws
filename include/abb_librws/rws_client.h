@@ -102,7 +102,7 @@ public:
      * \param module specifying the name of the RAPID module containing the symbol.
      * \param name specifying the name of the RAPID symbol.
      */
-    RAPIDSymbolResource(const std::string module, const std::string name)
+    RAPIDSymbolResource(const std::string& module, const std::string& name)
     :
     module(module),
     name(name)
@@ -131,7 +131,7 @@ public:
      * \param module specifying the name of the RAPID module containing the symbol.
      * \param name specifying the name of the RAPID symbol.
      */
-    RAPIDResource(const std::string task, const std::string module, const std::string name)
+    RAPIDResource(const std::string& task, const std::string& module, const std::string& name)
     :
     task(task),
     module(module),
@@ -144,7 +144,7 @@ public:
      * \param task specifying the name of the RAPID task containing the symbol.
      * \param symbol specifying the names of the RAPID module and the the symbol.
      */
-    RAPIDResource(const std::string task, const RAPIDSymbolResource symbol)
+    RAPIDResource(const std::string& task, const RAPIDSymbolResource& symbol)
     :
     task(task),
     module(symbol.module),
@@ -178,8 +178,8 @@ public:
      * \param filename specifying the name of the file.
      * \param directory specifying the directory of the file on the robot controller (set to $home by default).
      */
-    FileResource(const std::string filename,
-                 const std::string directory = SystemConstants::RWS::Identifiers::HOME_DIRECTORY)
+    FileResource(const std::string& filename,
+                 const std::string& directory = SystemConstants::RWS::Identifiers::HOME_DIRECTORY)
     :
     filename(filename),
     directory(directory)
@@ -233,7 +233,7 @@ public:
        * \param resource_uri for the URI of the resource.
        * \param priority for the priority of the subscription.
        */
-      SubscriptionResource(const std::string resource_uri, const Priority priority)
+      SubscriptionResource(const std::string& resource_uri, const Priority priority)
       :
       resource_uri(resource_uri),
       priority(priority)
@@ -246,7 +246,7 @@ public:
      * \param resource_uri for the URI of the resource.
      * \param priority for the priority of the subscription.
      */
-    void add(const std::string resource_uri, const Priority priority);
+    void add(const std::string& resource_uri, const Priority priority);
 
     /**
      * \brief A method to add information about a IO signal subscription resource.
@@ -254,7 +254,7 @@ public:
      * \param iosignal for the IO signal's name.
      * \param priority for the priority of the subscription.
      */
-    void addIOSignal(const std::string iosignal, const Priority priority);
+    void addIOSignal(const std::string& iosignal, const Priority priority);
 
     /**
      * \brief A method to add information about a RAPID persistant symbol subscription resource.
@@ -262,14 +262,14 @@ public:
      * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
      * \param priority for the priority of the subscription.
      */
-    void addRAPIDPersistantVariable(const RAPIDResource resource, const Priority priority);
+    void addRAPIDPersistantVariable(const RAPIDResource& resource, const Priority priority);
 
     /**
      * \brief A method for retrieving the contained subscription resources information.
      *
      * \return std::vector<SubscriptionResource> containing information of the subscription resources.
      */
-    std::vector<SubscriptionResource> getResources() { return resources_; }
+    const std::vector<SubscriptionResource>& getResources() const { return resources_; }
 
   private:
     /**
@@ -283,7 +283,7 @@ public:
    *
    * \param ip_address specifying the robot controller's IP address.
    */
-  RWSClient(const std::string ip_address)
+  RWSClient(const std::string& ip_address)
   :
   POCOClient(ip_address,
              SystemConstants::General::DEFAULT_PORT_NUMBER,
@@ -298,7 +298,7 @@ public:
    * \param username for the username to the RWS authentication process.
    * \param password for the password to the RWS authentication process.
    */
-  RWSClient(const std::string ip_address, const std::string username, const std::string password)
+  RWSClient(const std::string& ip_address, const std::string& username, const std::string& password)
   :
   POCOClient(ip_address,
              SystemConstants::General::DEFAULT_PORT_NUMBER,
@@ -312,7 +312,7 @@ public:
    * \param ip_address specifying the robot controller's IP address.
    * \param port for the port used by the RWS server.
    */
-  RWSClient(const std::string ip_address, const unsigned short port)
+  RWSClient(const std::string& ip_address, const unsigned short port)
   :
   POCOClient(ip_address,
              port,
@@ -328,10 +328,10 @@ public:
    * \param username for the username to the RWS authentication process.
    * \param password for the password to the RWS authentication process.
    */
-  RWSClient(const std::string ip_address,
+  RWSClient(const std::string& ip_address,
             const unsigned short port,
-            const std::string username,
-            const std::string password)
+            const std::string& username,
+            const std::string& password)
   :
   POCOClient(ip_address,
              port,
@@ -355,7 +355,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getConfigurationInstances(const std::string topic, const std::string type);
+  RWSResult getConfigurationInstances(const std::string& topic, const std::string& type);
 
   /**
    * \brief A method for retrieving all available IO signals on the controller.
@@ -371,7 +371,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getIOSignal(const std::string iosignal);
+  RWSResult getIOSignal(const std::string& iosignal);
 
   /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.
@@ -380,7 +380,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getMechanicalUnitJointTarget(const std::string mechunit);
+  RWSResult getMechanicalUnitJointTarget(const std::string& mechunit);
 
   /**
    * \brief A method for retrieving the current robtarget values of a mechanical unit.
@@ -389,7 +389,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getMechanicalUnitRobTarget(const std::string mechunit);
+  RWSResult getMechanicalUnitRobTarget(const std::string& mechunit);
 
   /**
    * \brief A method for retrieving the data of a RAPID symbol.
@@ -398,7 +398,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getRAPIDSymbolData(const RAPIDResource resource);
+  RWSResult getRAPIDSymbolData(const RAPIDResource& resource);
 
   /**
    * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
@@ -408,7 +408,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getRAPIDSymbolData(const RAPIDResource resource, RAPIDSymbolDataAbstract* p_data);
+  RWSResult getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract* p_data);
 
   /**
    * \brief A method for retrieving the properties of a RAPID symbol.
@@ -417,7 +417,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getRAPIDSymbolProperties(const RAPIDResource resource);
+  RWSResult getRAPIDSymbolProperties(const RAPIDResource& resource);
 
   /**
    * \brief A method for retrieving the execution state of RAPID.
@@ -433,7 +433,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getRAPIDModulesInfo(const std::string task);
+  RWSResult getRAPIDModulesInfo(const std::string& task);
 
   /**
    * \brief A method for retrieving the RAPID tasks that are defined in the robot controller system.
@@ -471,7 +471,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult setIOSignal(const std::string iosignal, const std::string value);
+  RWSResult setIOSignal(const std::string& iosignal, const std::string& value);
 
   /**
    * \brief A method for setting the data of a RAPID symbol.
@@ -481,7 +481,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult setRAPIDSymbolData(const RAPIDResource resource, const std::string data);
+  RWSResult setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data);
 
   /**
    * \brief A method for setting the data of a RAPID symbol (based on the provided struct representing the RAPID data).
@@ -491,7 +491,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult setRAPIDSymbolData(const RAPIDResource resource, RAPIDSymbolDataAbstract& data);
+  RWSResult setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for starting RAPID execution in the robot controller.
@@ -538,7 +538,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getFile(const FileResource resource, std::string* p_file_content);
+  RWSResult getFile(const FileResource& resource, std::string* p_file_content);
 
   /**
    * \brief A method for uploading a file to the robot controller.
@@ -548,7 +548,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult uploadFile(const FileResource resource, const std::string file_content);
+  RWSResult uploadFile(const FileResource& resource, const std::string& file_content);
 
   /**
    * \brief A method for deleting a file from the robot controller.
@@ -557,7 +557,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult deleteFile(const FileResource resource);
+  RWSResult deleteFile(const FileResource& resource);
 
   /**
    * \brief A method for starting for a subscription.
@@ -566,7 +566,7 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult startSubscription(const SubscriptionResources resources);
+  RWSResult startSubscription(const SubscriptionResources& resources);
 
   /**
    * \brief A method for waiting for a subscription event.
@@ -613,9 +613,9 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult registerLocalUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
-                              std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
-                              std::string location = SystemConstants::General::EXTERNAL_LOCATION);
+  RWSResult registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+                              const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
+                              const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
   /**
    * \brief A method for registering a user as remote.
@@ -626,9 +626,9 @@ public:
    *
    * \return RWSResult containing the result.
    */
-  RWSResult registerRemoteUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
-                               std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
-                               std::string location = SystemConstants::General::EXTERNAL_LOCATION);
+  RWSResult registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+                               const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
+                               const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
   /**
    * \brief Method for parsing a communication result into a XML document.
