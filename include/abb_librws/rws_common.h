@@ -744,25 +744,6 @@ public:
   TriBool(const bool initial_value) : value(initial_value ? TRUE_VALUE : FALSE_VALUE) {}
 
   /**
-   * \brief Operator for copy assignment.
-   *
-   * \param rhs for right hand side value.
-   *
-   * \return TriBool& self.
-   */
-  TriBool& operator=(const TriBool& other)
-  {
-    if (&other == this)
-    {
-      return *this;
-    }
-
-    value = other.value;
-
-    return *this;
-  }
-
-  /**
    * \brief Operator for assignment.
    *
    * \param rhs for right hand side value.
