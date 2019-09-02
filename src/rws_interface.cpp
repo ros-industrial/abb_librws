@@ -99,7 +99,7 @@ std::vector<RWSInterface::RobotWareOptionInfo> RWSInterface::getPresentRobotWare
                                            xmlFindTextContent(node_list.at(i+1), XMLAttributes::CLASS_VALUE)));
     }
   }
-  
+
   return result;
 }
 
@@ -129,7 +129,7 @@ bool RWSInterface::getMechanicalUnitJointTarget(const std::string mechunit, Join
     if (result)
     {
       std::stringstream ss;
-      
+
       ss << "[["
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_1")) << ","
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_2")) << ","
@@ -163,7 +163,7 @@ bool RWSInterface::getMechanicalUnitRobTarget(const std::string mechunit, RobTar
     if (result)
     {
       std::stringstream ss;
-      
+
       ss << "[["
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "x")) << ","
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "y")) << ","
@@ -209,12 +209,12 @@ bool RWSInterface::startRAPIDExecution()
 {
   return rws_client_.startRAPIDExecution().success;
 }
-  
+
 bool RWSInterface::stopRAPIDExecution()
 {
   return rws_client_.stopRAPIDExecution().success;
 }
-  
+
 bool RWSInterface::resetRAPIDProgramPointer()
 {
   return rws_client_.resetRAPIDProgramPointer().success;

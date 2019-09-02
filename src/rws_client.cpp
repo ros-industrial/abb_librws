@@ -97,7 +97,7 @@ void RWSClient::SubscriptionResources::add(const std::string resource_uri, const
 /***********************************************************************************************************************
  * Class definitions: RWSClient
  */
-  
+
 /************************************************************
  * Primary methods
  */
@@ -160,7 +160,7 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string mec
 RWSClient::RWSResult RWSClient::getRAPIDExecution()
 {
   uri_ = Resources::RW_RAPID_EXECUTION;
-  
+
   evaluation_conditions_.reset();
   evaluation_conditions_.parse_message_into_xml = true;
   evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
@@ -242,7 +242,7 @@ RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource resource,
   if (p_data)
   {
     RWSResult temp_result = getRAPIDSymbolProperties(resource);
-    
+
     if (temp_result.success)
     {
       data_type = xmlFindTextContent(temp_result.p_xml_document, XMLAttributes::CLASS_DATTYP);
@@ -526,14 +526,14 @@ RWSClient::RWSResult RWSClient::registerLocalUser(std::string username,
              "&application=" + application +
              "&location=" + location +
              "&ulocale=" + SystemConstants::General::LOCAL;
-  
+
   evaluation_conditions_.reset();
   evaluation_conditions_.parse_message_into_xml = false;
   evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
   evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
 
   RWSResult result = evaluatePOCOResult(httpPost(uri_, content_), evaluation_conditions_);
-  
+
   return result;
 }
 
@@ -647,9 +647,9 @@ std::string RWSClient::getLogText(const bool verbose)
   {
     return "";
   }
-  
+
   std::stringstream ss;
-  
+
   for (size_t i = 0; i < log_.size(); ++i)
   {
     std::stringstream temp;

@@ -128,21 +128,21 @@ public:
        * Note: Requires that the EGM option exists in the controller system.
        */
       static const std::string EGM_START_JOINT;
-        
+
       /**
        * \brief IO signal for requesting start of EGM pose motions (i.e. EGM pose mode).
        *
        * Note: Requires that the EGM option exists in the controller system.
        */
       static const std::string EGM_START_POSE;
-        
+
       /**
        * \brief IO signal for requesting stop of EGM motions.
        *
        * Note: Requires that the EGM option exists in the controller system.
        */
       static const std::string EGM_STOP;
-        
+
       /**
        * \brief Prefix for IO signals, used for checking if a mechanical unit is stationary or not.
        */
@@ -193,7 +193,7 @@ public:
          * Note: Requires that the EGM option exists in the controller system.
          */
         static const std::string T_ROB_EGM;
-        
+
         /**
          * \brief RAPID module managing the StateMachine AddIn's RAPID execution.
          */
@@ -382,7 +382,7 @@ public:
      *       Else: Raw corrections will be used.
      */
     RAPIDBool use_filtering;
-  
+
     /**
      * \brief Communication timeout [s].
      */
@@ -416,7 +416,7 @@ public:
      * \brief The tool to use.
      */
     ToolData tool;
-    
+
     /**
      * \brief The work object to use.
      */
@@ -438,18 +438,18 @@ public:
 
     /**
      * \brief Condition value [deg or mm] for when the EGM correction is considered to be finished.
-     * 
+     *
      * E.g.: for joint mode, then the condition is fulfilled when the joints are within [-cond_min_max, cond_min_max].
      */
     RAPIDNum cond_min_max;
-    
+
     /**
      * \brief Low pass filer bandwidth of the EGM controller [Hz].
      */
     RAPIDNum lp_filter;
-    
+
     /**
-     * \brief Sample rate for the EGM communication [ms]. 
+     * \brief Sample rate for the EGM communication [ms].
      *
      * Note: Only multiples of 4 are allowed (i.e. 4, 8, 16, etc...).
      */
@@ -457,7 +457,7 @@ public:
 
     /**
      * \brief Maximum admitted joint speed change [deg/s]:
-     * 
+     *
      * Note: Take care if setting this higher than the lowest max speed [deg/s],
      *       out of all the axis max speeds (found in the robot's data sheet).
      */
@@ -486,7 +486,7 @@ public:
      * \brief Condition time [s].
      */
     RAPIDNum cond_time;
-    
+
     /**
      * \brief Ramp in time [s].
      */
@@ -519,7 +519,7 @@ public:
     {
       components_.push_back(&ramp_out_time);
     }
-  
+
     /**
      * \brief Desired duration for ramping out EGM motions [s].
      */
@@ -562,23 +562,23 @@ public:
      * \brief Settings for EGMSetupUC instructions.
      */
     EGMSetupUCSettings setup_uc;
-    
+
     /**
      * \brief Settings for EGMAct instructions.
      */
     EGMActivateSettings activate;
-    
+
     /**
      * \brief Settings for EGMRun instructions.
      */
     EGMRunSettings run;
-  
+
     /**
      * \brief Settings for EGMStop instructions.
      */
     EGMStopSettings stop;
   };
-  
+
   /**
    * \brief Representation of a custom RAPID record, for settings to SmartGripper RAPID instructions.
    */
@@ -605,13 +605,13 @@ public:
      * \brief Expected force [N] used for gripping.
      */
     RAPIDNum hold_force;
-    
+
     /**
      * \brief The physical limit [mm] (if the gripper should operate in a smaller travel range).
      */
     RAPIDNum physical_limit;
   };
-  
+
   /**
    * \brief A constructor.
    *
@@ -625,7 +625,7 @@ public:
                SystemConstants::General::DEFAULT_PASSWORD),
   services_(this)
   {}
-  
+
   /**
    * \brief A constructor.
    *
@@ -768,7 +768,7 @@ private:
      * \brief Watchdog services provided by the StateMachine AddIn.
      */
     const Watchdog& watchdog() const { return watchdog_; }
-    
+
   private:
     /**
      * \brief Representation of the EGM services provided by the StateMachine AddIn.
@@ -973,7 +973,7 @@ private:
        * \return bool indicating if the communication was successful or not.
        */
       bool setMoveSpeed(const std::string task, SpeedData speed_data) const;
-      
+
       /**
        * \brief Set the routine name specifying which routine to run.
        *
@@ -997,7 +997,7 @@ private:
        */
       RWSStateMachineInterface* p_rws_interface_;
     };
-    
+
     /**
      * \brief Representation of the SmartGripper services provided by the StateMachine AddIn.
      *
@@ -1012,7 +1012,7 @@ private:
        * \param p_rws_interface for the RWS interface instance.
        */
       SG(RWSStateMachineInterface* p_rws_interface) : p_rws_interface_(p_rws_interface) {}
-      
+
       /**
        * \brief Request turning off both SmartGrippers' first blow.
        *
@@ -1047,7 +1047,7 @@ private:
        * \return bool indicating if the communication was successful or not.
        */
       bool dualCalibrate() const;
-      
+
       /**
        * \brief Get the settings for both SmartGrippers' RAPID instructions.
        *
@@ -1057,21 +1057,21 @@ private:
        * \return bool indicating if the communication was successful or not.
        */
       bool dualGetSettings(SGSettings* p_left_settings, SGSettings* p_right_settings) const;
-            
+
       /**
        * \brief Request inwards grip of both SmartGrippers.
        *
        * \return bool indicating if the communication was successful or not.
        */
       bool dualGripIn() const;
-      
+
       /**
        * \brief Request outwards grip of both SmartGrippers.
        *
        * \return bool indicating if the communication was successful or not.
        */
       bool dualGripOut() const;
-      
+
       /**
        * \brief Request initialization of both SmartGrippers.
        *
@@ -1161,7 +1161,7 @@ private:
        * \return bool indicating if the communication was successful or not.
        */
       bool leftCalibrate() const;
-      
+
       /**
        * \brief Get the settings for the left SmartGripper's RAPID instructions.
        *
@@ -1170,21 +1170,21 @@ private:
        * \return bool indicating if the communication was successful or not.
        */
       bool leftGetSettings(SGSettings* p_settings) const;
-            
+
       /**
        * \brief Request inwards grip of the left SmartGripper.
        *
        * \return bool indicating if the communication was successful or not.
        */
       bool leftGripIn() const;
-      
+
       /**
        * \brief Request outwards grip of the left SmartGripper.
        *
        * \return bool indicating if the communication was successful or not.
        */
       bool leftGripOut() const;
-      
+
       /**
        * \brief Request initialization of the left SmartGripper.
        *
@@ -1272,7 +1272,7 @@ private:
        * \return bool indicating if the communication was successful or not.
        */
       bool rightCalibrate() const;
-      
+
       /**
        * \brief Get the settings for the right SmartGripper's RAPID instructions.
        *
@@ -1281,21 +1281,21 @@ private:
        * \return bool indicating if the communication was successful or not.
        */
       bool rightGetSettings(SGSettings* p_settings) const;
-            
+
       /**
        * \brief Request inwards grip of the right SmartGripper.
        *
        * \return bool indicating if the communication was successful or not.
        */
       bool rightGripIn() const;
-      
+
       /**
        * \brief Request outwards grip of the right SmartGripper.
        *
        * \return bool indicating if the communication was successful or not.
        */
       bool rightGripOut() const;
-      
+
       /**
        * \brief Request initialization of the right SmartGripper.
        *

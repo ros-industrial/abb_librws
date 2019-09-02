@@ -61,7 +61,7 @@ const std::string IOSignals::RUN_RAPID_ROUTINE  = "RUN_RAPID_ROUTINE";
 const std::string IOSignals::RUN_SG_ROUTINE     = "RUN_SG_ROUTINE";
 const std::string IOSignals::WD_EXTERNAL_STATUS = "WD_EXTERNAL_STATUS";
 const std::string IOSignals::WD_STOP_REQUEST    = "WD_STOP_REQUEST";
-  
+
 const std::string Modules::T_ROB_EGM      = "TRobEGM";
 const std::string Modules::T_ROB_MAIN     = "TRobMain";
 const std::string Modules::T_ROB_RAPID    = "TRobRAPID";
@@ -209,7 +209,7 @@ States RWSStateMachineInterface::Services::Main::getCurrentState(const std::stri
   {
     result = STATE_UNKNOWN;
   }
- 
+
   return result;
 }
 
@@ -240,10 +240,10 @@ TriBool RWSStateMachineInterface::Services::Main::isStationary(const std::string
 
   return result;
 }
- 
 
 
- 
+
+
 /***********************************************************************************************************************
  * Class definitions: RWSStateMachineInterface::Services::RAPID
  */
@@ -688,7 +688,7 @@ bool RWSStateMachineInterface::Services::Utility::getCalibrationTarget(const std
 
 
 
- 
+
 /***********************************************************************************************************************
  * Class definitions: RWSStateMachineInterface::Services::Watchdog
  */

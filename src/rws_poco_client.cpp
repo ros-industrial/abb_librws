@@ -162,7 +162,7 @@ std::string POCOClient::POCOResult::mapWebSocketOpcode() const
     case WebSocket::FRAME_OP_PONG:
       result = "FRAME_OP_PONG";
     break;
-    
+
     default:
       result = "FRAME_OP_UNDEFINED";
     break;
@@ -174,7 +174,7 @@ std::string POCOClient::POCOResult::mapWebSocketOpcode() const
 std::string POCOClient::POCOResult::toString(const bool verbose, const size_t indent) const
 {
   std::stringstream ss;
-  
+
   std::string seperator = (indent == 0 ? " | " : "\n" + std::string(indent, ' '));
 
   ss << "General status: " << mapGeneralStatus();
@@ -344,7 +344,10 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri,
 
       p_websocket_->setReceiveTimeout(Poco::Timespan(timeout));
     }
-      
+
+    p_websocket_ = new WebSocket(http_client_session_, request, response);
+    p_websocket_->setReceiveTimeout(Poco::Timespan(timeout));
+
     result.addHTTPResponseInfo(response);
     result.status = POCOResult::OK;
   }
