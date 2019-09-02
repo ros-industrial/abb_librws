@@ -334,8 +334,19 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri,
   try
   {
     result.addHTTPRequestInfo(request);
-    p_websocket_ = new WebSocket(http_client_session_, request, response);
-    p_websocket_->setReceiveTimeout(Poco::Timespan(timeout));
+    {
+      // We must have atleast websocket_connect_mutext_,
+      // but if a connection already exists, we must also have websocket_use_mutex_.
+      ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
+      if (webSocketExist()) {
+        ScopedLock<Mutex> use_lock(websocket_use_mutex_);
+        p_websocket_ = new WebSocket(http_client_session_, request, response);
+      } else {
+        p_websocket_ = new WebSocket(http_client_session_, request, response);
+      }
+
+      p_websocket_->setReceiveTimeout(Poco::Timespan(timeout));
+    }
       
     result.addHTTPResponseInfo(response);
     result.status = POCOResult::OK;
@@ -372,7 +383,7 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri,
 POCOClient::POCOResult POCOClient::webSocketRecieveFrame()
 {
   // Lock the object's mutex. It is released when the method goes out of scope.
-  ScopedLock<Mutex> lock(websocket_mutex_);
+  ScopedLock<Mutex> lock(websocket_use_mutex_);
 
   // Result of the communication.
   POCOResult result;
@@ -449,6 +460,24 @@ POCOClient::POCOResult POCOClient::webSocketRecieveFrame()
   }
 
   return result;
+}
+
+void POCOClient::webSocketClose() {
+  // Make sure nobody is connecting while we're closing.
+  ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
+
+  // Make sure there is actually a connection to close.
+  if (!webSocketExist()) {
+    return;
+  }
+
+  // Close the socket. This should make webSocketReceiveFrame() return asap.
+  p_websocket_->close();
+
+  // Also acquire the websocket lock before invalidating the pointer,
+  // or we will break running calls to webSocketRecieveFrame().
+  ScopedLock<Mutex> use_lock(websocket_use_mutex_);
+  p_websocket_ = Poco::SharedPtr<Poco::Net::WebSocket>();
 }
 
 /************************************************************

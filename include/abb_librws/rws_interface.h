@@ -513,6 +513,16 @@ public:
   bool endSubscription();
 
   /**
+   * \brief Close the active subscription connection.
+   *
+   * This will cause waitForSubscriptionEvent() to return or throw.
+   * It does not delete the subscription from the controller.
+   *
+   * This function blocks until an active waitForSubscriptionEvent() has finished.
+   */
+  void closeSubscription();
+
+  /**
    * \brief A method for registering a user as local.
    *
    * \param username specifying the user name.

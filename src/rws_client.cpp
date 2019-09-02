@@ -490,6 +490,10 @@ RWSClient::RWSResult RWSClient::endSubscription()
   return result;
 }
 
+void RWSClient::closeSubscription() {
+  webSocketClose();
+}
+
 RWSClient::RWSResult RWSClient::logout()
 {
   uri_ = Resources::LOGOUT;
