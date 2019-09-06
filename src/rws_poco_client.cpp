@@ -471,8 +471,8 @@ void POCOClient::webSocketClose() {
     return;
   }
 
-  // Close the socket. This should make webSocketReceiveFrame() return asap.
-  p_websocket_->close();
+  // Shut down the socket. This should make webSocketReceiveFrame() return as soon as possible.
+  p_websocket_->shutdown();
 
   // Also acquire the websocket lock before invalidating the pointer,
   // or we will break running calls to webSocketRecieveFrame().
