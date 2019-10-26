@@ -335,18 +335,12 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri,
   {
     result.addHTTPRequestInfo(request);
     {
-      // We must have at least websocket_connect_mutext_,
-      // but if a connection already exists, we must also have websocket_use_mutex_.
+      // We must have at least websocket_connect_mutext_.
+      // If a connection already exists, we must also have websocket_use_mutex_.
+      // If not, nobody should have the mutex anyway, so we should get it immediately.
       ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
-      if (webSocketExist())
-      {
-        ScopedLock<Mutex> use_lock(websocket_use_mutex_);
-        p_websocket_ = new WebSocket(http_client_session_, request, response);
-      }
-      else
-      {
-        p_websocket_ = new WebSocket(http_client_session_, request, response);
-      }
+      ScopedLock<Mutex> use_lock(websocket_use_mutex_);
+      p_websocket_ = new WebSocket(http_client_session_, request, response);
 
       p_websocket_->setReceiveTimeout(Poco::Timespan(timeout));
     }
