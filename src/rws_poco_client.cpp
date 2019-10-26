@@ -335,13 +335,16 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string uri,
   {
     result.addHTTPRequestInfo(request);
     {
-      // We must have atleast websocket_connect_mutext_,
+      // We must have at least websocket_connect_mutext_,
       // but if a connection already exists, we must also have websocket_use_mutex_.
       ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
-      if (webSocketExist()) {
+      if (webSocketExist())
+      {
         ScopedLock<Mutex> use_lock(websocket_use_mutex_);
         p_websocket_ = new WebSocket(http_client_session_, request, response);
-      } else {
+      }
+      else
+      {
         p_websocket_ = new WebSocket(http_client_session_, request, response);
       }
 
@@ -462,12 +465,14 @@ POCOClient::POCOResult POCOClient::webSocketRecieveFrame()
   return result;
 }
 
-void POCOClient::webSocketClose() {
+void POCOClient::webSocketShutdown()
+{
   // Make sure nobody is connecting while we're closing.
   ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
 
   // Make sure there is actually a connection to close.
-  if (!webSocketExist()) {
+  if (!webSocketExist())
+  {
     return;
   }
 

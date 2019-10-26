@@ -374,8 +374,9 @@ bool RWSInterface::endSubscription()
   return rws_client_.endSubscription().success;
 }
 
-void RWSInterface::closeSubscription() {
-  rws_client_.webSocketClose();
+void RWSInterface::forceCloseSubscription()
+{
+  rws_client_.webSocketShutdown();
 }
 
 bool RWSInterface::registerLocalUser(std::string username,

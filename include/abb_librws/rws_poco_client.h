@@ -346,17 +346,17 @@ public:
   POCOResult webSocketRecieveFrame();
 
   /**
-   * \brief Close the websocket connection.
+   * \brief Forcibly shut down the websocket connection.
    *
-   * The connection is closed immediately.
+   * The connection is shut down immediately.
    * Subsequently, the function will block until a current call to webSocketRecieveFrame() has finished,
    * before cleaning up the local state.
    *
    * Note that since mutexes do not guarantee the order of acquisition for multiple contenders,
-   * it is undefined how many calls to webSocketRecieveFrame() will still attempt to use the closed
-   * connection before the local state is cleaned. Those invocation will raise a runtime error.
+   * it is undefined how many calls to webSocketRecieveFrame() will still attempt to use the shut down
+   * connection before the local state is cleaned. Those invocation will throw a runtime error.
    */
-  void webSocketClose();
+  void webSocketShutdown();
 
   /**
    * \brief A method for retrieving a substring in a string.
