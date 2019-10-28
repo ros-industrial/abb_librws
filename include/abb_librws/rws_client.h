@@ -574,6 +574,21 @@ public:
    * \return RWSResult containing the result.
    */
   RWSResult endSubscription();
+
+  /**
+   * \brief Force close the active subscription connection.
+   *
+   * This will cause waitForSubscriptionEvent() to return or throw.
+   * It does not delete the subscription from the controller.
+   *
+   * The preferred way to close the subscription is to request the robot controller to end it via
+   * endSubscription(). This function can be used to force the connection to close immediately in
+   * case the robot controller is not responding.
+   *
+   * This function blocks until an active waitForSubscriptionEvent() has finished.
+   *
+   */
+  void forceCloseSubscription();
   
   /**
    * \brief A method for logging out the currently active RWS session.

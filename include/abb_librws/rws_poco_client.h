@@ -346,6 +346,19 @@ public:
   POCOResult webSocketRecieveFrame();
 
   /**
+   * \brief Forcibly shut down the websocket connection.
+   *
+   * The connection is shut down immediately.
+   * Subsequently, the function will block until a current call to webSocketRecieveFrame() has finished,
+   * before cleaning up the local state.
+   *
+   * Note that since mutexes do not guarantee the order of acquisition for multiple contenders,
+   * it is undefined how many calls to webSocketRecieveFrame() will still attempt to use the shut down
+   * connection before the local state is cleaned. Those invocation will throw a runtime error.
+   */
+  void webSocketShutdown();
+
+  /**
    * \brief A method for retrieving a substring in a string.
    *
    * \param whole_string for the string containing the substring.
@@ -421,9 +434,27 @@ private:
   Poco::Mutex http_mutex_;
 
   /**
-   * \brief A mutex for protecting the client's WebSocket resources.
+   * \brief A mutex for protecting the client's WebSocket pointer.
+   *
+   * This mutex must be held while setting or invalidating the p_websocket_ member.
+   * Note that the websocket_use_mutex_ must also be held while invalidating the pointer,
+   * since someone may be using it otherwise.
+   *
+   * If acquiring both websocket_connect_mutex_ and websocket_use_mutex_,
+   * the connect mutex must be acquired first.
    */
-  Poco::Mutex websocket_mutex_;
+  Poco::Mutex websocket_connect_mutex_;
+
+  /**
+   * \brief A mutex for protecting the client's WebSocket resources.
+   *
+   * This mutex must be held while using the p_websocket_ member,
+   * and while invalidating the pointer.
+   *
+   * If acquiring both websocket_connect_mutex_ and websocket_use_mutex_,
+   * the connect mutex must be acquired first.
+   */
+  Poco::Mutex websocket_use_mutex_;
 
   /**
    * \brief HTTP credentials for the remote server's access authentication process.
