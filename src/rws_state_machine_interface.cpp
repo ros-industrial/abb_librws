@@ -264,7 +264,8 @@ bool RWSStateMachineInterface::Services::RAPID::runCallByVar(const std::string& 
          setRoutineName(task, Procedures::RUN_CALL_BY_VAR) && signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runModuleLoad(const std::string& task, const std::string& file_path) const
+bool RWSStateMachineInterface::Services::RAPID::runModuleLoad(const std::string& task,
+                                                              const std::string& file_path) const
 {
   RAPIDString temp_file_path(file_path);
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MODULE_FILE_PATH_INPUT, temp_file_path) &&
@@ -279,7 +280,8 @@ bool RWSStateMachineInterface::Services::RAPID::runModuleUnload(const std::strin
          setRoutineName(task, Procedures::RUN_MODULE_UNLOAD) && signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runMoveAbsJ(const std::string& task, const JointTarget& joint_target) const
+bool RWSStateMachineInterface::Services::RAPID::runMoveAbsJ(const std::string& task,
+                                                            const JointTarget& joint_target) const
 {
   return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MOVE_JOINT_TARGET_INPUT, joint_target) &&
          setRoutineName(task, Procedures::RUN_MOVE_ABS_J) && signalRunRAPIDRoutine();
@@ -396,7 +398,8 @@ bool RWSStateMachineInterface::Services::SG::dualMoveTo(const float left_positio
          signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualSetSettings(const SGSettings& left_settings, const SGSettings& right_settings) const
+bool RWSStateMachineInterface::Services::SG::dualSetSettings(const SGSettings& left_settings,
+                                                             const SGSettings& right_settings) const
 {
   return setSettings(SystemConstants::RAPID::TASK_ROB_L, left_settings) &&
          setSettings(SystemConstants::RAPID::TASK_ROB_R, right_settings);

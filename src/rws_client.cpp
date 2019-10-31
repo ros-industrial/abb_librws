@@ -71,7 +71,8 @@ void RWSClient::SubscriptionResources::addIOSignal(const std::string& iosignal, 
   add(resource_uri, priority);
 }
 
-void RWSClient::SubscriptionResources::addRAPIDPersistantVariable(const RAPIDResource& resource, const Priority priority)
+void RWSClient::SubscriptionResources::addRAPIDPersistantVariable(const RAPIDResource& resource,
+                                                                  const Priority priority)
 {
   std::string resource_uri = Resources::RW_RAPID_SYMBOL_DATA_RAPID;
   resource_uri += "/";
