@@ -358,6 +358,13 @@ public:
   RWSResult getConfigurationInstances(const std::string topic, const std::string type);
 
   /**
+   * \brief A method for retrieving all available IO signals on the controller.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult getIOSignals();
+
+  /**
    * \brief A method for retrieving the value of an IO signal.
    * 
    * \param iosignal for the IO signal's name.

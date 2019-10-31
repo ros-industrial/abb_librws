@@ -113,6 +113,17 @@ RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string topi
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
+RWSClient::RWSResult RWSClient::getIOSignals()
+{
+  std::string const & uri = SystemConstants::RWS::Resources::RW_IOSYSTEM_SIGNALS;
+
+  evaluation_conditions_.reset();
+  evaluation_conditions_.parse_message_into_xml = true;
+  evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri), evaluation_conditions_);
+}
+
 RWSClient::RWSResult RWSClient::getIOSignal(const std::string iosignal)
 {
   uri_ = generateIOSignalPath(iosignal);
