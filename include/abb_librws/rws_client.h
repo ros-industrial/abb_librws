@@ -777,34 +777,9 @@ private:
   std::deque<POCOResult> log_;
 
   /**
-   * \brief Container for building the request URIs.
-   */
-  std::string uri_;
-
-  /**
-   * \brief Container for building the request content.
-   */
-  std::string content_;
-
-  /**
    * \brief A subscription group id.
    */
   std::string subscription_group_id_;
-
-  /**
-   * \brief Container for building the subscription content.
-   */
-  std::stringstream subscription_content_;
-
-  /**
-   * \brief Container for specifying conditions for evaluating the result of a POCO communication.
-   */
-  EvaluationConditions evaluation_conditions_;
-
-  /**
-   * \brief A Document Object Model parser, for parsing into a XML document.
-   */
-  Poco::XML::DOMParser xml_parser_;
 };
 
 } // end namespace rws
