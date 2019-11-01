@@ -60,7 +60,7 @@ typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
  * Primary methods
  */
 
-void RWSClient::SubscriptionResources::addIOSignal(const std::string iosignal, const Priority priority)
+void RWSClient::SubscriptionResources::addIOSignal(const std::string& iosignal, const Priority priority)
 {
   std::string resource_uri = Resources::RW_IOSYSTEM_SIGNALS;
   resource_uri += "/";
@@ -71,7 +71,8 @@ void RWSClient::SubscriptionResources::addIOSignal(const std::string iosignal, c
   add(resource_uri, priority);
 }
 
-void RWSClient::SubscriptionResources::addRAPIDPersistantVariable(const RAPIDResource resource, const Priority priority)
+void RWSClient::SubscriptionResources::addRAPIDPersistantVariable(const RAPIDResource& resource,
+                                                                  const Priority priority)
 {
   std::string resource_uri = Resources::RW_RAPID_SYMBOL_DATA_RAPID;
   resource_uri += "/";
@@ -86,7 +87,7 @@ void RWSClient::SubscriptionResources::addRAPIDPersistantVariable(const RAPIDRes
   add(resource_uri, priority);
 }
 
-void RWSClient::SubscriptionResources::add(const std::string resource_uri, const Priority priority)
+void RWSClient::SubscriptionResources::add(const std::string& resource_uri, const Priority priority)
 {
   resources_.push_back(SubscriptionResource(resource_uri, priority));
 }
@@ -97,12 +98,12 @@ void RWSClient::SubscriptionResources::add(const std::string resource_uri, const
 /***********************************************************************************************************************
  * Class definitions: RWSClient
  */
-  
+
 /************************************************************
  * Primary methods
  */
 
-RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string topic, const std::string type)
+RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string& topic, const std::string& type)
 {
   uri_ = generateConfigurationPath(topic, type) + Resources::INSTANCES;
 
@@ -124,7 +125,7 @@ RWSClient::RWSResult RWSClient::getIOSignals()
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::getIOSignal(const std::string iosignal)
+RWSClient::RWSResult RWSClient::getIOSignal(const std::string& iosignal)
 {
   uri_ = generateIOSignalPath(iosignal);
 
@@ -135,7 +136,7 @@ RWSClient::RWSResult RWSClient::getIOSignal(const std::string iosignal)
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& mechunit)
 {
   uri_ = generateMechanicalUnitPath(mechunit) + Resources::JOINTTARGET;
 
@@ -146,7 +147,7 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string m
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit)
 {
   uri_ = generateMechanicalUnitPath(mechunit) + Resources::ROBTARGET;
 
@@ -160,7 +161,7 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string mec
 RWSClient::RWSResult RWSClient::getRAPIDExecution()
 {
   uri_ = Resources::RW_RAPID_EXECUTION;
-  
+
   evaluation_conditions_.reset();
   evaluation_conditions_.parse_message_into_xml = true;
   evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
@@ -168,7 +169,7 @@ RWSClient::RWSResult RWSClient::getRAPIDExecution()
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::getRAPIDModulesInfo(const std::string task)
+RWSClient::RWSResult RWSClient::getRAPIDModulesInfo(const std::string& task)
 {
   uri_ = Resources::RW_RAPID_MODULES + "?" + Queries::TASK + task;
 
@@ -223,7 +224,7 @@ RWSClient::RWSResult RWSClient::getPanelOperationMode()
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource resource)
+RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource)
 {
   uri_ = generateRAPIDDataPath(resource);
 
@@ -234,7 +235,7 @@ RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource resource)
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource resource, RAPIDSymbolDataAbstract* p_data)
+RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract* p_data)
 {
   RWSResult result;
   std::string data_type;
@@ -242,7 +243,7 @@ RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource resource,
   if (p_data)
   {
     RWSResult temp_result = getRAPIDSymbolProperties(resource);
-    
+
     if (temp_result.success)
     {
       data_type = xmlFindTextContent(temp_result.p_xml_document, XMLAttributes::CLASS_DATTYP);
@@ -272,7 +273,7 @@ RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource resource,
   return result;
 }
 
-RWSClient::RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource resource)
+RWSClient::RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource& resource)
 {
   uri_ = generateRAPIDPropertiesPath(resource);
 
@@ -283,7 +284,7 @@ RWSClient::RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource res
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::setIOSignal(const std::string iosignal, const std::string value)
+RWSClient::RWSResult RWSClient::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   uri_ = generateIOSignalPath(iosignal) + "?" + Queries::ACTION_SET;
   content_ = Identifiers::LVALUE + "=" + value;
@@ -295,7 +296,7 @@ RWSClient::RWSResult RWSClient::setIOSignal(const std::string iosignal, const st
   return evaluatePOCOResult(httpPost(uri_, content_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource resource, const std::string data)
+RWSClient::RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data)
 {
   uri_ = generateRAPIDDataPath(resource) + "?" + Queries::ACTION_SET;
   content_ = Identifiers::VALUE + "=" + data;
@@ -307,7 +308,7 @@ RWSClient::RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource resource,
   return evaluatePOCOResult(httpPost(uri_, content_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource resource, RAPIDSymbolDataAbstract& data)
+RWSClient::RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
 {
   return setRAPIDSymbolData(resource, data.constructString());
 }
@@ -371,7 +372,7 @@ RWSClient::RWSResult RWSClient::setMotorsOff()
   return evaluatePOCOResult(httpPost(uri_, content_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::getFile(const FileResource resource, std::string* p_file_content)
+RWSClient::RWSResult RWSClient::getFile(const FileResource& resource, std::string* p_file_content)
 {
   RWSResult rws_result;
   POCOClient::POCOResult poco_result;
@@ -396,7 +397,7 @@ RWSClient::RWSResult RWSClient::getFile(const FileResource resource, std::string
   return rws_result;
 }
 
-RWSClient::RWSResult RWSClient::uploadFile(const FileResource resource, const std::string file_content)
+RWSClient::RWSResult RWSClient::uploadFile(const FileResource& resource, const std::string& file_content)
 {
   uri_ = generateFilePath(resource);
   content_ = file_content;
@@ -409,7 +410,7 @@ RWSClient::RWSResult RWSClient::uploadFile(const FileResource resource, const st
   return evaluatePOCOResult(httpPut(uri_, content_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::deleteFile(const FileResource resource)
+RWSClient::RWSResult RWSClient::deleteFile(const FileResource& resource)
 {
   uri_ = generateFilePath(resource);
 
@@ -421,7 +422,7 @@ RWSClient::RWSResult RWSClient::deleteFile(const FileResource resource)
   return evaluatePOCOResult(httpDelete(uri_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::startSubscription(SubscriptionResources resources)
+RWSClient::RWSResult RWSClient::startSubscription(const SubscriptionResources& resources)
 {
   RWSResult result;
 
@@ -431,7 +432,7 @@ RWSClient::RWSResult RWSClient::startSubscription(SubscriptionResources resource
 
     // Generate content for a subscription HTTP post request.
     subscription_content_.str(std::string());
-    for (int i = 0; i < temp.size(); ++i)
+    for (std::size_t i = 0; i < temp.size(); ++i)
     {
       subscription_content_ << "resources=" << i
                             << "&"
@@ -517,29 +518,29 @@ RWSClient::RWSResult RWSClient::logout()
   return evaluatePOCOResult(httpGet(uri_), evaluation_conditions_);
 }
 
-RWSClient::RWSResult RWSClient::registerLocalUser(std::string username,
-                                                  std::string application,
-                                                  std::string location)
+RWSClient::RWSResult RWSClient::registerLocalUser(const std::string& username,
+                                                  const std::string& application,
+                                                  const std::string& location)
 {
   uri_ = Services::USERS;
   content_ = "username=" + username +
              "&application=" + application +
              "&location=" + location +
              "&ulocale=" + SystemConstants::General::LOCAL;
-  
+
   evaluation_conditions_.reset();
   evaluation_conditions_.parse_message_into_xml = false;
   evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
   evaluation_conditions_.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
 
   RWSResult result = evaluatePOCOResult(httpPost(uri_, content_), evaluation_conditions_);
-  
+
   return result;
 }
 
-RWSClient::RWSResult RWSClient::registerRemoteUser(std::string username,
-                                                   std::string application,
-                                                   std::string location)
+RWSClient::RWSResult RWSClient::registerRemoteUser(const std::string& username,
+                                                   const std::string& application,
+                                                   const std::string& location)
 {
   uri_ = Services::USERS;
   content_ = "username=" + username +
@@ -647,9 +648,9 @@ std::string RWSClient::getLogText(const bool verbose)
   {
     return "";
   }
-  
+
   std::stringstream ss;
-  
+
   for (size_t i = 0; i < log_.size(); ++i)
   {
     std::stringstream temp;

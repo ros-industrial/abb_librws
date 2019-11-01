@@ -147,7 +147,7 @@ void RAPIDAtomic<RAPID_STRING>::parseString(const std::string& value_string)
  * Primary methods
  */
 
-RAPIDRecord::RAPIDRecord(const std::string record_type_name)
+RAPIDRecord::RAPIDRecord(const std::string& record_type_name)
 :
 record_type_name_(record_type_name)
 {}
@@ -214,7 +214,7 @@ RAPIDRecord& RAPIDRecord::operator=(const RAPIDRecord& other)
  * Auxiliary methods
  */
 
-unsigned int RAPIDRecord::countCharInString(std::string input, const char character)
+unsigned int RAPIDRecord::countCharInString(std::string& input, const char character)
 {
   bool done = false;
   unsigned int count = 0;
@@ -238,7 +238,7 @@ unsigned int RAPIDRecord::countCharInString(std::string input, const char charac
   return count;
 }
 
-std::vector<std::string> RAPIDRecord::extractDelimitedSubstrings(const std::string input)
+std::vector<std::string> RAPIDRecord::extractDelimitedSubstrings(const std::string& input)
 {
   // Prepare the input by removing any starting and ending '[' respective ']'
   std::string temp_0(input);

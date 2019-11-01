@@ -50,7 +50,7 @@ namespace rws
  */
 
 std::vector<Poco::XML::Node*> xmlFindNodes(Poco::AutoPtr<Poco::XML::Document> p_xml_document,
-                                           const XMLAttribute attribute)
+                                           const XMLAttribute& attribute)
 {
   std::vector<Poco::XML::Node*> result;
 
@@ -73,7 +73,7 @@ std::vector<Poco::XML::Node*> xmlFindNodes(Poco::AutoPtr<Poco::XML::Document> p_
   return result;
 }
 
-std::string xmlFindTextContent(Poco::AutoPtr<Poco::XML::Document> p_xml_document, const XMLAttribute attribute)
+std::string xmlFindTextContent(Poco::AutoPtr<Poco::XML::Document> p_xml_document, const XMLAttribute& attribute)
 {
   std::string result;
 
@@ -86,7 +86,7 @@ std::string xmlFindTextContent(Poco::AutoPtr<Poco::XML::Document> p_xml_document
   return result;
 }
 
-std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute attribute)
+std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute& attribute)
 {
   std::string result;
 
@@ -125,7 +125,7 @@ std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute
   return result;
 }
 
-bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute attribute)
+bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute& attribute)
 {
   bool found = attribute.name.empty() && attribute.value.empty();
 

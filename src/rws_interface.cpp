@@ -99,11 +99,11 @@ std::vector<RWSInterface::RobotWareOptionInfo> RWSInterface::getPresentRobotWare
                                            xmlFindTextContent(node_list.at(i+1), XMLAttributes::CLASS_VALUE)));
     }
   }
-  
+
   return result;
 }
 
-std::string RWSInterface::getIOSignal(const std::string iosignal)
+std::string RWSInterface::getIOSignal(const std::string& iosignal)
 {
   std::string result;
 
@@ -117,7 +117,7 @@ std::string RWSInterface::getIOSignal(const std::string iosignal)
   return result;
 }
 
-bool RWSInterface::getMechanicalUnitJointTarget(const std::string mechunit, JointTarget* p_jointtarget)
+bool RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget)
 {
   bool result = false;
 
@@ -129,7 +129,7 @@ bool RWSInterface::getMechanicalUnitJointTarget(const std::string mechunit, Join
     if (result)
     {
       std::stringstream ss;
-      
+
       ss << "[["
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_1")) << ","
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_2")) << ","
@@ -151,7 +151,7 @@ bool RWSInterface::getMechanicalUnitJointTarget(const std::string mechunit, Join
   return result;
 }
 
-bool RWSInterface::getMechanicalUnitRobTarget(const std::string mechunit, RobTarget* p_robtarget)
+bool RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit, RobTarget* p_robtarget)
 {
   bool result = false;
 
@@ -163,7 +163,7 @@ bool RWSInterface::getMechanicalUnitRobTarget(const std::string mechunit, RobTar
     if (result)
     {
       std::stringstream ss;
-      
+
       ss << "[["
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "x")) << ","
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "y")) << ","
@@ -190,17 +190,17 @@ bool RWSInterface::getMechanicalUnitRobTarget(const std::string mechunit, RobTar
   return result;
 }
 
-bool RWSInterface::setRAPIDSymbolData(const std::string task,
-                                      const std::string module,
-                                      const std::string name,
-                                      RAPIDSymbolDataAbstract& data)
+bool RWSInterface::setRAPIDSymbolData(const std::string& task,
+                                      const std::string& module,
+                                      const std::string& name,
+                                      const RAPIDSymbolDataAbstract& data)
 {
   return rws_client_.setRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), data).success;
 }
 
-bool RWSInterface::setRAPIDSymbolData(const std::string task,
-                                      const RWSClient::RAPIDSymbolResource symbol,
-                                      RAPIDSymbolDataAbstract& data)
+bool RWSInterface::setRAPIDSymbolData(const std::string& task,
+                                      const RWSClient::RAPIDSymbolResource& symbol,
+                                      const RAPIDSymbolDataAbstract& data)
 {
   return rws_client_.setRAPIDSymbolData(RWSClient::RAPIDResource(task, symbol), data).success;
 }
@@ -209,12 +209,12 @@ bool RWSInterface::startRAPIDExecution()
 {
   return rws_client_.startRAPIDExecution().success;
 }
-  
+
 bool RWSInterface::stopRAPIDExecution()
 {
   return rws_client_.stopRAPIDExecution().success;
 }
-  
+
 bool RWSInterface::resetRAPIDProgramPointer()
 {
   return rws_client_.resetRAPIDProgramPointer().success;
@@ -230,7 +230,7 @@ bool RWSInterface::setMotorsOff()
   return rws_client_.setMotorsOff().success;
 }
 
-std::vector<RWSInterface::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string task)
+std::vector<RWSInterface::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
 {
   std::vector<RAPIDModuleInfo> result;
 
@@ -304,42 +304,42 @@ TriBool RWSInterface::isRAPIDRunning()
                               ContollerStates::RAPID_EXECUTION_RUNNING);
 }
 
-bool RWSInterface::setIOSignal(const std::string iosignal, const std::string value)
+bool RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   return rws_client_.setIOSignal(iosignal, value).success;
 }
 
-bool RWSInterface::getRAPIDSymbolData(const std::string task,
-                                      const std::string module,
-                                      const std::string name,
+bool RWSInterface::getRAPIDSymbolData(const std::string& task,
+                                      const std::string& module,
+                                      const std::string& name,
                                       RAPIDSymbolDataAbstract* p_data)
 {
   return rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), p_data).success;
 }
 
-bool RWSInterface::getRAPIDSymbolData(const std::string task,
-                                      const RWSClient::RAPIDSymbolResource symbol,
+bool RWSInterface::getRAPIDSymbolData(const std::string& task,
+                                      const RWSClient::RAPIDSymbolResource& symbol,
                                       RAPIDSymbolDataAbstract* p_data)
 {
   return rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, symbol), p_data).success;
 }
 
-bool RWSInterface::getFile(const RWSClient::FileResource resource, std::string* p_file_content)
+bool RWSInterface::getFile(const RWSClient::FileResource& resource, std::string* p_file_content)
 {
   return rws_client_.getFile(resource, p_file_content).success;
 }
 
-bool RWSInterface::uploadFile(const RWSClient::FileResource resource, const std::string file_content)
+bool RWSInterface::uploadFile(const RWSClient::FileResource& resource, const std::string& file_content)
 {
   return rws_client_.uploadFile(resource, file_content).success;
 }
 
-bool RWSInterface::deleteFile(const RWSClient::FileResource resource)
+bool RWSInterface::deleteFile(const RWSClient::FileResource& resource)
 {
   return rws_client_.deleteFile(resource).success;
 }
 
-bool RWSInterface::startSubscription (RWSClient::SubscriptionResources resources)
+bool RWSInterface::startSubscription (const RWSClient::SubscriptionResources& resources)
 {
   return rws_client_.startSubscription(resources).success;
 }
@@ -379,16 +379,16 @@ void RWSInterface::forceCloseSubscription()
   rws_client_.webSocketShutdown();
 }
 
-bool RWSInterface::registerLocalUser(std::string username,
-                                     std::string application,
-                                     std::string location)
+bool RWSInterface::registerLocalUser(const std::string& username,
+                                     const std::string& application,
+                                     const std::string& location)
 {
   return rws_client_.registerLocalUser(username, application, location).success;
 }
 
-bool RWSInterface::registerRemoteUser(std::string username,
-                                      std::string application,
-                                      std::string location)
+bool RWSInterface::registerRemoteUser(const std::string& username,
+                                      const std::string& application,
+                                      const std::string& location)
 {
   return rws_client_.registerRemoteUser(username, application, location).success;
 }
