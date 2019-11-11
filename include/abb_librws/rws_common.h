@@ -37,11 +37,14 @@
 #ifndef RWS_COMMON_H
 #define RWS_COMMON_H
 
+#include <ostream>
 #include <string>
 #include <vector>
 
 #include "Poco/DOM/AutoPtr.h"
 #include "Poco/DOM/Document.h"
+
+#include "visibility_control.h"
 
 namespace abb
 {
@@ -125,7 +128,7 @@ struct SystemConstants
   /**
    * \brief Controller states related constants.
    */
-  struct ContollerStates
+  struct ABB_LIBRWS_PUBLIC ContollerStates
   {
     /**
      * \brief Robot controller motor on.
@@ -151,7 +154,7 @@ struct SystemConstants
   /**
    * \brief General constants.
    */
-  struct General
+  struct ABB_LIBRWS_PUBLIC General
   {
     /**
      * \brief Default name of an application using RWS.
@@ -242,7 +245,7 @@ struct SystemConstants
   /**
    * \brief IO signal related constants.
    */
-  struct IOSignals
+  struct ABB_LIBRWS_PUBLIC IOSignals
   {
     /**
      * \brief Name of defined IO signal for smart gripper left position.
@@ -300,7 +303,7 @@ struct SystemConstants
   /**
    * \brief RAPID related constants.
    */
-  struct RAPID
+  struct ABB_LIBRWS_PUBLIC RAPID
   {
     /**
      * \brief RAPID boolean false.
@@ -371,7 +374,7 @@ struct SystemConstants
     /**
      * \brief XML attributes specifying names with corresponding values.
      */
-    struct XMLAttributes
+    struct ABB_LIBRWS_PUBLIC XMLAttributes
     {
       /**
        * \brief Class & cfg-ia-t-li.
@@ -457,7 +460,7 @@ struct SystemConstants
     /**
      * \brief Identifiers in different RWS messages. E.g. XML attribute names/values.
      */
-    struct Identifiers
+    struct ABB_LIBRWS_PUBLIC Identifiers
     {
       /**
        * \brief XML attribute name: class.
@@ -563,7 +566,7 @@ struct SystemConstants
     /**
      * \brief RWS queries.
      */
-    struct Queries
+    struct ABB_LIBRWS_PUBLIC Queries
     {
       /**
        * \brief Release action query.
@@ -614,7 +617,7 @@ struct SystemConstants
     /**
      * \brief RWS resources and queries.
      */
-    struct Resources
+    struct ABB_LIBRWS_PUBLIC Resources
     {
       /**
        * \brief Instances.
@@ -700,7 +703,7 @@ struct SystemConstants
     /**
      * \brief RWS services.
      */
-    struct Services
+    struct ABB_LIBRWS_PUBLIC Services
     {
       /**
        * \brief Controller service.
