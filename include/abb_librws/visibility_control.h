@@ -12,10 +12,14 @@
     #define ABB_LIBRWS_EXPORT __declspec(dllexport)
     #define ABB_LIBRWS_IMPORT __declspec(dllimport)
   #endif
-  #ifdef ABB_LIBRWS_BUILDING_LIBRARY
-    #define ABB_LIBRWS_PUBLIC ABB_LIBRWS_EXPORT
+  #ifdef ABB_LIBRWS_STATIC_LIBRARY
+    #define ABB_LIBRWS_PUBLIC
   #else
-    #define ABB_LIBRWS_PUBLIC ABB_LIBRWS_IMPORT
+    #ifdef ABB_LIBRWS_BUILDING_SHARED_LIBRARY
+      #define ABB_LIBRWS_PUBLIC ABB_LIBRWS_EXPORT
+    #else
+      #define ABB_LIBRWS_PUBLIC ABB_LIBRWS_IMPORT
+    #endif
   #endif
   #define ABB_LIBRWS_PUBLIC_TYPE ABB_LIBRWS_PUBLIC
   #define ABB_LIBRWS_LOCAL
