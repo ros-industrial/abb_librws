@@ -43,6 +43,7 @@ set(
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES})
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
@@ -57,7 +58,7 @@ if(BUILD_SHARED_LIBS)
   # which is appropriate when building the dll but not consuming it.
   target_compile_definitions(${PROJECT_NAME} PRIVATE "ABB_LIBRWS_BUILDING_SHARED_LIBRARY")
 else()
-  target_compile_definitions(${PROJECT_NAME} PRIVATE "ABB_LIBRWS_STATIC_LIBRARY")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC "ABB_LIBRWS_STATIC_LIBRARY")
 endif()
 
 #############
