@@ -7,7 +7,7 @@
   <maintainer email="jon.tjerngren@se.abb.com">Jon Tjerngren</maintainer>
   <license>BSD 3-Clause</license>
   <url type="repository">https://github.com/ros-industrial/abb_librws</url>
-  <author email="jon.tjerngren@se.abb.com">Jon Tjerngren</author>
+  <author>Jon Tjerngren</author>
 
   <buildtool_depend>cmake</buildtool_depend>
 

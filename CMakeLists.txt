@@ -13,8 +13,6 @@ project(abb_librws VERSION ${CMAKE_MATCH_1} LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
-
 if(WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
@@ -23,7 +21,7 @@ endif()
 ## POCO C++ Libraries ##
 ########################
 # We need at least 1.4.3 because of WebSocket support.
-find_package(Poco 1.4.3 REQUIRED COMPONENTS Net Util Foundation XML)
+find_package(Poco 1.4.3 REQUIRED COMPONENTS Foundation Net Util XML)
 
 ###########
 ## Build ##
@@ -44,21 +42,24 @@ set(
 
 add_library(${PROJECT_NAME} ${SRC_FILES})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME})
+
 target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
-  PUBLIC ${Poco_INCLUDE_DIRS}
-)
-target_link_libraries(${PROJECT_NAME} PUBLIC
-  ${Poco_LIBRARIES}
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}>"
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
 )
 
-if(BUILD_SHARED_LIBS)
-  # Causes the visibility macros to use dllexport rather than dllimport,
-  # which is appropriate when building the dll but not consuming it.
-  target_compile_definitions(${PROJECT_NAME} PRIVATE "ABB_LIBRWS_BUILDING_SHARED_LIBRARY")
-else()
-  target_compile_definitions(${PROJECT_NAME} PUBLIC "ABB_LIBRWS_STATIC_LIBRARY")
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  Poco::Foundation
+  Poco::Net
+  Poco::Util
+  Poco::XML
+)
+
+if(NOT BUILD_SHARED_LIBS)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC "ABB_LIBRWS_STATIC_DEFINE")
 endif()
 
 #############
@@ -67,6 +68,12 @@ endif()
 install(
   DIRECTORY include/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
 )
 
 install(
@@ -95,8 +102,7 @@ install(
   FILES
     "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake"
     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-  DESTINATION "share/${PROJECT_NAME}/cmake"
-  COMPONENT dev
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
 )
 
 # Export targets.
@@ -109,8 +115,7 @@ export(
 
 install(
   EXPORT export_${PROJECT_NAME}
-  DESTINATION "share/${PROJECT_NAME}/cmake"
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
   FILE ${PROJECT_NAME}Targets.cmake
   NAMESPACE ${PROJECT_NAME}::
-  COMPONENT dev
 )

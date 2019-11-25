@@ -44,7 +44,7 @@
 #include "Poco/DOM/AutoPtr.h"
 #include "Poco/DOM/Document.h"
 
-#include "visibility_control.h"
+#include "abb_librws_export.h"
 
 namespace abb
 {
@@ -128,7 +128,7 @@ struct SystemConstants
   /**
    * \brief Controller states related constants.
    */
-  struct ABB_LIBRWS_PUBLIC ContollerStates
+  struct ABB_LIBRWS_EXPORT ContollerStates
   {
     /**
      * \brief Robot controller motor on.
@@ -154,7 +154,7 @@ struct SystemConstants
   /**
    * \brief General constants.
    */
-  struct ABB_LIBRWS_PUBLIC General
+  struct ABB_LIBRWS_EXPORT General
   {
     /**
      * \brief Default name of an application using RWS.
@@ -245,7 +245,7 @@ struct SystemConstants
   /**
    * \brief IO signal related constants.
    */
-  struct ABB_LIBRWS_PUBLIC IOSignals
+  struct ABB_LIBRWS_EXPORT IOSignals
   {
     /**
      * \brief Name of defined IO signal for smart gripper left position.
@@ -303,7 +303,7 @@ struct SystemConstants
   /**
    * \brief RAPID related constants.
    */
-  struct ABB_LIBRWS_PUBLIC RAPID
+  struct ABB_LIBRWS_EXPORT RAPID
   {
     /**
      * \brief RAPID boolean false.
@@ -374,7 +374,7 @@ struct SystemConstants
     /**
      * \brief XML attributes specifying names with corresponding values.
      */
-    struct ABB_LIBRWS_PUBLIC XMLAttributes
+    struct ABB_LIBRWS_EXPORT XMLAttributes
     {
       /**
        * \brief Class & cfg-ia-t-li.
@@ -460,7 +460,7 @@ struct SystemConstants
     /**
      * \brief Identifiers in different RWS messages. E.g. XML attribute names/values.
      */
-    struct ABB_LIBRWS_PUBLIC Identifiers
+    struct ABB_LIBRWS_EXPORT Identifiers
     {
       /**
        * \brief XML attribute name: class.
@@ -566,7 +566,7 @@ struct SystemConstants
     /**
      * \brief RWS queries.
      */
-    struct ABB_LIBRWS_PUBLIC Queries
+    struct ABB_LIBRWS_EXPORT Queries
     {
       /**
        * \brief Release action query.
@@ -617,7 +617,7 @@ struct SystemConstants
     /**
      * \brief RWS resources and queries.
      */
-    struct ABB_LIBRWS_PUBLIC Resources
+    struct ABB_LIBRWS_EXPORT Resources
     {
       /**
        * \brief Instances.
@@ -703,7 +703,7 @@ struct SystemConstants
     /**
      * \brief RWS services.
      */
-    struct ABB_LIBRWS_PUBLIC Services
+    struct ABB_LIBRWS_EXPORT Services
     {
       /**
        * \brief Controller service.
