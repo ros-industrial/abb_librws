@@ -578,9 +578,9 @@ RWSClient::RWSResult RWSClient::registerRemoteUser(const std::string& username,
 {
   std::string uri = Services::USERS;
   std::string content = "username=" + username +
-             "&application=" + application +
-             "&location=" + location +
-             "&ulocale=" + SystemConstants::General::REMOTE;
+                        "&application=" + application +
+                        "&location=" + location +
+                        "&ulocale=" + SystemConstants::General::REMOTE;
 
   EvaluationConditions evaluation_conditions;
   evaluation_conditions.parse_message_into_xml = false;

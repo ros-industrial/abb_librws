@@ -63,10 +63,10 @@ RWSInterface::RuntimeInfo RWSInterface::collectRuntimeInfo()
   RuntimeInfo runtime_info;
 
   runtime_info.auto_mode     = isAutoMode();
-  runtime_info.motor_on      = isMotorOn();
+  runtime_info.motors_on     = isMotorsOn();
   runtime_info.rapid_running = isRAPIDRunning();
   runtime_info.rws_connected = (runtime_info.auto_mode != TriBool::UNKNOWN_VALUE &&
-                                runtime_info.motor_on != TriBool::UNKNOWN_VALUE &&
+                                runtime_info.motors_on != TriBool::UNKNOWN_VALUE &&
                                 runtime_info.rapid_running != TriBool::UNKNOWN_VALUE);
 
   return runtime_info;
@@ -294,7 +294,7 @@ TriBool RWSInterface::isAutoMode()
                               ContollerStates::PANEL_OPERATION_MODE_AUTO);
 }
 
-TriBool RWSInterface::isMotorOn()
+TriBool RWSInterface::isMotorsOn()
 {
   return compareSingleContent(rws_client_.getPanelControllerState(),
                               XMLAttributes::CLASS_CTRLSTATE,

@@ -183,7 +183,7 @@ public:
     /**
      * \brief Indicator for if the motors are on or not or unknown.
      */
-    TriBool motor_on;
+    TriBool motors_on;
 
     /**
      * \brief Indicator for if RAPID is running or not or unknown.
@@ -374,7 +374,7 @@ public:
    *
    * \return TriBool indicating if the motors are on or not or unknown.
    */
-  TriBool isMotorOn();
+  TriBool isMotorsOn();
 
   /**
    * \brief A method for checking if RAPID is running.
