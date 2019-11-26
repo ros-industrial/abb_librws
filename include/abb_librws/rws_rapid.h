@@ -321,7 +321,7 @@ protected:
    *
    * \return unsigned int containing the number of times the character occurs.
    */
-  unsigned int countCharInString(std::string& input, const char character);
+  unsigned int countCharInString(std::string input, const char character);
 
   /**
    * \brief A method to extract delimited substrings in a string.
