@@ -13,6 +13,8 @@ project(abb_librws VERSION ${CMAKE_MATCH_1} LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/third_party")
+
 if(WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
@@ -49,13 +51,11 @@ generate_export_header(${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}>"
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
+	${Poco_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-  Poco::Foundation
-  Poco::Net
-  Poco::Util
-  Poco::XML
+  ${Poco_LIBRARIES}
 )
 
 if(NOT BUILD_SHARED_LIBS)
