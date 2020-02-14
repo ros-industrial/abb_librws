@@ -151,13 +151,17 @@ bool RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit, Joi
   return result;
 }
 
-bool RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit, RobTarget* p_robtarget)
+bool RWSInterface::getMechanicalUnitRobTarget(const std::string &mechunit,
+                                              RobTarget *p_robtarget,
+                                              const std::string &tool,
+                                              const std::string &wobj,
+                                              const std::string &coordinate)
 {
   bool result = false;
 
   if (p_robtarget)
   {
-    RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitRobTarget(mechunit);
+    RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitRobTarget(mechunit, tool, wobj, coordinate);
     result = rws_result.success;
 
     if (result)

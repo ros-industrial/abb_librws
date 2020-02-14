@@ -302,11 +302,18 @@ public:
    *
    * \param mechunit for the mechanical unit's name.
    * \param p_robtarget for storing the retrieved robtarget data.
+   * \param tool for the tool frame relative to which the robtarget will be reported
+   * \param wobj for the wobj relative to which the robtarget will be reported
+   * \param coordinate for the coordinate mode in which the robtarget will be reported
    *
    * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
-  bool getMechanicalUnitRobTarget(const std::string& mechunit, RobTarget* p_robtarget);
-
+  bool getMechanicalUnitRobTarget(const std::string& mechunit,
+                                  RobTarget *p_robtarget,
+                                  const std::string &tool = "",
+                                  const std::string &wobj = "",
+                                  const std::string &coordinate = "");
+  
   /**
    * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *

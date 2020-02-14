@@ -147,9 +147,20 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& 
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
 
-RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string &mechunit,
+                                                           const std::string &tool,
+                                                           const std::string &wobj,
+                                                           const std::string &coordinate)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + Resources::ROBTARGET;
+  if (!coordinate.empty())
+  {
+    uri += "?coordinate=" + coordinate;
+    if (!tool.empty())
+      uri += "&tool=" + tool;
+    if (!wobj.empty())
+      uri += "&wobj=" + wobj;
+  }
 
   EvaluationConditions evaluation_conditions;
   evaluation_conditions.parse_message_into_xml = true;

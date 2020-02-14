@@ -386,10 +386,13 @@ public:
    * \brief A method for retrieving the current robtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
+   * \param tool for the tool frame relative to which the robtarget will be reported
+   * \param wobj for the wobj relative to which the robtarget will be reported
+   * \param coordinate for the coordinate mode in which the robtarget will be reported
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getMechanicalUnitRobTarget(const std::string& mechunit);
+  RWSResult getMechanicalUnitRobTarget(const std::string& mechunit, const std::string& tool = "", const std::string& wobj = "", const std::string& coordinate = "");
 
   /**
    * \brief A method for retrieving the data of a RAPID symbol.
