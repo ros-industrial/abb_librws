@@ -279,6 +279,18 @@ public:
   };
 
   /**
+   * \brief An enumeration of controller coordinate frames.
+   */
+  enum class Coordinate
+  {
+    BASE,
+    WORLD,
+    TOOL,
+    WOBJ,
+    ACTIVE
+  };
+
+  /**
    * \brief A constructor.
    *
    * \param ip_address specifying the robot controller's IP address.
@@ -386,13 +398,16 @@ public:
    * \brief A method for retrieving the current robtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * \param tool for the tool frame relative to which the robtarget will be reported
-   * \param wobj for the wobj relative to which the robtarget will be reported
-   * \param coordinate for the coordinate mode in which the robtarget will be reported
+   * \param tool for the tool frame relative to which the robtarget will be reported.
+   * \param wobj for the wobj relative to which the robtarget will be reported.
+   * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    *
    * \return RWSResult containing the result.
    */
-  RWSResult getMechanicalUnitRobTarget(const std::string& mechunit, const std::string& tool = "", const std::string& wobj = "", const std::string& coordinate = "");
+  RWSResult getMechanicalUnitRobTarget(const std::string& mechunit,
+                                       const Coordinate& coordinate = RWSClient::Coordinate::ACTIVE,
+                                       const std::string& tool = "",
+                                       const std::string& wobj = "");
 
   /**
    * \brief A method for retrieving the data of a RAPID symbol.

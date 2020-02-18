@@ -147,19 +147,42 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& 
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
 
-RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string &mechunit,
-                                                           const std::string &tool,
-                                                           const std::string &wobj,
-                                                           const std::string &coordinate)
+RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
+                                                           const Coordinate& coordinate,
+                                                           const std::string& tool,
+                                                           const std::string& wobj)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + Resources::ROBTARGET;
-  if (!coordinate.empty())
+
+  std::string args = "";
+  if (!tool.empty())
   {
-    uri += "?coordinate=" + coordinate;
-    if (!tool.empty())
-      uri += "&tool=" + tool;
-    if (!wobj.empty())
-      uri += "&wobj=" + wobj;
+    args += "&tool=" + tool;
+  }
+  if (!wobj.empty())
+  {
+    args += "&wobj=" + wobj;
+  }
+
+  const std::string coordinate_arg = "?coordinate=";
+  switch (coordinate)
+  {
+  case Coordinate::BASE:
+    uri += coordinate_arg + SystemConstants::General::COORDINATE_BASE + args;
+    break;
+  case Coordinate::WORLD:
+    uri += coordinate_arg + SystemConstants::General::COORDINATE_WORLD + args;
+    break;
+  case Coordinate::TOOL:
+    uri += coordinate_arg + SystemConstants::General::COORDINATE_TOOL + args;
+    break;
+  case Coordinate::WOBJ:
+    uri += coordinate_arg + SystemConstants::General::COORDINATE_WOBJ + args;
+    break;
+  default:
+    // If the "ACTIVE" enumeration is passed in (or any other non-identified value),
+    // do not add any arguments to this command
+    break;
   }
 
   EvaluationConditions evaluation_conditions;
