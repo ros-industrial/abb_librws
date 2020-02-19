@@ -167,21 +167,21 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& me
   const std::string coordinate_arg = "?coordinate=";
   switch (coordinate)
   {
-  case Coordinate::BASE:
-    uri += coordinate_arg + SystemConstants::General::COORDINATE_BASE + args;
+    case BASE:
+      uri += coordinate_arg + SystemConstants::General::COORDINATE_BASE + args;
     break;
-  case Coordinate::WORLD:
-    uri += coordinate_arg + SystemConstants::General::COORDINATE_WORLD + args;
+    case WORLD:
+      uri += coordinate_arg + SystemConstants::General::COORDINATE_WORLD + args;
     break;
-  case Coordinate::TOOL:
-    uri += coordinate_arg + SystemConstants::General::COORDINATE_TOOL + args;
+    case TOOL:
+      uri += coordinate_arg + SystemConstants::General::COORDINATE_TOOL + args;
     break;
-  case Coordinate::WOBJ:
-    uri += coordinate_arg + SystemConstants::General::COORDINATE_WOBJ + args;
+    case WOBJ:
+      uri += coordinate_arg + SystemConstants::General::COORDINATE_WOBJ + args;
     break;
-  default:
-    // If the "ACTIVE" enumeration is passed in (or any other non-identified value),
-    // do not add any arguments to this command
+    default:
+      // If the "ACTIVE" enumeration is passed in (or any other non-identified value),
+      // do not add any arguments to this command
     break;
   }
 

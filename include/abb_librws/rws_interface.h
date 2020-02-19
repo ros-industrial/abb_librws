@@ -302,15 +302,15 @@ public:
    *
    * \param mechunit for the mechanical unit's name.
    * \param p_robtarget for storing the retrieved robtarget data.
+   * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    * \param tool for the tool frame relative to which the robtarget will be reported.
    * \param wobj for the wobj relative to which the robtarget will be reported.
-   * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    *
    * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getMechanicalUnitRobTarget(const std::string& mechunit,
                                   RobTarget* p_robtarget,
-                                  const RWSClient::Coordinate& coordinate = RWSClient::Coordinate::ACTIVE,
+                                  const RWSClient::Coordinate& coordinate = RWSClient::ACTIVE,
                                   const std::string& tool = "",
                                   const std::string& wobj = "");
 
