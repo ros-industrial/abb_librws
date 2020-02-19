@@ -286,7 +286,7 @@ public:
     BASE,  ///< \brief Base frame coordinate
     WORLD,  ///< \brief World frame coordinate
     TOOL,  ///< \brief Tool frame coordinate
-    WOBJ,  ///< \brief Wobj frame coordinate
+    WOBJ,  ///< \brief Work object (wobj) frame coordinate
     ACTIVE  ///< \brief Currently active coordinate
   };
 
@@ -400,7 +400,7 @@ public:
    * \param mechunit for the mechanical unit's name.
    * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    * \param tool for the tool frame relative to which the robtarget will be reported.
-   * \param wobj for the wobj relative to which the robtarget will be reported.
+   * \param wobj for the work object (wobj) relative to which the robtarget will be reported.
    *
    * \return RWSResult containing the result.
    */

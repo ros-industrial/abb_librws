@@ -234,7 +234,7 @@ struct SystemConstants
     static const std::string COORDINATE_TOOL;
 
     /**
-     * \brief Wobj coordinate system.
+     * \brief Work object (wobj) coordinate system.
      */
     static const std::string COORDINATE_WOBJ;
   };
