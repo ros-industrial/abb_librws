@@ -178,6 +178,10 @@ const std::string SystemConstants::General::MECHANICAL_UNIT_ROB_4  = "ROB_4";
 const std::string SystemConstants::General::MECHANICAL_UNIT_ROB_L  = "ROB_L";
 const std::string SystemConstants::General::MECHANICAL_UNIT_ROB_R  = "ROB_R";
 const std::string SystemConstants::General::REMOTE                 = "remote";
+const std::string SystemConstants::General::COORDINATE_BASE        = "Base";
+const std::string SystemConstants::General::COORDINATE_WORLD       = "Word";
+const std::string SystemConstants::General::COORDINATE_TOOL        = "Tool";
+const std::string SystemConstants::General::COORDINATE_WOBJ        = "Wobj";
 
 const std::string SystemConstants::IOSignals::HAND_ACTUAL_POSITION_L   = "hand_ActualPosition_L";
 const std::string SystemConstants::IOSignals::HAND_ACTUAL_POSITION_R   = "hand_ActualPosition_R";

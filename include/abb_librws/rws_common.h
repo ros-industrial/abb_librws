@@ -217,6 +217,26 @@ struct SystemConstants
      * \brief Remote user.
      */
     static const std::string REMOTE;
+
+    /**
+     * \brief Base coordinate system.
+     */
+    static const std::string COORDINATE_BASE;
+
+    /**
+     * \brief World coordinate system.
+     */
+    static const std::string COORDINATE_WORLD;
+
+    /**
+     * \brief Tool coordinate system.
+     */
+    static const std::string COORDINATE_TOOL;
+
+    /**
+     * \brief Work object (wobj) coordinate system.
+     */
+    static const std::string COORDINATE_WOBJ;
   };
 
   /**
