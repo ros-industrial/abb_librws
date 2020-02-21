@@ -214,7 +214,7 @@ RAPIDRecord& RAPIDRecord::operator=(const RAPIDRecord& other)
  * Auxiliary methods
  */
 
-unsigned int RAPIDRecord::countCharInString(std::string& input, const char character)
+unsigned int RAPIDRecord::countCharInString(std::string input, const char character)
 {
   bool done = false;
   unsigned int count = 0;
