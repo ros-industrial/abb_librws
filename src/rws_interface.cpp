@@ -276,12 +276,18 @@ RWSInterface::SystemInfo RWSInterface::getSystemInfo()
   SystemInfo result;
 
   RWSClient::RWSResult rws_result = rws_client_.getRobotWareSystem();
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_SYS_SYSTEM_LI);
 
+  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_SYS_SYSTEM_LI);
   for (size_t i = 0; i < node_list.size(); ++i)
   {
     result.system_name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
     result.robot_ware_version = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_RW_VERSION_NAME);
+  }
+
+  node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_SYS_OPTION_LI);
+  for (size_t i = 0; i < node_list.size(); ++i)
+  {
+    result.system_options.push_back(xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_OPTION));
   }
 
   return result;

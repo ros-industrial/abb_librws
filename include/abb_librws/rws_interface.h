@@ -63,6 +63,11 @@ public:
      * \brief The system's name.
      */
     std::string system_name;
+
+    /**
+     * \brief The system's active options.
+     */
+    std::vector<std::string> system_options;
   };
 
   /**
