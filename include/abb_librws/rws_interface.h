@@ -341,6 +341,7 @@ public:
   bool getRAPIDSymbolData(const std::string& task,
                           const RWSClient::RAPIDSymbolResource& symbol,
                           RAPIDSymbolDataAbstract* p_data);
+
   /**
    * \brief A method for retrieving information about the RAPID modules of a RAPID task defined in the robot controller.
    *
