@@ -413,6 +413,11 @@ struct SystemConstants
       static const XMLAttribute CLASS_CFG_IA_T_LI;
 
       /**
+       * \brief Class & controller type.
+       */
+      static const XMLAttribute CLASS_CTRL_TYPE;
+
+      /**
        * \brief Class & controller execution state.
        */
       static const XMLAttribute CLASS_CTRLEXECSTATE;
@@ -512,6 +517,11 @@ struct SystemConstants
        * \brief Configuration list item.
        */
       static const std::string CFG_IA_T_LI;
+
+      /**
+       * \brief Controller type.
+       */
+      static const std::string CTRL_TYPE;
 
       /**
        * \brief Controller execution state.

@@ -259,6 +259,7 @@ const std::string SystemConstants::RAPID::TYPE_NUM    = "num";
 const std::string SystemConstants::RAPID::TYPE_STRING = "string";
 
 const std::string Identifiers::CFG_IA_T_LI                    = "cfg-ia-t-li";
+const std::string Identifiers::CTRL_TYPE                      = "ctrl-type";
 const std::string Identifiers::CTRLEXECSTATE                  = "ctrlexecstate";
 const std::string Identifiers::CTRLSTATE                      = "ctrlstate";
 const std::string Identifiers::DATTYP                         = "dattyp";
@@ -312,6 +313,7 @@ const std::string Resources::RW_RAPID_TASKS                   = Services::RW + "
 const std::string Resources::RW_SYSTEM                        = Services::RW + "/system";
 
 const XMLAttribute XMLAttributes::CLASS_CFG_IA_T_LI(Identifiers::CLASS       , Identifiers::CFG_IA_T_LI);
+const XMLAttribute XMLAttributes::CLASS_CTRL_TYPE(Identifiers::CLASS         , Identifiers::CTRL_TYPE);
 const XMLAttribute XMLAttributes::CLASS_CTRLEXECSTATE(Identifiers::CLASS     , Identifiers::CTRLEXECSTATE);
 const XMLAttribute XMLAttributes::CLASS_CTRLSTATE(Identifiers::CLASS         , Identifiers::CTRLSTATE);
 const XMLAttribute XMLAttributes::CLASS_DATTYP(Identifiers::CLASS            , Identifiers::DATTYP);
