@@ -50,6 +50,18 @@ class RWSInterface
 {
 public:
   /**
+   * \brief Execution state of a RAPID task.
+   */
+  enum RAPIDTaskExecutionState
+  {
+    UNKNOWN,      ///< The task state is unknown.
+    READY,        ///< The task is ready.
+    STOPPED,      ///< The task has been stopped.
+    STARTED,      ///< The task has been started.
+    UNINITIALIZED ///< The task has not been initialized.
+  };
+
+  /**
    * \brief A struct for containing system information of the robot controller.
    */
   struct SystemInfo
@@ -141,11 +153,18 @@ public:
      *
      * \param name for the name of the task.
      * \param is_motion_task indicating if the task is a motion task or not.
+     * \param is_active indicating if the task is active or not.
+     * \param execution_state indicating the task's current execution state.
      */
-    RAPIDTaskInfo(const std::string& name, bool is_motion_task)
+    RAPIDTaskInfo(const std::string& name,
+                  const bool is_motion_task,
+                  const bool is_active,
+                  const RAPIDTaskExecutionState execution_state)
     :
     name(name),
-    is_motion_task(is_motion_task)
+    is_motion_task(is_motion_task),
+    is_active(is_active),
+    execution_state(execution_state)
     {}
 
     /**
@@ -157,6 +176,16 @@ public:
      * \brief Flag indicating if the task is a motion task.
      */
     bool is_motion_task;
+
+    /**
+     * \brief Flag indicating if the task is active or not.
+     */
+    bool is_active;
+
+    /**
+     * \brief The current execution state of the task.
+     */
+    RAPIDTaskExecutionState execution_state;
   };
 
   /**
