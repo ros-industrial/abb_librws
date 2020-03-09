@@ -290,6 +290,9 @@ RWSInterface::SystemInfo RWSInterface::getSystemInfo()
     result.system_options.push_back(xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_OPTION));
   }
 
+  result.system_type = xmlFindTextContent(rws_client_.getContollerService().p_xml_document,
+                                          XMLAttributes::CLASS_CTRL_TYPE);
+
   return result;
 }
 
