@@ -49,6 +49,31 @@ namespace rws
  * Function definitions
  */
 
+std::vector<Poco::XML::Node*> xmlFindNodes(Poco::XML::Node* p_root, const XMLAttribute& attribute)
+{
+  std::vector<Poco::XML::Node*> result;
+
+  if(p_root)
+  {
+    bool found = false;
+
+    Poco::XML::NodeIterator node_iterator(p_root, Poco::XML::NodeFilter::SHOW_ELEMENT);
+    Poco::XML::Node* p_node = node_iterator.nextNode();
+
+    while (p_node)
+    {
+      if (xmlNodeHasAttribute(p_node, attribute))
+      {
+        result.push_back(p_node);
+      }
+
+      p_node = node_iterator.nextNode();
+    }
+  }
+
+  return result;
+}
+
 std::vector<Poco::XML::Node*> xmlFindNodes(Poco::AutoPtr<Poco::XML::Document> p_xml_document,
                                            const XMLAttribute& attribute)
 {
