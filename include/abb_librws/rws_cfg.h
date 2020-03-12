@@ -50,6 +50,38 @@ namespace cfg
 {
 
 /**
+ * \brief Namespace for types belonging to the motion (MOC) domain.
+ */
+namespace moc
+{
+/**
+ * \brief Representation of a 'Arm' instance.
+ */
+struct Arm
+{
+  /**
+   * \brief The instance's name.
+   */
+  std::string name;
+
+  /**
+   * \brief The lower joint bound.
+   *
+   * The unit depends on the type of joint, i.e. [rad] for rotational and [m] for linear.
+   *
+   */
+  double lower_joint_bound;
+
+  /**
+   * \brief The upper joint bound.
+   *
+   * The unit depends on the type of joint, i.e. [rad] for rotational and [m] for linear.
+   */
+  double upper_joint_bound;
+};
+} // end namespace moc
+
+/**
  * \brief Namespace for types belonging to the controller (SYS) domain.
  */
 namespace sys
