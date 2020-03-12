@@ -49,6 +49,28 @@ namespace rws
 namespace cfg
 {
 
+/**
+ * \brief Namespace for types belonging to the controller (SYS) domain.
+ */
+namespace sys
+{
+/**
+ * \brief Representation of a 'Present Option' instance.
+ */
+struct PresentOption
+{
+  /**
+   * \brief The instance's name.
+   */
+  std::string name;
+
+  /**
+   * \brief The option's description.
+   */
+  std::string description;
+};
+} // end namespace sys
+
 } // end namespace cfg
 } // end namespace rws
 } // end namespace abb
