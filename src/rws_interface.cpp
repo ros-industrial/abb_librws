@@ -82,6 +82,46 @@ RWSInterface::StaticInfo RWSInterface::collectStaticInfo()
   return static_info;
 }
 
+std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
+{
+  std::vector<cfg::moc::Arm> result;
+
+  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "ARM");
+
+  std::vector<Poco::XML::Node*> instances = xmlFindNodes(rws_result.p_xml_document,
+                                                         XMLAttribute("class", "cfg-dt-instance-li"));
+
+  for (size_t i = 0; i < instances.size(); ++i)
+  {
+    std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
+
+    cfg::moc::Arm arm;
+
+    for (size_t j = 0; j < attributes.size(); ++j)
+    {
+      Poco::XML::Node* attribute = attributes[j];
+      if(xmlNodeHasAttribute(attribute, XMLAttribute("title", "name")))
+      {
+        arm.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+      else if(xmlNodeHasAttribute(attribute, XMLAttribute("title", "lower_joint_bound")))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> arm.lower_joint_bound;
+      }
+      else if(xmlNodeHasAttribute(attribute, XMLAttribute("title", "upper_joint_bound")))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> arm.upper_joint_bound;
+      }
+    }
+
+    result.push_back(arm);
+  }
+
+  return result;
+}
+
 std::vector<RWSInterface::RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
 {
   std::vector<RobotWareOptionInfo> result;
