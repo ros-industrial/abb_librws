@@ -8,6 +8,11 @@
 
 RobotWare versions `7.0` and higher are currently incompatible with *abb_librws* (due to RWS `1.0` being replaced by RWS `2.0`). See [this](http://developercenter.robotstudio.com/webservice) for more information about the different RWS versions.
 
+Pull request [abb_librws#69](https://github.com/ros-industrial/abb_librws/pull/69) turned this package from a Catkin package into a plain CMake package. ROS users may use any of the following build tools to build the library:
+
+* ROS 1: `catkin_make_isolated` or [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/index.html).
+* ROS 2: [colcon](https://colcon.readthedocs.io/en/released/).
+
 ## Overview
 
 A C++ library for interfacing with ABB robot controllers supporting *Robot Web Services* (RWS) `1.0`. See the online [documentation](http://developercenter.robotstudio.com/webservice/api_reference) for a detailed description of what RWS `1.0` is and how to use it.
