@@ -121,6 +121,17 @@ std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute
 bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute& attribute);
 
 /**
+ * \brief A method for checking if a XML node has the specified attribute.
+ *
+ * \param p_node for the XML node to check.
+ * \param name specifying the attribute's name.
+ * \param value specifying the attribute's value.
+ *
+ * \return bool indicating if the attribute was found or not.
+ */
+bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const std::string& name, const std::string& value);
+
+/**
  * \brief Struct containing various constant values defined by default robot controller systems.
  */
 struct SystemConstants
