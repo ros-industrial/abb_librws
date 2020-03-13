@@ -86,10 +86,10 @@ std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
 {
   std::vector<cfg::moc::Arm> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "ARM");
+  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ARM);
 
-  std::vector<Poco::XML::Node*> instances = xmlFindNodes(rws_result.p_xml_document,
-                                                         XMLAttribute("class", "cfg-dt-instance-li"));
+  std::vector<Poco::XML::Node*> instances;
+  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for (size_t i = 0; i < instances.size(); ++i)
   {
@@ -100,16 +100,16 @@ std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
     for (size_t j = 0; j < attributes.size(); ++j)
     {
       Poco::XML::Node* attribute = attributes[j];
-      if(xmlNodeHasAttribute(attribute, XMLAttribute("title", "name")))
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, Identifiers::NAME))
       {
         arm.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
       }
-      else if(xmlNodeHasAttribute(attribute, XMLAttribute("title", "lower_joint_bound")))
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "lower_joint_bound"))
       {
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> arm.lower_joint_bound;
       }
-      else if(xmlNodeHasAttribute(attribute, XMLAttribute("title", "upper_joint_bound")))
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "upper_joint_bound"))
       {
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> arm.upper_joint_bound;
