@@ -259,6 +259,8 @@ const std::string SystemConstants::RAPID::TYPE_NUM    = "num";
 const std::string SystemConstants::RAPID::TYPE_STRING = "string";
 
 const std::string Identifiers::ACTIVE                         = "active";
+const std::string Identifiers::ARM                            = "arm";
+const std::string Identifiers::CFG_DT_INSTANCE_LI             = "cfg-dt-instance-li";
 const std::string Identifiers::CFG_IA_T_LI                    = "cfg-ia-t-li";
 const std::string Identifiers::CTRL_TYPE                      = "ctrl-type";
 const std::string Identifiers::CTRLEXECSTATE                  = "ctrlexecstate";
@@ -268,6 +270,7 @@ const std::string Identifiers::EXCSTATE                       = "excstate";
 const std::string Identifiers::IOS_SIGNAL                     = "ios-signal";
 const std::string Identifiers::HOME_DIRECTORY                 = "$home";
 const std::string Identifiers::LVALUE                         = "lvalue";
+const std::string Identifiers::MOC                            = "moc";
 const std::string Identifiers::MOTIONTASK                     = "motiontask";
 const std::string Identifiers::NAME                           = "name";
 const std::string Identifiers::OPMODE                         = "opmode";
@@ -279,6 +282,7 @@ const std::string Identifiers::STATE                          = "state";
 const std::string Identifiers::SYS                            = "sys";
 const std::string Identifiers::SYS_OPTION_LI                  = "sys-option-li";
 const std::string Identifiers::SYS_SYSTEM_LI                  = "sys-system-li";
+const std::string Identifiers::TITLE                          = "title";
 const std::string Identifiers::TYPE                           = "type";
 const std::string Identifiers::VALUE                          = "value";
 const std::string Identifiers::CLASS                          = "class";
@@ -315,6 +319,7 @@ const std::string Resources::RW_RAPID_TASKS                   = Services::RW + "
 const std::string Resources::RW_SYSTEM                        = Services::RW + "/system";
 
 const XMLAttribute XMLAttributes::CLASS_ACTIVE(Identifiers::CLASS            , Identifiers::ACTIVE);
+const XMLAttribute XMLAttributes::CLASS_CFG_DT_INSTANCE_LI(Identifiers::CLASS, Identifiers::CFG_DT_INSTANCE_LI);
 const XMLAttribute XMLAttributes::CLASS_CFG_IA_T_LI(Identifiers::CLASS       , Identifiers::CFG_IA_T_LI);
 const XMLAttribute XMLAttributes::CLASS_CTRL_TYPE(Identifiers::CLASS         , Identifiers::CTRL_TYPE);
 const XMLAttribute XMLAttributes::CLASS_CTRLEXECSTATE(Identifiers::CLASS     , Identifiers::CTRLEXECSTATE);

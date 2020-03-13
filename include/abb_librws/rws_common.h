@@ -413,6 +413,11 @@ struct SystemConstants
       static const XMLAttribute CLASS_ACTIVE;
 
       /**
+       * \brief Class & cfg-dt-instance-li.
+       */
+      static const XMLAttribute CLASS_CFG_DT_INSTANCE_LI;
+
+      /**
        * \brief Class & cfg-ia-t-li.
        */
       static const XMLAttribute CLASS_CFG_IA_T_LI;
@@ -524,9 +529,19 @@ struct SystemConstants
       static const std::string ACTIVE;
 
       /**
+       * \brief Configuration motion domain type: arm.
+       */
+      static const std::string ARM;
+
+      /**
        * \brief XML attribute name: class.
        */
       static const std::string CLASS;
+
+      /**
+       * \brief Configuration instance list item.
+       */
+      static const std::string CFG_DT_INSTANCE_LI;
 
       /**
        * \brief Configuration list item.
@@ -567,6 +582,11 @@ struct SystemConstants
        * \brief IO signal.
        */
       static const std::string IOS_SIGNAL;
+
+      /**
+       * \brief Motion topic in the system configurations (abbreviated as moc).
+       */
+      static const std::string MOC;
 
       /**
        * \brief Motion task.
@@ -627,6 +647,11 @@ struct SystemConstants
        * \brief Sys system list item.
        */
       static const std::string SYS_SYSTEM_LI;
+
+      /**
+       * \brief Title.
+       */
+      static const std::string TITLE;
 
       /**
        * \brief Type.
