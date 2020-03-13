@@ -6,7 +6,7 @@
 
 ## Overview
 
-A C++ library for interfacing with ABB robot controllers supporting *Robot Web Services* (RWS). See the online [documentation](http://developercenter.robotstudio.com/webservice/api_reference) for a detailed description of what RWS is and how to use it.
+A C++ library for interfacing with ABB robot controllers supporting *Robot Web Services* (RWS) `1.0`. See the online [documentation](http://developercenter.robotstudio.com/webservice/api_reference) for a detailed description of what RWS `1.0` is and how to use it.
 
 * See [abb_libegm](https://github.com/ros-industrial/abb_libegm) for a companion library that interfaces with *Externally Guided Motion* (EGM).
 * See StateMachine Add-In ([1.0](https://robotapps.robotstudio.com/#/viewApp/7fa7065f-457f-47ce-98d7-c04882e703ee) or [1.1](https://robotapps.robotstudio.com/#/viewApp/c163de01-792e-4892-a290-37dbe050b6e1)) for an optional *RobotWare Add-In* that can be useful when configuring an ABB robot controller for use with this library.
@@ -21,7 +21,7 @@ The following is a conceptual sketch of how this RWS library can be viewed, in r
 
 ### Requirements
 
-* RobotWare version `6.0` or higher.
+* RobotWare version `6.0` or higher (less than `7.0`, which uses RWS `2.0`).
 
 ### Dependencies
 
