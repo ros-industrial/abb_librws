@@ -11,6 +11,8 @@ A C++ library for interfacing with ABB robot controllers supporting *Robot Web S
 * See [abb_libegm](https://github.com/ros-industrial/abb_libegm) for a companion library that interfaces with *Externally Guided Motion* (EGM).
 * See [StateMachine Add-In](https://robotapps.robotstudio.com/#/viewApp/7fa7065f-457f-47ce-98d7-c04882e703ee) for an optional *RobotWare Add-In* that can be useful when configuring an ABB robot controller for use with this library.
 
+Please note that this package has not been productized, it is provided "as-is" and only limited support can be expected.
+
 ### Sketch
 
 The following is a conceptual sketch of how this RWS library can be viewed, in relation to an ABB robot controller as well as the EGM companion library mentioned above. The optional *StateMachine Add-In* is related to the robot controller's RAPID program and system configuration.
