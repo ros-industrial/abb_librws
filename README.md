@@ -4,6 +4,10 @@
 [![license - bsd 3 clause](https://img.shields.io/:license-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![support level: vendor](https://img.shields.io/badge/support%20level-vendor-brightgreen.png)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 
+## Important Notes
+
+RobotWare versions `7.0` and higher are currently incompatible with *abb_librws* (due to RWS `1.0` being replaced by RWS `2.0`). See [this](http://developercenter.robotstudio.com/webservice) for more information about the different RWS versions.
+
 ## Overview
 
 A C++ library for interfacing with ABB robot controllers supporting *Robot Web Services* (RWS) `1.0`. See the online [documentation](http://developercenter.robotstudio.com/webservice/api_reference) for a detailed description of what RWS `1.0` is and how to use it.
