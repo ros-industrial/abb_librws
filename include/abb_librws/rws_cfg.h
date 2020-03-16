@@ -83,6 +83,37 @@ struct Arm
 };
 
 /**
+ * \brief Representation of a 'Robot' instance.
+ */
+struct Robot
+{
+  /**
+   * \brief The instance's name.
+   */
+  std::string name;
+
+  /**
+   * \brief The robot's type.
+   */
+  std::string use_robot_type;
+
+  /**
+   * \brief The joints used by the robot.
+   */
+  std::vector<std::string> use_joints;
+
+  /**
+   * \brief The robot's base frame.
+   */
+  Pose base_frame;
+
+  /**
+   * \brief The robot or single that moves the robot's base frame.
+   */
+  std::string base_frame_moved_by;
+};
+
+/**
  * \brief Representation of a 'Single' instance.
  */
 struct Single
