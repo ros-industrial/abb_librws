@@ -83,6 +83,27 @@ struct Arm
 };
 
 /**
+ * \brief Representation of a 'Mechanical Unit' instance.
+ */
+struct MechanicalUnit
+{
+  /**
+   * \brief The instance's name.
+   */
+  std::string name;
+
+  /**
+   * \brief The robot used by the mechanical unit.
+   */
+  std::string use_robot;
+
+  /**
+   * \brief The singles used by the mechanical unit.
+   */
+  std::vector<std::string> use_singles;
+};
+
+/**
  * \brief Representation of a 'Robot' instance.
  */
 struct Robot
