@@ -172,6 +172,27 @@ struct Single
 namespace sys
 {
 /**
+ * \brief Representation of a 'Mechanical Unit Group' instance.
+ */
+struct MechanicalUnitGroup
+{
+  /**
+   * \brief The instance's name.
+   */
+  std::string name;
+
+  /**
+   * \brief The robot (with TCP) used by the group.
+   */
+  std::string robot;
+
+  /**
+   * \brief The mechanical units (without TCP) used by the group.
+   */
+  std::vector<std::string> mechanical_units;
+};
+
+/**
  * \brief Representation of a 'Present Option' instance.
  */
 struct PresentOption
