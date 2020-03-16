@@ -318,6 +318,91 @@ std::vector<cfg::moc::Single> RWSInterface::getCFGSingles()
   return result;
 }
 
+std::vector<cfg::moc::Robot> RWSInterface::getCFGRobots()
+{
+  std::vector<cfg::moc::Robot> result;
+
+  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ROBOT);
+
+  std::vector<Poco::XML::Node*> instances;
+  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+
+  for(size_t i = 0; i < instances.size(); ++i)
+  {
+     std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
+
+     cfg::moc::Robot robot;
+
+    for(size_t j = 0; j < attributes.size(); ++j)
+    {
+      Poco::XML::Node* attribute = attributes[j];
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, Identifiers::NAME))
+      {
+        robot.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_robot_type"))
+      {
+        robot.use_robot_type = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_0") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_1") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_2") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_3") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_4") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_5"))
+      {
+        robot.use_joints.push_back(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_x"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> robot.base_frame.pos.x.value;
+        robot.base_frame.pos.x.value *= 1000.0;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_y"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> robot.base_frame.pos.y.value;
+        robot.base_frame.pos.y.value *= 1000.0;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_z"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> robot.base_frame.pos.z.value;
+        robot.base_frame.pos.z.value *= 1000.0;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u0"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> robot.base_frame.rot.q1.value;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u1"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> robot.base_frame.rot.q2.value;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u2"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> robot.base_frame.rot.q3.value;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u3"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> robot.base_frame.rot.q4.value;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_coordinated"))
+      {
+        robot.base_frame_moved_by = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+    }
+
+     result.push_back(robot);
+  }
+
+  return result;
+}
+
 std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
 {
   std::vector<cfg::moc::Transmission> result;

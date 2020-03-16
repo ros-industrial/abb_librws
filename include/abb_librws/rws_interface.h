@@ -465,6 +465,13 @@ public:
   std::vector<cfg::moc::Transmission> getCFGTransmission();
 
   /**
+   * \brief Retrieves the configuration instances for the present robots.
+   *
+   * \return std::vector<cfg::moc::Robot> containing a list of the present robots.
+   */
+  std::vector<cfg::moc::Robot> getCFGRobots();
+
+  /**
    * \brief A method for retrieving the RobotWare options present on the active robot controller system.
    *
    * This method has been deprecated, please use 'getCFGPresentOptions()' instead.
