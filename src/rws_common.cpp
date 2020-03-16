@@ -277,6 +277,7 @@ const std::string Identifiers::OPMODE                         = "opmode";
 const std::string Identifiers::PRESENT_OPTIONS                = "present_options";
 const std::string Identifiers::RAP_MODULE_INFO_LI             = "rap-module-info-li";
 const std::string Identifiers::RAP_TASK_LI                    = "rap-task-li";
+const std::string Identifiers::ROBOT                          = "robot";
 const std::string Identifiers::RW_VERSION_NAME                = "rwversionname";
 const std::string Identifiers::SINGLE                         = "single";
 const std::string Identifiers::STATE                          = "state";

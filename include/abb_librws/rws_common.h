@@ -624,6 +624,11 @@ struct SystemConstants
       static const std::string RAP_TASK_LI;
 
       /**
+       * \brief Robot.
+       */
+      static const std::string ROBOT;
+
+      /**
        * \brief RobotWare version name.
        */
       static const std::string RW_VERSION_NAME;
