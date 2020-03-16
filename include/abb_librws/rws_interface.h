@@ -447,6 +447,13 @@ public:
   std::vector<cfg::moc::MechanicalUnit> getCFGMechanicalUnits();
 
   /**
+   * \brief Retrieves the configuration instances for the mechanical unit groups defined in the system.
+   *
+   * \return std::vector<cfg::sys::MechanicalUnitGroup> containing a list of the mechanical unit groups in the system.
+   */
+  std::vector<cfg::sys::MechanicalUnitGroup> getCFGMechanicalUnitGroups();
+
+  /**
    * \brief Retrieves the configuration instances for the present (RobotWare) options.
    *
    * \return std::vector<cfg::sys::PresentOption> containing a list of the present (RobotWare) options.
