@@ -106,6 +106,11 @@ struct Single
    * \brief The single's base frame.
    */
   Pose base_frame;
+
+  /**
+   * \brief The robot or single that moves the single's base frame.
+   */
+  std::string base_frame_coordinated;
 };
 } // end namespace moc
 
