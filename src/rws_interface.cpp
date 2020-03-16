@@ -293,9 +293,13 @@ std::vector<cfg::moc::Single> RWSInterface::getCFGSingles()
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> single.base_frame.rot.q4.value;
       }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_coordinated"))
+      {
+        single.base_frame_coordinated = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
     }
 
-    result.push_back(cfg::moc::Single());
+    result.push_back(single);
   }
 
   return result;
