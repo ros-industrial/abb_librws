@@ -39,6 +39,8 @@
 
 #include <string>
 
+#include "rws_rapid.h"
+
 namespace abb
 {
 namespace rws
@@ -78,6 +80,32 @@ struct Arm
    * The unit depends on the type of joint, i.e. [rad] for rotational and [m] for linear.
    */
   double upper_joint_bound;
+};
+
+/**
+ * \brief Representation of a 'Single' instance.
+ */
+struct Single
+{
+  /**
+   * \brief The instance's name.
+   */
+  std::string name;
+
+  /**
+   * \brief The single's type.
+   */
+  std::string use_single_type;
+
+  /**
+   * \brief The joint used by the single.
+   */
+  std::string use_joint;
+
+  /**
+   * \brief The single's base frame.
+   */
+  Pose base_frame;
 };
 } // end namespace moc
 
