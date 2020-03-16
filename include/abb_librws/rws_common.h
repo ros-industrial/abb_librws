@@ -584,6 +584,11 @@ struct SystemConstants
       static const std::string IOS_SIGNAL;
 
       /**
+       * \brief Mechanical unit.
+       */
+      static const std::string MECHANICAL_UNIT;
+
+      /**
        * \brief Motion topic in the system configurations (abbreviated as moc).
        */
       static const std::string MOC;
