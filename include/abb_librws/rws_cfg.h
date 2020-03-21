@@ -83,6 +83,22 @@ struct Arm
 };
 
 /**
+ * \brief Representation of a 'Joint' instance.
+ */
+struct Joint
+{
+  /**
+   * \brief The instance's name.
+   */
+  std::string name;
+
+  /**
+   * \brief The arm used by the joint.
+   */
+  std::string use_arm;
+};
+
+/**
  * \brief Representation of a 'Mechanical Unit' instance.
  */
 struct MechanicalUnit
