@@ -133,6 +133,40 @@ std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
   return result;
 }
 
+std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
+{
+  std::vector<cfg::moc::Joint> result;
+
+  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "JOINT");
+
+  std::vector<Poco::XML::Node*> instances;
+  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+
+  for(size_t i = 0; i < instances.size(); ++i)
+  {
+    std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
+
+    cfg::moc::Joint joint;
+
+    for(size_t j = 0; j < attributes.size(); ++j)
+    {
+      Poco::XML::Node* attribute = attributes[j];
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "name"))
+      {
+        joint.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_arm"))
+      {
+        joint.use_arm = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+    }
+
+    result.push_back(joint);
+  }
+
+  return result;
+}
+
 std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
 {
   std::vector<cfg::sys::PresentOption> result;

@@ -428,6 +428,13 @@ public:
    */
   std::vector<cfg::moc::Arm> getCFGArms();
 
+  /*
+   * \brief Retrieves the configuration instances for the joints defined in the system.
+   *
+   * \return std::vector<cfg::moc::Joint> containing a list of the joints defined in the system.
+   */
+  std::vector<cfg::moc::Joint> getCFGJoints();
+
   /**
    * \brief Retrieves the configuration instances for the present (RobotWare) options.
    *
