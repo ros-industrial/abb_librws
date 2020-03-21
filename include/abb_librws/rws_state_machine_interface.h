@@ -413,6 +413,37 @@ public:
     };
 
     /**
+     * \brief Copy constructor.
+     *
+     * \param other containing the values to copy.
+     */
+    EGMActivateSettings(const EGMActivateSettings& other)
+    :
+    RAPIDRecord(other.record_type_name_)
+    {
+      if (this != &other)
+      {
+        tool = other.tool;
+        wobj = other.wobj;
+        correction_frame = other.correction_frame;
+        sensor_frame = other.sensor_frame;
+        cond_min_max = other.cond_min_max;
+        lp_filter = other.lp_filter;
+        sample_rate = other.sample_rate;
+        max_speed_deviation = other.max_speed_deviation;
+        components_.clear();
+        components_.push_back(&tool);
+        components_.push_back(&wobj);
+        components_.push_back(&correction_frame);
+        components_.push_back(&sensor_frame);
+        components_.push_back(&cond_min_max);
+        components_.push_back(&lp_filter);
+        components_.push_back(&sample_rate);
+        components_.push_back(&max_speed_deviation);
+      }
+    }
+
+    /**
      * \brief The tool to use.
      */
     ToolData tool;
@@ -483,6 +514,29 @@ public:
     }
 
     /**
+     * \brief Copy constructor.
+     *
+     * \param other containing the values to copy.
+     */
+    EGMRunSettings(const EGMRunSettings& other)
+    :
+    RAPIDRecord(other.record_type_name_)
+    {
+      if (this != &other)
+      {
+        cond_time = other.cond_time;
+        ramp_in_time = other.ramp_in_time;
+        offset = other.offset;
+        pos_corr_gain = other.pos_corr_gain;
+        components_.clear();
+        components_.push_back(&cond_time);
+        components_.push_back(&ramp_in_time);
+        components_.push_back(&offset);
+        components_.push_back(&pos_corr_gain);
+      }
+    }
+
+    /**
      * \brief Condition time [s].
      */
     RAPIDNum cond_time;
@@ -544,6 +598,33 @@ public:
       components_.push_back(&activate);
       components_.push_back(&run);
       components_.push_back(&stop);
+    }
+
+    /**
+     * \brief Copy constructor.
+     *
+     * \param other containing the values to copy.
+     */
+    EGMSettings(const EGMSettings& other)
+    :
+    RAPIDRecord(other.record_type_name_)
+    {
+      if (this != &other)
+      {
+        allow_egm_motions = other.allow_egm_motions;
+        use_presync = other.use_presync;
+        setup_uc = other.setup_uc;
+        activate = other.activate;
+        run = other.run;
+        stop = other.stop;
+        components_.clear();
+        components_.push_back(&allow_egm_motions);
+        components_.push_back(&use_presync);
+        components_.push_back(&setup_uc);
+        components_.push_back(&activate);
+        components_.push_back(&run);
+        components_.push_back(&stop);
+      }
     }
 
     /**
