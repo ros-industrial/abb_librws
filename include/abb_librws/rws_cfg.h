@@ -93,6 +93,11 @@ struct Joint
   std::string name;
 
   /**
+   * \brief The joint's logical axis.
+   */
+  int logical_axis;
+
+  /**
    * \brief The arm used by the joint.
    */
   std::string use_arm;
