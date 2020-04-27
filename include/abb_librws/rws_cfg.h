@@ -195,6 +195,22 @@ struct Single
    */
   std::string base_frame_coordinated;
 };
+
+/**
+ * \brief Representation of a 'Transmission' instance.
+ */
+struct Transmission
+{
+  /**
+   * \brief The instance's name.
+   */
+  std::string name;
+
+  /**
+   * \brief Specifies if the corresponding joint uses rotational motion (otherwise linear).
+   */
+  bool rotating_move;
+};
 } // end namespace moc
 
 /**
