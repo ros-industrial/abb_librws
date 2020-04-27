@@ -98,9 +98,19 @@ struct Joint
   int logical_axis;
 
   /**
+   * \brief The joint's kinematic axis number.
+   */
+  int kinematic_axis_number;
+
+  /**
    * \brief The arm used by the joint.
    */
   std::string use_arm;
+
+  /**
+   * \brief The transmission used by the joint.
+   */
+  std::string use_transmission;
 };
 
 /**
