@@ -62,6 +62,113 @@ public:
   };
 
   /**
+   * \brief Type of a mechanical unit.
+   */
+  enum MechanicalUnitType
+  {
+    NONE,      ///< The unit has no type.
+    TCP_ROBOT, ///< The unit is a TCP robot.
+    ROBOT,     ///< The unit is a robot.
+    SINGLE,    ///< The unit is a single.
+    UNDEFINED  ///< The unit is undefined.
+  };
+
+  /**
+   * \brief Mode of a mechanical unit.
+   */
+  enum MechanicalUnitMode
+  {
+    ACTIVATED,  ///< The unit has been activated.
+    DEACTIVATED ///< The unit has been deactivated.
+  };
+
+  /**
+   * \brief A struct for containing static information of a mechanical unit.
+   */
+  struct MechanicalUnitStaticInfo
+  {
+    /**
+     * \brief The unit's type.
+     */
+    MechanicalUnitType type;
+
+    /**
+     * \brief The RAPID task using the unit.
+     */
+    std::string task_name;
+
+    /**
+     * \brief Number of axes in the unit.
+     */
+    int axes;
+
+    /**
+     * \brief Total number of axes in the unit (including axes in possible integrated unit).
+     */
+    int axes_total;
+
+    /**
+     * \brief Name of another unit (that this unit is integrated into).
+     *
+     * Will be set to "NoIntegratedUnit" if this unit is not integrated into another unit.
+     */
+    std::string is_integrated_unit;
+
+    /**
+     * \brief Name of another unit (that is part of this unit).
+     *
+     * Will be set to "NoIntegratedUnit" if this unit has no integrated unit.
+     */
+    std::string has_integrated_unit;
+  };
+
+  /**
+   * \brief A struct for containing dynamic information of a mechanical unit.
+   */
+  struct MechanicalUnitDynamicInfo
+  {
+    /**
+     * \brief Name of the unit's active tool.
+     */
+    std::string tool_name;
+
+    /**
+     * \brief Name of the unit's active work object.
+     */
+    std::string wobj_name;
+
+    /**
+     * \brief Name of the unit's active payload.
+     */
+    std::string payload_name;
+
+    /**
+     * \brief Name of the unit's active total payload.
+     */
+    std::string total_payload_name;
+
+    /**
+     * \brief The unit's current state.
+     */
+    std::string status;
+
+    /**
+     * \brief The unit's current mode.
+     */
+    MechanicalUnitMode mode;
+
+    /**
+     * \brief The unit's current jogging mode.
+     */
+    std::string jog_mode;
+
+    /**
+     * \brief The unit's current coordinate system type.
+     */
+    RWSClient::Coordinate coord_system;
+  };
+
+  /**
    * \brief A struct for containing system information of the robot controller.
    */
   struct SystemInfo
