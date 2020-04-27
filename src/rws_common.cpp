@@ -151,6 +151,28 @@ std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute
   return result;
 }
 
+std::string xmlNodeGetAttributeValue(const Poco::XML::Node* p_node, const std::string& name)
+{
+  std::string result;
+
+  if (p_node && p_node->hasAttributes() && !name.empty())
+  {
+    Poco::AutoPtr<Poco::XML::NamedNodeMap> p_attributes(p_node->attributes());
+
+    for (unsigned long i = 0; i < p_attributes->length(); ++i)
+    {
+      Poco::XML::Node* p_attribute = p_attributes->item(i);
+
+      if (p_attribute->nodeName() == name)
+      {
+        return p_attribute->nodeValue();
+      }
+    }
+  }
+
+  return result;
+}
+
 bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute& attribute)
 {
   bool found = attribute.name.empty() && attribute.value.empty();

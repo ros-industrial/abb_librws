@@ -121,6 +121,16 @@ std::string xmlFindTextContent(Poco::AutoPtr<Poco::XML::Document> p_xml_document
 std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute& attribute);
 
 /**
+ * \brief A function for getting a XML node's attribute value.
+ *
+ * \param p_node for the XML node to process.
+ * \param name specifying the XML attribute's name to get the value for.
+ *
+ * \return std::string with the attribute's value. Empty if the attribute was not found.
+ */
+std::string xmlNodeGetAttributeValue(const Poco::XML::Node* p_node, const std::string& name);
+
+/**
  * \brief A function for checking if an XML node has the specified attribute.
  *
  * \param p_node for the XML node to check.
