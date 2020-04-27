@@ -160,9 +160,18 @@ std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> joint.logical_axis;
       }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "kinematic_axis_number"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> joint.kinematic_axis_number;
+      }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_arm"))
       {
         joint.use_arm = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_transmission"))
+      {
+        joint.use_transmission = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
       }
     }
 
