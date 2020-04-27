@@ -434,6 +434,26 @@ public:
   std::string getIOSignal(const std::string& iosignal);
 
   /**
+   * \brief A method for retrieving static information about a mechanical unit.
+   *
+   * \param mechunit for the mechanical unit's name.
+   * \param p_static_info for storing the retrieved information.
+   *
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   */
+  bool getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo* p_static_info);
+
+  /**
+   * \brief A method for retrieving dynamic information about a mechanical unit.
+   *
+   * \param mechunit for the mechanical unit's name.
+   * \param p_dynamic_info for storing the retrieved information.
+   *
+   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   */
+  bool getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo* p_dynamic_info);
+
+  /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.

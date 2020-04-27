@@ -393,6 +393,24 @@ public:
   RWSResult getIOSignal(const std::string& iosignal);
 
   /**
+   * \brief A method for retrieving static information about a mechanical unit.
+   *
+   * \param mechunit for the mechanical unit's name.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult getMechanicalUnitStaticInfo(const std::string& mechunit);
+
+  /**
+   * \brief A method for retrieving dynamic information about a mechanical unit.
+   *
+   * \param mechunit for the mechanical unit's name.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult getMechanicalUnitDynamicInfo(const std::string& mechunit);
+
+  /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
