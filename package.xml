@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
-<package>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>abb_librws</name>
   <version>1.0.0</version>
-  <description>The abb_librws package for easing the use of ABB Robot Web Services (RWS) feature</description>
-
+  <description>Package for easing the use of ABB's Robot Web Services (RWS) feature</description>
   <maintainer email="jon.tjerngren@se.abb.com">Jon Tjerngren</maintainer>
-
   <license>BSD 3-Clause</license>
-
-  <author email="jon.tjerngren@se.abb.com">Jon Tjerngren</author>
-
   <url type="repository">https://github.com/ros-industrial/abb_librws</url>
+  <author>Jon Tjerngren</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>cmake</buildtool_depend>
 
-  <build_depend>cmake_modules</build_depend>
-  <build_depend version_gte="1.4.3">libpoco-dev</build_depend>
+  <depend version_gte="1.4.3">libpoco-dev</depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
 </package>

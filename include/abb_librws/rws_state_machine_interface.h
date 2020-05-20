@@ -120,7 +120,7 @@ public:
     /**
      * \brief IO signal resources.
      */
-    struct IOSignals
+    struct ABB_LIBRWS_EXPORT IOSignals
     {
       /**
        * \brief IO signal for requesting start of EGM joint motions (i.e. EGM joint mode).
@@ -185,7 +185,7 @@ public:
       /**
        * \brief RAPID modules.
        */
-      struct Modules
+      struct ABB_LIBRWS_EXPORT Modules
       {
         /**
          * \brief RAPID module providing functionality for using EGM.
@@ -225,7 +225,7 @@ public:
       /**
        * \brief Predefiend RAPID procedures.
        */
-      struct Procedures
+      struct ABB_LIBRWS_EXPORT Procedures
       {
         /**
          * \brief Predefined RAPID procedure "runCallByVar".
@@ -261,7 +261,7 @@ public:
       /**
        * \brief RAPID symbols.
        */
-      struct Symbols
+      struct ABB_LIBRWS_EXPORT Symbols
       {
         /**
          * \brief RAPID symbol indicating the current EGM action of a RAPID motion task.
