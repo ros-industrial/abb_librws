@@ -283,11 +283,11 @@ public:
    */
   enum Coordinate
   {
-    BASE,  ///< \brief Base frame coordinate
-    WORLD,  ///< \brief World frame coordinate
-    TOOL,  ///< \brief Tool frame coordinate
-    WOBJ,  ///< \brief Work object (wobj) frame coordinate
-    ACTIVE  ///< \brief Currently active coordinate
+    BASE,  ///< \brief Base frame coordinate.
+    WORLD, ///< \brief World frame coordinate.
+    TOOL,  ///< \brief Tool frame coordinate.
+    WOBJ,  ///< \brief Work object (wobj) frame coordinate.
+    ACTIVE ///< \brief Currently active coordinate.
   };
 
   /**

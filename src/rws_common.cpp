@@ -107,7 +107,8 @@ std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute
         {
           Poco::XML::Node* p_child = p_children->item(i);
 
-          if (p_child->nodeType() == Poco::XML::Node::TEXT_NODE && xmlNodeHasAttribute(p_child->parentNode(), attribute))
+          if (p_child->nodeType() == Poco::XML::Node::TEXT_NODE &&
+              xmlNodeHasAttribute(p_child->parentNode(), attribute))
           {
             found = true;
             result = p_child->nodeValue();
