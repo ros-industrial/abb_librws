@@ -826,6 +826,19 @@ bool RWSInterface::setMotorsOff()
   return rws_client_.setMotorsOff().success;
 }
 
+bool RWSInterface::setSpeedRatio(unsigned int ratio)
+{
+  if(ratio > 100)
+  {
+    ratio = 100;
+  }
+
+  std::stringstream ss;
+  ss << ratio;
+
+  return rws_client_.setSpeedRatio(ss.str()).success;
+}
+
 std::vector<RWSInterface::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
 {
   std::vector<RAPIDModuleInfo> result;
