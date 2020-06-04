@@ -572,6 +572,17 @@ public:
   RWSResult setMotorsOff();
 
   /**
+   * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
+   *
+   * Note: The ratio must be an integer [0, 100] in text format.
+   *
+   * \param ratio specifying the new ratio.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult setSpeedRatio(const std::string& ratio);
+
+  /**
    * \brief A method for retrieving a file from the robot controller.
    *
    * Note: Depending on the file, then the content can be in text or binary format.

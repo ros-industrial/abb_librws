@@ -439,6 +439,18 @@ RWSClient::RWSResult RWSClient::setMotorsOff()
   return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
+RWSClient::RWSResult RWSClient::setSpeedRatio(const std::string& ratio)
+{
+  std::string uri = "/rw/panel/speedratio?action=setspeedratio";
+  std::string content = "speed-ratio=" + ratio;
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = false;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
+
+  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+}
+
 RWSClient::RWSResult RWSClient::getFile(const FileResource& resource, std::string* p_file_content)
 {
   RWSResult rws_result;
