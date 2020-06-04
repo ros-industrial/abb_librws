@@ -924,6 +924,13 @@ private:
       bool signalEGMStartPose() const;
 
       /**
+       * \brief Signal the StateMachine AddIn to start EGM position streaming.
+       *
+       * \return bool indicating if the signaling was successful or not.
+       */
+      bool signalEGMStartStream() const;
+
+      /**
        * \brief Signal the StateMachine AddIn to stop any current EGM motions.
        *
        * \return bool indicating if the signaling was successful or not.

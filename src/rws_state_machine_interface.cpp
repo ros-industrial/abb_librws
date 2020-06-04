@@ -161,6 +161,11 @@ bool RWSStateMachineInterface::Services::EGM::signalEGMStartPose() const
   return p_rws_interface_->toggleIOSignal(IOSignals::EGM_START_POSE);
 }
 
+bool RWSStateMachineInterface::Services::EGM::signalEGMStartStream() const
+{
+  return p_rws_interface_->toggleIOSignal(IOSignals::EGM_START_STREAM);
+}
+
 bool RWSStateMachineInterface::Services::EGM::signalEGMStop() const
 {
   return p_rws_interface_->toggleIOSignal(IOSignals::EGM_STOP);
