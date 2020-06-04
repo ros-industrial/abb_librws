@@ -557,6 +557,17 @@ public:
                                   const std::string& wobj = "");
 
   /**
+   * \brief A method for retrieving the data of a RAPID symbol in raw text format.
+   *
+   * \param task for the name of the RAPID task containing the RAPID symbol.
+   * \param module for the name of the RAPID module containing the RAPID symbol.
+   * \param name for the name of the RAPID symbol.
+   *
+   * \return std::string containing the data. Empty if not found.
+   */
+  std::string getRAPIDSymbolData(const std::string& task, const std::string& module, const std::string& name);
+
+  /**
    * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.

@@ -928,6 +928,14 @@ bool RWSInterface::setIOSignal(const std::string& iosignal, const std::string& v
   return rws_client_.setIOSignal(iosignal, value).success;
 }
 
+std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
+                                             const std::string& module,
+                                             const std::string& name)
+{
+  return xmlFindTextContent(rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name)).p_xml_document,
+                            XMLAttributes::CLASS_VALUE);
+}
+
 bool RWSInterface::getRAPIDSymbolData(const std::string& task,
                                       const std::string& module,
                                       const std::string& name,
