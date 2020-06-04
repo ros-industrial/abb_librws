@@ -648,6 +648,21 @@ public:
   bool setIOSignal(const std::string& iosignal, const std::string& value);
 
   /**
+   * \brief A method for setting the data of a RAPID symbol via raw text format.
+   *
+   * \param task for the name of the RAPID task containing the RAPID symbol.
+   * \param module for the name of the RAPID module containing the RAPID symbol.
+   * \param name for the name of the RAPID symbol.
+   * \param data containing the RAPID symbol's new data.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */
+  bool setRAPIDSymbolData(const std::string& task,
+                          const std::string& module,
+                          const std::string& name,
+                          const std::string& data);
+
+  /**
    * \brief A method for setting the data of a RAPID symbol.
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.
