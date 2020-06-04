@@ -937,6 +937,13 @@ private:
        */
       bool signalEGMStop() const;
 
+      /**
+       * \brief Signal the StateMachine AddIn to stop any current position streaming.
+       *
+       * \return bool indicating if the signaling was successful or not.
+       */
+      bool signalEGMStopStream() const;
+
     private:
       /**
        * \brief The RWS interface instance.

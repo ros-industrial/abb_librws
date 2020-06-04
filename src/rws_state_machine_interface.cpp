@@ -171,6 +171,11 @@ bool RWSStateMachineInterface::Services::EGM::signalEGMStop() const
   return p_rws_interface_->toggleIOSignal(IOSignals::EGM_STOP);
 }
 
+bool RWSStateMachineInterface::Services::EGM::signalEGMStopStream() const
+{
+  return p_rws_interface_->toggleIOSignal(IOSignals::EGM_STOP_STREAM);
+}
+
 
 
 
