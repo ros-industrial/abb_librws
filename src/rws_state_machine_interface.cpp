@@ -55,7 +55,9 @@ typedef RWSStateMachineInterface::ResourceIdentifiers::RAPID::Symbols    Symbols
 
 const std::string IOSignals::EGM_START_JOINT    = "EGM_START_JOINT";
 const std::string IOSignals::EGM_START_POSE     = "EGM_START_POSE";
+const std::string IOSignals::EGM_START_STREAM   = "EGM_START_STREAM";
 const std::string IOSignals::EGM_STOP           = "EGM_STOP";
+const std::string IOSignals::EGM_STOP_STREAM    = "EGM_STOP_STREAM";
 const std::string IOSignals::OUTPUT_STATIONARY  = "OUTPUT_STATIONARY";
 const std::string IOSignals::RUN_RAPID_ROUTINE  = "RUN_RAPID_ROUTINE";
 const std::string IOSignals::RUN_SG_ROUTINE     = "RUN_SG_ROUTINE";

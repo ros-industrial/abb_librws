@@ -137,11 +137,25 @@ public:
       static const std::string EGM_START_POSE;
 
       /**
+       * \brief IO signal for requesting start of EGM position streaming (i.e. only feedback).
+       *
+       * Note: Requires that the EGM option exists in the controller system.
+       */
+      static const std::string EGM_START_STREAM;
+
+      /**
        * \brief IO signal for requesting stop of EGM motions.
        *
        * Note: Requires that the EGM option exists in the controller system.
        */
       static const std::string EGM_STOP;
+
+      /**
+       * \brief IO signal for requesting stop of EGM position streaming.
+       *
+       * Note: Requires that the EGM option exists in the controller system.
+       */
+      static const std::string EGM_STOP_STREAM;
 
       /**
        * \brief Prefix for IO signals, used for checking if a mechanical unit is stationary or not.
