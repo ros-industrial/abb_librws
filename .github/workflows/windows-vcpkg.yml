@@ -25,7 +25,9 @@ jobs:
         vcpkgArguments: '--triplet x64-windows poco'
         # commit from vcpkg's master branch on 2020/06/01
         vcpkgGitCommitId: 6d36e2a86baf8d227fc6dce587bd69997d67fb5e
-        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        # Workaround for https://github.com/ros-industrial/abb_libegm/pull/101#discussion_r433370614
+        # This line can be removed once Poco is linked via its imported CMake targets
+        vcpkgDirectory: '${{ github.workspace }}/../vcpkg'  
 
     - name: Configure the project 
       shell: bash
