@@ -465,6 +465,25 @@ public:
   }
 
   /**
+   * \brief Copy constructor.
+   *
+   * \param other containing the values to copy.
+   */
+  JointTarget(const JointTarget& other)
+  :
+  RAPIDRecord(other.record_type_name_)
+  {
+    if (this != &other)
+    {
+      robax = other.robax;
+      extax = other.extax;
+      components_.clear();
+      components_.push_back(&robax);
+      components_.push_back(&extax);
+    }
+  }
+
+  /**
    * \brief Robot axes.
    */
   RobJoint robax;
@@ -567,6 +586,25 @@ public:
   }
 
   /**
+   * \brief Copy constructor.
+   *
+   * \param other containing the values to copy.
+   */
+  Pose(const Pose& other)
+  :
+  RAPIDRecord(other.record_type_name_)
+  {
+    if (this != &other)
+    {
+      pos = other.pos;
+      rot = other.rot;
+      components_.clear();
+      components_.push_back(&pos);
+      components_.push_back(&rot);
+    }
+  }
+
+  /**
    * \brief Position (x, y, z) [mm].
    */
   Pos pos;
@@ -637,6 +675,29 @@ public:
   }
 
   /**
+   * \brief Copy constructor.
+   *
+   * \param other containing the values to copy.
+   */
+  RobTarget(const RobTarget& other)
+  :
+  RAPIDRecord(other.record_type_name_)
+  {
+    if (this != &other)
+    {
+      pos = other.pos;
+      orient = other.orient;
+      robconf = other.robconf;
+      extax = other.extax;
+      components_.clear();
+      components_.push_back(&pos);
+      components_.push_back(&orient);
+      components_.push_back(&robconf);
+      components_.push_back(&extax);
+    }
+  }
+
+  /**
    * \brief Position for the tool center point [mm].
    */
   Pos pos;
@@ -676,6 +737,33 @@ public:
     components_.push_back(&ix);
     components_.push_back(&iy);
     components_.push_back(&iz);
+  }
+
+  /**
+   * \brief Copy constructor.
+   *
+   * \param other containing the values to copy.
+   */
+  LoadData(const LoadData& other)
+  :
+  RAPIDRecord(other.record_type_name_)
+  {
+    if (this != &other)
+    {
+      mass = other.mass;
+      cog = other.cog;
+      aom = other.aom;
+      ix = other.ix;
+      iy = other.iy;
+      iz = other.iz;
+      components_.clear();
+      components_.push_back(&mass);
+      components_.push_back(&cog);
+      components_.push_back(&aom);
+      components_.push_back(&ix);
+      components_.push_back(&iy);
+      components_.push_back(&iz);
+    }
   }
 
   /**
@@ -728,6 +816,27 @@ public:
   }
 
   /**
+   * \brief Copy constructor.
+   *
+   * \param other containing the values to copy.
+   */
+  ToolData(const ToolData& other)
+  :
+  RAPIDRecord(other.record_type_name_)
+  {
+    if (this != &other)
+    {
+      robhold = other.robhold;
+      tframe = other.tframe;
+      tload = other.tload;
+      components_.clear();
+      components_.push_back(&robhold);
+      components_.push_back(&tframe);
+      components_.push_back(&tload);
+    }
+  }
+
+  /**
    * \brief Defines if the robot is holding the tool or not.
    */
   RAPIDBool robhold;
@@ -761,6 +870,31 @@ public:
     components_.push_back(&ufmec);
     components_.push_back(&uframe);
     components_.push_back(&oframe);
+  }
+
+  /**
+   * \brief Copy constructor.
+   *
+   * \param other containing the values to copy.
+   */
+  WObjData(const WObjData& other)
+  :
+  RAPIDRecord(other.record_type_name_)
+  {
+    if (this != &other)
+    {
+      robhold = other.robhold;
+      ufprog = other.ufprog;
+      ufmec = other.ufmec;
+      uframe = other.uframe;
+      oframe = other.oframe;
+      components_.clear();
+      components_.push_back(&robhold);
+      components_.push_back(&ufprog);
+      components_.push_back(&ufmec);
+      components_.push_back(&uframe);
+      components_.push_back(&oframe);
+    }
   }
 
   /**
