@@ -121,7 +121,7 @@ std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute
 bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute& attribute);
 
 /**
- * \brief A method for checking if a XML node has the specified attribute.
+ * \brief A method for checking if an XML node has the specified attribute.
  *
  * \param p_node for the XML node to check.
  * \param name specifying the attribute's name.
