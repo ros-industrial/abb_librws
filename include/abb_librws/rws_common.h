@@ -80,6 +80,16 @@ struct XMLAttribute
 };
 
 /**
+ * \brief Returns all children of the given node that have the specifed attribute (name and value).
+ *
+ * \param p_root for the root node to search.
+ * \param attribute specifying the XML attribute (name and value) that the children should have.
+ *
+ * \return std::vector<Poco::XML::Node*> with the children (empty if none are found, or if the root node is nullptr).
+ */
+std::vector<Poco::XML::Node*> xmlFindNodes(Poco::XML::Node* p_root, const XMLAttribute& attribute);
+
+/**
  * \brief A function for finding all nodes in an XML document that has the specifed attribute (name and value).
  *
  * \param p_xml_document for the XML document to search.
@@ -89,16 +99,6 @@ struct XMLAttribute
  */
 std::vector<Poco::XML::Node*> xmlFindNodes(Poco::AutoPtr<Poco::XML::Document> p_xml_document,
                                            const XMLAttribute& attribute);
-
-/**
- * \brief Returns all children of the given node that have the specifed attribute (name and value).
- *
- * \param p_root for the root node to search.
- * \param attribute specifying the XML attribute (name and value) that the children should have.
- *
- * \return std::vector<Poco::XML::Node*> with the children (empty if none are found, or if the root node is nullptr).
- */
-std::vector<Poco::XML::Node*> xmlFindNodes(Poco::XML::Node* p_root, const XMLAttribute& attribute);
 
 /**
  * \brief A function for finding the text content of an XML node in an XML document. It stops after the first hit.
