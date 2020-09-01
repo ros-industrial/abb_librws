@@ -148,6 +148,11 @@ bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute& attr
   return found;
 }
 
+bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const std::string& name, const std::string& value)
+{
+  return xmlNodeHasAttribute(p_node, XMLAttribute(name, value));
+}
+
 
 
 
