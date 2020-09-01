@@ -91,7 +91,7 @@ std::vector<Poco::XML::Node*> xmlFindNodes(Poco::AutoPtr<Poco::XML::Document> p_
                                            const XMLAttribute& attribute);
 
 /**
- * \brief Finds all sub nodes under a root node that has the specifed attribute (name and value).
+ * \brief Returns all children of the given node that have the specifed attribute (name and value).
  *
  * \param p_root for the root node to search.
  * \param attribute specifying the XML attribute (name and value) that the sub nodes should have.
