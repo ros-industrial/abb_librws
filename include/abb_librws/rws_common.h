@@ -96,7 +96,7 @@ std::vector<Poco::XML::Node*> xmlFindNodes(Poco::AutoPtr<Poco::XML::Document> p_
  * \param p_root for the root node to search.
  * \param attribute specifying the XML attribute (name and value) that the children should have.
  *
- * \return std::vector<Poco::XML::Node*> containing the found nodes.
+ * \return std::vector<Poco::XML::Node*> with the children (empty if none are found, or if the root node is nullptr).
  */
 std::vector<Poco::XML::Node*> xmlFindNodes(Poco::XML::Node* p_root, const XMLAttribute& attribute);
 
