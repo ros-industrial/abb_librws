@@ -212,12 +212,12 @@ public:
         static const std::string T_ROB_SG;
 
         /**
-         * \brief RAPID module providing utility functionallity.
+         * \brief RAPID module providing utility functionality.
          */
         static const std::string T_ROB_UTILITY;
 
         /**
-         * \brief RAPID module providing functionallity for a watchdog.
+         * \brief RAPID module providing functionality for a watchdog.
          */
         static const std::string T_ROB_WATCHDOG;
       };

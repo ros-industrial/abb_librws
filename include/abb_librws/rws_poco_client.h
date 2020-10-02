@@ -147,12 +147,12 @@ public:
       struct WebSocketInfo
       {
         /**
-         * \brief Flags from a recieved WebSocket frame.
+         * \brief Flags from a received WebSocket frame.
          */
         int flags;
 
         /**
-         * \brief Content from a recieved WebSocket frame.
+         * \brief Content from a received WebSocket frame.
          */
         std::string frame_content;
 
@@ -179,7 +179,7 @@ public:
     GeneralStatus status;
 
     /**
-     * \brief Container for an exception message (if one occured).
+     * \brief Container for an exception message (if one occurred).
      */
     std::string exception_message;
 

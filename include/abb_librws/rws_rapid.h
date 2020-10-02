@@ -908,7 +908,7 @@ public:
   RAPIDBool ufprog;
 
   /**
-   * \brief User frame mechancial unit.
+   * \brief User frame mechanical unit.
    */
   RAPIDString ufmec;
 
