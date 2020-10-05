@@ -147,12 +147,12 @@ public:
       struct WebSocketInfo
       {
         /**
-         * \brief Flags from a recieved WebSocket frame.
+         * \brief Flags from a received WebSocket frame.
          */
         int flags;
 
         /**
-         * \brief Content from a recieved WebSocket frame.
+         * \brief Content from a received WebSocket frame.
          */
         std::string frame_content;
 
@@ -179,7 +179,7 @@ public:
     GeneralStatus status;
 
     /**
-     * \brief Container for an exception message (if one occured).
+     * \brief Container for an exception message (if one occurred).
      */
     std::string exception_message;
 
@@ -343,17 +343,17 @@ public:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult webSocketRecieveFrame();
+  POCOResult webSocketReceiveFrame();
 
   /**
    * \brief Forcibly shut down the websocket connection.
    *
    * The connection is shut down immediately.
-   * Subsequently, the function will block until a current call to webSocketRecieveFrame() has finished,
+   * Subsequently, the function will block until a current call to webSocketReceiveFrame() has finished,
    * before cleaning up the local state.
    *
    * Note that since mutexes do not guarantee the order of acquisition for multiple contenders,
-   * it is undefined how many calls to webSocketRecieveFrame() will still attempt to use the shut down
+   * it is undefined how many calls to webSocketReceiveFrame() will still attempt to use the shut down
    * connection before the local state is cleaned. Those invocation will throw a runtime error.
    */
   void webSocketShutdown();

@@ -378,7 +378,7 @@ POCOClient::POCOResult POCOClient::webSocketConnect(const std::string& uri,
   return result;
 }
 
-POCOClient::POCOResult POCOClient::webSocketRecieveFrame()
+POCOClient::POCOResult POCOClient::webSocketReceiveFrame()
 {
   // Lock the object's mutex. It is released when the method goes out of scope.
   ScopedLock<Mutex> lock(websocket_use_mutex_);
@@ -475,7 +475,7 @@ void POCOClient::webSocketShutdown()
   p_websocket_->shutdown();
 
   // Also acquire the websocket lock before invalidating the pointer,
-  // or we will break running calls to webSocketRecieveFrame().
+  // or we will break running calls to webSocketReceiveFrame().
   ScopedLock<Mutex> use_lock(websocket_use_mutex_);
   p_websocket_ = Poco::SharedPtr<Poco::Net::WebSocket>();
 }

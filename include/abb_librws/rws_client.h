@@ -81,7 +81,7 @@ public:
     Poco::AutoPtr<Poco::XML::Document> p_xml_document;
 
     /**
-     * \brief Container for an error message (if one occured).
+     * \brief Container for an error message (if one occurred).
      */
     std::string error_message;
 

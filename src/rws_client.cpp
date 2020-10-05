@@ -512,7 +512,7 @@ RWSClient::RWSResult RWSClient::waitForSubscriptionEvent()
   evaluation_conditions.parse_message_into_xml = true;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
 
-  return evaluatePOCOResult(webSocketRecieveFrame(), evaluation_conditions);
+  return evaluatePOCOResult(webSocketReceiveFrame(), evaluation_conditions);
 }
 
 RWSClient::RWSResult RWSClient::endSubscription()

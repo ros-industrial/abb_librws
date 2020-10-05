@@ -521,7 +521,7 @@ public:
   bool endSubscription();
 
   /**
-   * \brief Froce close the active subscription connection.
+   * \brief Force close the active subscription connection.
    *
    * This will cause waitForSubscriptionEvent() to return or throw.
    * It does not delete the subscription from the controller.
