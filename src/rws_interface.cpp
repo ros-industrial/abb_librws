@@ -136,23 +136,23 @@ bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
       std::string type = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "type"));
       if(type == "None")
       {
-        p_static_info->type = MechanicalUnitType::NONE;
+        p_static_info->type = NONE;
       }
       else if(type == "TCPRobot")
       {
-        p_static_info->type = MechanicalUnitType::TCP_ROBOT;
+        p_static_info->type = TCP_ROBOT;
       }
       else if(type == "Robot")
       {
-        p_static_info->type = MechanicalUnitType::ROBOT;
+        p_static_info->type = ROBOT;
       }
       else if(type == "Single")
       {
-        p_static_info->type = MechanicalUnitType::SINGLE;
+        p_static_info->type = SINGLE;
       }
       else
       {
-        p_static_info->type = MechanicalUnitType::UNDEFINED;
+        p_static_info->type = UNDEFINED;
       }
 
       std::stringstream axes(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes")));
@@ -190,29 +190,29 @@ bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
       std::string mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "mode"));
       if(mode == "Activated")
       {
-        p_dynamic_info->mode = MechanicalUnitMode::ACTIVATED;
+        p_dynamic_info->mode = ACTIVATED;
       }
       else
       {
-        p_dynamic_info->mode = MechanicalUnitMode::DEACTIVATED;
+        p_dynamic_info->mode = DEACTIVATED;
       }
 
       std::string coord_system = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "coord-system"));
       if(coord_system == "Base")
       {
-        p_dynamic_info->coord_system = RWSClient::Coordinate::BASE;
+        p_dynamic_info->coord_system = RWSClient::BASE;
       }
       else if(coord_system == "Tool")
       {
-        p_dynamic_info->coord_system = RWSClient::Coordinate::TOOL;
+        p_dynamic_info->coord_system = RWSClient::TOOL;
       }
       else if(coord_system == "Wobj")
       {
-        p_dynamic_info->coord_system = RWSClient::Coordinate::WOBJ;
+        p_dynamic_info->coord_system = RWSClient::WOBJ;
       }
       else
       {
-        p_dynamic_info->coord_system = RWSClient::Coordinate::WORLD;
+        p_dynamic_info->coord_system = RWSClient::WORLD;
       }
 
       result = true;
