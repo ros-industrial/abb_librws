@@ -124,7 +124,7 @@ std::string xmlFindTextContent(const Poco::XML::Node* p_node, const XMLAttribute
  * \brief A function for getting an XML node's attribute value.
  *
  * \param p_node for the XML node to process.
- * \param name specifying the XML attribute's name to get the value for.
+ * \param name specifying the XML attribute's name to get the value of.
  *
  * \return std::string with the attribute's value. Empty if the attribute was not found.
  */
