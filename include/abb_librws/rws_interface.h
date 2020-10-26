@@ -437,21 +437,21 @@ public:
    * \brief A method for retrieving static information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * \param p_static_info for storing the retrieved information.
+   * \param static_info for storing the retrieved information.
    *
    * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
-  bool getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo* p_static_info);
+  bool getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
 
   /**
    * \brief A method for retrieving dynamic information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * \param p_dynamic_info for storing the retrieved information.
+   * \param dynamic_info for storing the retrieved information.
    *
    * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
-  bool getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo* p_dynamic_info);
+  bool getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
 
   /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.

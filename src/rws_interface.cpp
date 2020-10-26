@@ -117,106 +117,100 @@ std::string RWSInterface::getIOSignal(const std::string& iosignal)
   return result;
 }
 
-bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo* p_static_info)
+bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info)
 {
   bool result = false;
 
-  if (p_static_info)
+  RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitStaticInfo(mechunit);
+
+  if(rws_result.success)
   {
-    RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitStaticInfo(mechunit);
+    static_info.task_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "task-name"));
+    static_info.is_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
+                                                        XMLAttribute("class", "is-integrated-unit"));
+    static_info.has_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
+                                                         XMLAttribute("class", "has-integrated-unit"));
 
-    if(rws_result.success)
+    std::string type = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "type"));
+    if(type == "None")
     {
-      p_static_info->task_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "task-name"));
-      p_static_info->is_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
-                                                             XMLAttribute("class", "is-integrated-unit"));
-      p_static_info->has_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
-                                                              XMLAttribute("class", "has-integrated-unit"));
-
-      std::string type = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "type"));
-      if(type == "None")
-      {
-        p_static_info->type = NONE;
-      }
-      else if(type == "TCPRobot")
-      {
-        p_static_info->type = TCP_ROBOT;
-      }
-      else if(type == "Robot")
-      {
-        p_static_info->type = ROBOT;
-      }
-      else if(type == "Single")
-      {
-        p_static_info->type = SINGLE;
-      }
-      else
-      {
-        p_static_info->type = UNDEFINED;
-      }
-
-      std::stringstream axes(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes")));
-      axes >> p_static_info->axes;
-
-      std::stringstream axes_total(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes-total")));
-      axes_total >> p_static_info->axes_total;
-
-      result = true;
+      static_info.type = NONE;
     }
+    else if(type == "TCPRobot")
+    {
+      static_info.type = TCP_ROBOT;
+    }
+    else if(type == "Robot")
+    {
+      static_info.type = ROBOT;
+    }
+    else if(type == "Single")
+    {
+      static_info.type = SINGLE;
+    }
+    else
+    {
+      static_info.type = UNDEFINED;
+    }
+
+    std::stringstream axes(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes")));
+    axes >> static_info.axes;
+
+    std::stringstream axes_total(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes-total")));
+    axes_total >> static_info.axes_total;
+
+    result = true;
   }
 
   return result;
 }
 
-bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo* p_dynamic_info)
+bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info)
 {
   bool result = false;
 
-  if (p_dynamic_info)
+  RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitDynamicInfo(mechunit);
+
+  if(rws_result.success)
   {
-    RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitDynamicInfo(mechunit);
+    dynamic_info.tool_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "tool-name"));
+    dynamic_info.wobj_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "wobj-name"));
+    dynamic_info.payload_name = xmlFindTextContent(rws_result.p_xml_document,
+                                                   XMLAttribute("class", "payload-name"));
+    dynamic_info.total_payload_name = xmlFindTextContent(rws_result.p_xml_document,
+                                                         XMLAttribute("class", "total-payload-name"));
+    dynamic_info.status = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "status"));
+    dynamic_info.jog_mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "jog-mode"));
 
-    if(rws_result.success)
+    std::string mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "mode"));
+    if(mode == "Activated")
     {
-      p_dynamic_info->tool_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "tool-name"));
-      p_dynamic_info->wobj_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "wobj-name"));
-      p_dynamic_info->payload_name = xmlFindTextContent(rws_result.p_xml_document,
-                                                        XMLAttribute("class", "payload-name"));
-      p_dynamic_info->total_payload_name = xmlFindTextContent(rws_result.p_xml_document,
-                                                              XMLAttribute("class", "total-payload-name"));
-      p_dynamic_info->status = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "status"));
-      p_dynamic_info->jog_mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "jog-mode"));
-
-      std::string mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "mode"));
-      if(mode == "Activated")
-      {
-        p_dynamic_info->mode = ACTIVATED;
-      }
-      else
-      {
-        p_dynamic_info->mode = DEACTIVATED;
-      }
-
-      std::string coord_system = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "coord-system"));
-      if(coord_system == "Base")
-      {
-        p_dynamic_info->coord_system = RWSClient::BASE;
-      }
-      else if(coord_system == "Tool")
-      {
-        p_dynamic_info->coord_system = RWSClient::TOOL;
-      }
-      else if(coord_system == "Wobj")
-      {
-        p_dynamic_info->coord_system = RWSClient::WOBJ;
-      }
-      else
-      {
-        p_dynamic_info->coord_system = RWSClient::WORLD;
-      }
-
-      result = true;
+      dynamic_info.mode = ACTIVATED;
     }
+    else
+    {
+      dynamic_info.mode = DEACTIVATED;
+    }
+
+    std::string coord_system = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "coord-system"));
+    if(coord_system == "Base")
+    {
+      dynamic_info.coord_system = RWSClient::BASE;
+    }
+    else if(coord_system == "Tool")
+    {
+      dynamic_info.coord_system = RWSClient::TOOL;
+    }
+    else if(coord_system == "Wobj")
+    {
+      dynamic_info.coord_system = RWSClient::WOBJ;
+    }
+    else
+    {
+      dynamic_info.coord_system = RWSClient::WORLD;
+    }
+
+    result = true;
   }
 
   return result;
