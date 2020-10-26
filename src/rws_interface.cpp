@@ -267,8 +267,9 @@ std::vector<RWSInterface::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
     bool is_active = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_ACTIVE) == "On";
     std::string temp = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_EXCSTATE);
 
-    // assume task state is unknown, update based on contents of 'temp'
+    // Assume task state is unknown, update based on contents of 'temp'.
     RAPIDTaskExecutionState execution_state = UNKNOWN;
+
     if(temp == "read")
     {
       execution_state = READY;
