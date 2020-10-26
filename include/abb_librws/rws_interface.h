@@ -67,9 +67,9 @@ public:
   enum MechanicalUnitType
   {
     NONE,      ///< The unit has no type.
-    TCP_ROBOT, ///< The unit is a TCP robot.
-    ROBOT,     ///< The unit is a robot.
-    SINGLE,    ///< The unit is a single.
+    TCP_ROBOT, ///< The unit is a TCP robot (has more than one joint, and can process commands in Cartesian space).
+    ROBOT,     ///< The unit is a robot (has more than one joint, but can only process commands in joint space).
+    SINGLE,    ///< The unit is a single (has only one joint).
     UNDEFINED  ///< The unit is undefined.
   };
 
