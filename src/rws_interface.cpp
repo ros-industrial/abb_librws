@@ -158,7 +158,15 @@ bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
     std::stringstream axes_total(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes-total")));
     axes_total >> static_info.axes_total;
 
-    result = true;
+    // Basic verification.
+    if(!static_info.task_name.empty() &&
+       !static_info.is_integrated_unit.empty() &&
+       !static_info.has_integrated_unit.empty() &&
+       static_info.type != UNDEFINED &&
+       !axes.fail() && !axes_total.fail())
+    {
+      result = true;
+    }
   }
 
   return result;
@@ -211,7 +219,17 @@ bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
       dynamic_info.coord_system = RWSClient::WOBJ;
     }
 
-    result = true;
+    // Basic verification.
+    if(!dynamic_info.tool_name.empty() &&
+       !dynamic_info.wobj_name.empty() &&
+       !dynamic_info.payload_name.empty() &&
+       !dynamic_info.total_payload_name.empty() &&
+       !dynamic_info.status.empty() &&
+       !dynamic_info.jog_mode.empty() &&
+       dynamic_info.mode != UNKNOWN_MODE)
+    {
+      result = true;
+    }
   }
 
   return result;

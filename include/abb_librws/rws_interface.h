@@ -440,7 +440,7 @@ public:
    * \param mechunit for the mechanical unit's name.
    * \param static_info for storing the retrieved information.
    *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   * \return bool indicating if the communication was successful or not (basic verification for non-empty data is made).
    */
   bool getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
 
@@ -450,7 +450,7 @@ public:
    * \param mechunit for the mechanical unit's name.
    * \param dynamic_info for storing the retrieved information.
    *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   * \return bool indicating if the communication was successful or not (basic verification for non-empty data is made).
    */
   bool getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
 
