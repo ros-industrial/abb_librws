@@ -78,8 +78,9 @@ public:
    */
   enum MechanicalUnitMode
   {
-    ACTIVATED,  ///< The unit has been activated.
-    DEACTIVATED ///< The unit has been deactivated.
+    UNKNOWN_MODE, ///< The unit mode is unknown.
+    ACTIVATED,    ///< The unit has been activated.
+    DEACTIVATED   ///< The unit has been deactivated.
   };
 
   /**

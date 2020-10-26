@@ -130,8 +130,11 @@ bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
                                                         XMLAttribute("class", "is-integrated-unit"));
     static_info.has_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
                                                          XMLAttribute("class", "has-integrated-unit"));
-
     std::string type = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "type"));
+
+    // Assume mechanical unit type is undefined, update based on contents of 'type'.
+    static_info.type = UNDEFINED;
+
     if(type == "None")
     {
       static_info.type = NONE;
@@ -147,10 +150,6 @@ bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
     else if(type == "Single")
     {
       static_info.type = SINGLE;
-    }
-    else
-    {
-      static_info.type = UNDEFINED;
     }
 
     std::stringstream axes(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes")));
@@ -181,18 +180,24 @@ bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
                                                          XMLAttribute("class", "total-payload-name"));
     dynamic_info.status = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "status"));
     dynamic_info.jog_mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "jog-mode"));
-
     std::string mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "mode"));
+    std::string coord_system = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "coord-system"));
+
+    // Assume mechanical unit mode is unknown, update based on contents of 'mode'.
+    dynamic_info.mode = UNKNOWN_MODE;
+
     if(mode == "Activated")
     {
       dynamic_info.mode = ACTIVATED;
     }
-    else
+    else if(mode == "Deactivated")
     {
       dynamic_info.mode = DEACTIVATED;
     }
 
-    std::string coord_system = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "coord-system"));
+    // Assume mechanical unit coordinate system is world, update based on contents of 'coord_system'.
+    dynamic_info.coord_system = RWSClient::WORLD;
+
     if(coord_system == "Base")
     {
       dynamic_info.coord_system = RWSClient::BASE;
@@ -204,10 +209,6 @@ bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
     else if(coord_system == "Wobj")
     {
       dynamic_info.coord_system = RWSClient::WOBJ;
-    }
-    else
-    {
-      dynamic_info.coord_system = RWSClient::WORLD;
     }
 
     result = true;
