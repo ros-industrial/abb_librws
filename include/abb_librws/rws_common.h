@@ -413,6 +413,11 @@ struct SystemConstants
       static const XMLAttribute CLASS_CFG_IA_T_LI;
 
       /**
+       * \brief Class & controller type.
+       */
+      static const XMLAttribute CLASS_CTRL_TYPE;
+
+      /**
        * \brief Class & controller execution state.
        */
       static const XMLAttribute CLASS_CTRLEXECSTATE;
@@ -473,6 +478,11 @@ struct SystemConstants
       static const XMLAttribute CLASS_STATE;
 
       /**
+       * \brief Class & sys-option-li.
+       */
+      static const XMLAttribute CLASS_SYS_OPTION_LI;
+
+      /**
        * \brief Class & sys-system-li.
        */
       static const XMLAttribute CLASS_SYS_SYSTEM_LI;
@@ -486,6 +496,11 @@ struct SystemConstants
        * \brief Class & value.
        */
       static const XMLAttribute CLASS_VALUE;
+
+      /**
+       * \brief Class & option.
+       */
+      static const XMLAttribute CLASS_OPTION;
     };
 
     /**
@@ -502,6 +517,11 @@ struct SystemConstants
        * \brief Configuration list item.
        */
       static const std::string CFG_IA_T_LI;
+
+      /**
+       * \brief Controller type.
+       */
+      static const std::string CTRL_TYPE;
 
       /**
        * \brief Controller execution state.
@@ -579,6 +599,11 @@ struct SystemConstants
       static const std::string SYS;
 
       /**
+       * \brief Sys option list item.
+       */
+      static const std::string SYS_OPTION_LI;
+
+      /**
        * \brief Sys system list item.
        */
       static const std::string SYS_SYSTEM_LI;
@@ -592,6 +617,11 @@ struct SystemConstants
        * \brief Value.
        */
       static const std::string VALUE;
+
+      /**
+       * \brief Option.
+       */
+      static const std::string OPTION;
     };
 
     /**

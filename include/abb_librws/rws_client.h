@@ -360,6 +360,13 @@ public:
   }
 
   /**
+   * \brief Retrieves a list of controller resources (e.g. controller identity and clock information).
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult getContollerService();
+
+  /**
    * \brief A method for retrieving the configuration instances of a type, belonging to a specific configuration topic.
    *
    * \param topic specifying the configuration topic.

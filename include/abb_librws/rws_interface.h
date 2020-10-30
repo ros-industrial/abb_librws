@@ -63,6 +63,16 @@ public:
      * \brief The system's name.
      */
     std::string system_name;
+
+    /**
+     * \brief The system's type (e.g. if it is a virtual controller system or not).
+     */
+    std::string system_type;
+
+    /**
+     * \brief The system's options.
+     */
+    std::vector<std::string> system_options;
   };
 
   /**
@@ -359,7 +369,7 @@ public:
   /**
    * \brief A method for retrieving some system information from the robot controller.
    *
-   * \return SystemInfo containing the system information.
+   * \return SystemInfo containing the system information (info will be empty if e.g. a timeout occurred).
    */
   SystemInfo getSystemInfo();
 

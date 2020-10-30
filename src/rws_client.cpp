@@ -103,6 +103,17 @@ void RWSClient::SubscriptionResources::add(const std::string& resource_uri, cons
  * Primary methods
  */
 
+RWSClient::RWSResult RWSClient::getContollerService()
+{
+  std::string uri = Services::CTRL;
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = true;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
+}
+
 RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string& topic, const std::string& type)
 {
   std::string uri = generateConfigurationPath(topic, type) + Resources::INSTANCES;

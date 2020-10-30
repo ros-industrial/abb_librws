@@ -259,6 +259,7 @@ const std::string SystemConstants::RAPID::TYPE_NUM    = "num";
 const std::string SystemConstants::RAPID::TYPE_STRING = "string";
 
 const std::string Identifiers::CFG_IA_T_LI                    = "cfg-ia-t-li";
+const std::string Identifiers::CTRL_TYPE                      = "ctrl-type";
 const std::string Identifiers::CTRLEXECSTATE                  = "ctrlexecstate";
 const std::string Identifiers::CTRLSTATE                      = "ctrlstate";
 const std::string Identifiers::DATTYP                         = "dattyp";
@@ -274,10 +275,12 @@ const std::string Identifiers::RAP_TASK_LI                    = "rap-task-li";
 const std::string Identifiers::RW_VERSION_NAME                = "rwversionname";
 const std::string Identifiers::STATE                          = "state";
 const std::string Identifiers::SYS                            = "sys";
+const std::string Identifiers::SYS_OPTION_LI                  = "sys-option-li";
 const std::string Identifiers::SYS_SYSTEM_LI                  = "sys-system-li";
 const std::string Identifiers::TYPE                           = "type";
 const std::string Identifiers::VALUE                          = "value";
 const std::string Identifiers::CLASS                          = "class";
+const std::string Identifiers::OPTION                         = "option";
 const std::string Queries::ACTION_RELEASE                     = "action=release";
 const std::string Queries::ACTION_REQUEST                     = "action=request";
 const std::string Queries::ACTION_RESETPP                     = "action=resetpp";
@@ -310,6 +313,7 @@ const std::string Resources::RW_RAPID_TASKS                   = Services::RW + "
 const std::string Resources::RW_SYSTEM                        = Services::RW + "/system";
 
 const XMLAttribute XMLAttributes::CLASS_CFG_IA_T_LI(Identifiers::CLASS       , Identifiers::CFG_IA_T_LI);
+const XMLAttribute XMLAttributes::CLASS_CTRL_TYPE(Identifiers::CLASS         , Identifiers::CTRL_TYPE);
 const XMLAttribute XMLAttributes::CLASS_CTRLEXECSTATE(Identifiers::CLASS     , Identifiers::CTRLEXECSTATE);
 const XMLAttribute XMLAttributes::CLASS_CTRLSTATE(Identifiers::CLASS         , Identifiers::CTRLSTATE);
 const XMLAttribute XMLAttributes::CLASS_DATTYP(Identifiers::CLASS            , Identifiers::DATTYP);
@@ -322,9 +326,11 @@ const XMLAttribute XMLAttributes::CLASS_RAP_MODULE_INFO_LI(Identifiers::CLASS, I
 const XMLAttribute XMLAttributes::CLASS_RAP_TASK_LI(Identifiers::CLASS       , Identifiers::RAP_TASK_LI);
 const XMLAttribute XMLAttributes::CLASS_RW_VERSION_NAME(Identifiers::CLASS   , Identifiers::RW_VERSION_NAME);
 const XMLAttribute XMLAttributes::CLASS_STATE(Identifiers::CLASS             , Identifiers::STATE);
+const XMLAttribute XMLAttributes::CLASS_SYS_OPTION_LI(Identifiers::CLASS     , Identifiers::SYS_OPTION_LI);
 const XMLAttribute XMLAttributes::CLASS_SYS_SYSTEM_LI(Identifiers::CLASS     , Identifiers::SYS_SYSTEM_LI);
 const XMLAttribute XMLAttributes::CLASS_TYPE(Identifiers::CLASS              , Identifiers::TYPE);
 const XMLAttribute XMLAttributes::CLASS_VALUE(Identifiers::CLASS             , Identifiers::VALUE);
+const XMLAttribute XMLAttributes::CLASS_OPTION(Identifiers::CLASS            , Identifiers::OPTION);
 
 } // end namespace rws
 } // end namespace abb
