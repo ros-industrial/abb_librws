@@ -34,6 +34,15 @@
  ***********************************************************************************************************************
  */
 
+/**
+ * The intention of this file is to provide representations
+ * of RobotWare system configuration instances.
+ *
+ * Please see the "Technical reference manual - System parameters"
+ * (document ID: 3HAC050948-001, revision: N) for more information
+ * about how configurations are structured in RobotWare.
+ */
+
 #ifndef RWS_CFG_H
 #define RWS_CFG_H
 
