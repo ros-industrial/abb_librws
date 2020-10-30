@@ -147,6 +147,28 @@ RWSClient::RWSResult RWSClient::getIOSignal(const std::string& iosignal)
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
 
+RWSClient::RWSResult RWSClient::getMechanicalUnitStaticInfo(const std::string& mechunit)
+{
+  std::string uri = generateMechanicalUnitPath(mechunit) + "?resource=static";
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = true;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
+}
+
+RWSClient::RWSResult RWSClient::getMechanicalUnitDynamicInfo(const std::string& mechunit)
+{
+  std::string uri = generateMechanicalUnitPath(mechunit) + "?resource=dynamic";
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = true;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
+}
+
 RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + Resources::JOINTTARGET;

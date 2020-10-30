@@ -62,6 +62,114 @@ public:
   };
 
   /**
+   * \brief Type of a mechanical unit.
+   */
+  enum MechanicalUnitType
+  {
+    NONE,      ///< The unit has no type.
+    TCP_ROBOT, ///< The unit is a TCP robot (has more than one joint, and can process commands in Cartesian space).
+    ROBOT,     ///< The unit is a robot (has more than one joint, but can only process commands in joint space).
+    SINGLE,    ///< The unit is a single (has only one joint).
+    UNDEFINED  ///< The unit is undefined.
+  };
+
+  /**
+   * \brief Mode of a mechanical unit.
+   */
+  enum MechanicalUnitMode
+  {
+    UNKNOWN_MODE, ///< The unit mode is unknown.
+    ACTIVATED,    ///< The unit has been activated.
+    DEACTIVATED   ///< The unit has been deactivated.
+  };
+
+  /**
+   * \brief A struct for containing static information of a mechanical unit.
+   */
+  struct MechanicalUnitStaticInfo
+  {
+    /**
+     * \brief The unit's type.
+     */
+    MechanicalUnitType type;
+
+    /**
+     * \brief The RAPID task using the unit.
+     */
+    std::string task_name;
+
+    /**
+     * \brief Number of axes in the unit.
+     */
+    int axes;
+
+    /**
+     * \brief Total number of axes in the unit (including axes in possible integrated unit).
+     */
+    int axes_total;
+
+    /**
+     * \brief Name of another unit (that this unit is integrated into).
+     *
+     * Will be set to "NoIntegratedUnit" if this unit is not integrated into another unit.
+     */
+    std::string is_integrated_unit;
+
+    /**
+     * \brief Name of another unit (that is part of this unit).
+     *
+     * Will be set to "NoIntegratedUnit" if this unit has no integrated unit.
+     */
+    std::string has_integrated_unit;
+  };
+
+  /**
+   * \brief A struct for containing dynamic information of a mechanical unit.
+   */
+  struct MechanicalUnitDynamicInfo
+  {
+    /**
+     * \brief Name of the unit's active tool.
+     */
+    std::string tool_name;
+
+    /**
+     * \brief Name of the unit's active work object.
+     */
+    std::string wobj_name;
+
+    /**
+     * \brief Name of the unit's active payload.
+     */
+    std::string payload_name;
+
+    /**
+     * \brief Name of the unit's active total payload.
+     */
+    std::string total_payload_name;
+
+    /**
+     * \brief The unit's current state.
+     */
+    std::string status;
+
+    /**
+     * \brief The unit's current mode.
+     */
+    MechanicalUnitMode mode;
+
+    /**
+     * \brief The unit's current jogging mode.
+     */
+    std::string jog_mode;
+
+    /**
+     * \brief The unit's current coordinate system type.
+     */
+    RWSClient::Coordinate coord_system;
+  };
+
+  /**
    * \brief A struct for containing system information of the robot controller.
    */
   struct SystemInfo
@@ -325,6 +433,26 @@ public:
    * \return std::string containing the IO signal's value (empty if not found).
    */
   std::string getIOSignal(const std::string& iosignal);
+
+  /**
+   * \brief A method for retrieving static information about a mechanical unit.
+   *
+   * \param mechunit for the mechanical unit's name.
+   * \param static_info for storing the retrieved information.
+   *
+   * \return bool indicating if the communication was successful or not (basic verification for non-empty data is made).
+   */
+  bool getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
+
+  /**
+   * \brief A method for retrieving dynamic information about a mechanical unit.
+   *
+   * \param mechunit for the mechanical unit's name.
+   * \param dynamic_info for storing the retrieved information.
+   *
+   * \return bool indicating if the communication was successful or not (basic verification for non-empty data is made).
+   */
+  bool getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
 
   /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.

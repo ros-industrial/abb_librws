@@ -117,6 +117,124 @@ std::string RWSInterface::getIOSignal(const std::string& iosignal)
   return result;
 }
 
+bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info)
+{
+  bool result = false;
+
+  RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitStaticInfo(mechunit);
+
+  if(rws_result.success)
+  {
+    static_info.task_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "task-name"));
+    static_info.is_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
+                                                        XMLAttribute("class", "is-integrated-unit"));
+    static_info.has_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
+                                                         XMLAttribute("class", "has-integrated-unit"));
+    std::string type = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "type"));
+
+    // Assume mechanical unit type is undefined, update based on contents of 'type'.
+    static_info.type = UNDEFINED;
+
+    if(type == "None")
+    {
+      static_info.type = NONE;
+    }
+    else if(type == "TCPRobot")
+    {
+      static_info.type = TCP_ROBOT;
+    }
+    else if(type == "Robot")
+    {
+      static_info.type = ROBOT;
+    }
+    else if(type == "Single")
+    {
+      static_info.type = SINGLE;
+    }
+
+    std::stringstream axes(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes")));
+    axes >> static_info.axes;
+
+    std::stringstream axes_total(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes-total")));
+    axes_total >> static_info.axes_total;
+
+    // Basic verification.
+    if(!static_info.task_name.empty() &&
+       !static_info.is_integrated_unit.empty() &&
+       !static_info.has_integrated_unit.empty() &&
+       static_info.type != UNDEFINED &&
+       !axes.fail() && !axes_total.fail())
+    {
+      result = true;
+    }
+  }
+
+  return result;
+}
+
+bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info)
+{
+  bool result = false;
+
+  RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitDynamicInfo(mechunit);
+
+  if(rws_result.success)
+  {
+    dynamic_info.tool_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "tool-name"));
+    dynamic_info.wobj_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "wobj-name"));
+    dynamic_info.payload_name = xmlFindTextContent(rws_result.p_xml_document,
+                                                   XMLAttribute("class", "payload-name"));
+    dynamic_info.total_payload_name = xmlFindTextContent(rws_result.p_xml_document,
+                                                         XMLAttribute("class", "total-payload-name"));
+    dynamic_info.status = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "status"));
+    dynamic_info.jog_mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "jog-mode"));
+    std::string mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "mode"));
+    std::string coord_system = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "coord-system"));
+
+    // Assume mechanical unit mode is unknown, update based on contents of 'mode'.
+    dynamic_info.mode = UNKNOWN_MODE;
+
+    if(mode == "Activated")
+    {
+      dynamic_info.mode = ACTIVATED;
+    }
+    else if(mode == "Deactivated")
+    {
+      dynamic_info.mode = DEACTIVATED;
+    }
+
+    // Assume mechanical unit coordinate system is world, update based on contents of 'coord_system'.
+    dynamic_info.coord_system = RWSClient::WORLD;
+
+    if(coord_system == "Base")
+    {
+      dynamic_info.coord_system = RWSClient::BASE;
+    }
+    else if(coord_system == "Tool")
+    {
+      dynamic_info.coord_system = RWSClient::TOOL;
+    }
+    else if(coord_system == "Wobj")
+    {
+      dynamic_info.coord_system = RWSClient::WOBJ;
+    }
+
+    // Basic verification.
+    if(!dynamic_info.tool_name.empty() &&
+       !dynamic_info.wobj_name.empty() &&
+       !dynamic_info.payload_name.empty() &&
+       !dynamic_info.total_payload_name.empty() &&
+       !dynamic_info.status.empty() &&
+       !dynamic_info.jog_mode.empty() &&
+       dynamic_info.mode != UNKNOWN_MODE)
+    {
+      result = true;
+    }
+  }
+
+  return result;
+}
+
 bool RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget)
 {
   bool result = false;
