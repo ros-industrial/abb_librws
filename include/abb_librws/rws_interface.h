@@ -37,6 +37,7 @@
 #ifndef RWS_INTERFACE_H
 #define RWS_INTERFACE_H
 
+#include "rws_cfg.h"
 #include "rws_client.h"
 
 namespace abb
