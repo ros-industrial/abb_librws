@@ -264,8 +264,30 @@ std::vector<RWSInterface::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
   {
     std::string name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
     bool is_motion_task = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_MOTIONTASK) == RAPID::RAPID_TRUE;
+    bool is_active = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_ACTIVE) == "On";
+    std::string temp = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_EXCSTATE);
 
-    result.push_back(RAPIDTaskInfo(name, is_motion_task));
+    // Assume task state is unknown, update based on contents of 'temp'.
+    RAPIDTaskExecutionState execution_state = UNKNOWN;
+
+    if(temp == "read")
+    {
+      execution_state = READY;
+    }
+    else if(temp == "stop")
+    {
+      execution_state = STOPPED;
+    }
+    else if(temp == "star")
+    {
+      execution_state = STARTED;
+    }
+    else if(temp == "unin")
+    {
+      execution_state = UNINITIALIZED;
+    }
+
+    result.push_back(RAPIDTaskInfo(name, is_motion_task, is_active, execution_state));
   }
 
   return result;

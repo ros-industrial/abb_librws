@@ -258,11 +258,13 @@ const std::string SystemConstants::RAPID::TYPE_DNUM   = "dnum";
 const std::string SystemConstants::RAPID::TYPE_NUM    = "num";
 const std::string SystemConstants::RAPID::TYPE_STRING = "string";
 
+const std::string Identifiers::ACTIVE                         = "active";
 const std::string Identifiers::CFG_IA_T_LI                    = "cfg-ia-t-li";
 const std::string Identifiers::CTRL_TYPE                      = "ctrl-type";
 const std::string Identifiers::CTRLEXECSTATE                  = "ctrlexecstate";
 const std::string Identifiers::CTRLSTATE                      = "ctrlstate";
 const std::string Identifiers::DATTYP                         = "dattyp";
+const std::string Identifiers::EXCSTATE                       = "excstate";
 const std::string Identifiers::IOS_SIGNAL                     = "ios-signal";
 const std::string Identifiers::HOME_DIRECTORY                 = "$home";
 const std::string Identifiers::LVALUE                         = "lvalue";
@@ -312,11 +314,13 @@ const std::string Resources::RW_RAPID_SYMBOL_PROPERTIES_RAPID = Services::RW + "
 const std::string Resources::RW_RAPID_TASKS                   = Services::RW + "/rapid/tasks";
 const std::string Resources::RW_SYSTEM                        = Services::RW + "/system";
 
+const XMLAttribute XMLAttributes::CLASS_ACTIVE(Identifiers::CLASS            , Identifiers::ACTIVE);
 const XMLAttribute XMLAttributes::CLASS_CFG_IA_T_LI(Identifiers::CLASS       , Identifiers::CFG_IA_T_LI);
 const XMLAttribute XMLAttributes::CLASS_CTRL_TYPE(Identifiers::CLASS         , Identifiers::CTRL_TYPE);
 const XMLAttribute XMLAttributes::CLASS_CTRLEXECSTATE(Identifiers::CLASS     , Identifiers::CTRLEXECSTATE);
 const XMLAttribute XMLAttributes::CLASS_CTRLSTATE(Identifiers::CLASS         , Identifiers::CTRLSTATE);
 const XMLAttribute XMLAttributes::CLASS_DATTYP(Identifiers::CLASS            , Identifiers::DATTYP);
+const XMLAttribute XMLAttributes::CLASS_EXCSTATE(Identifiers::CLASS          , Identifiers::EXCSTATE);
 const XMLAttribute XMLAttributes::CLASS_IOS_SIGNAL(Identifiers::CLASS        , Identifiers::IOS_SIGNAL);
 const XMLAttribute XMLAttributes::CLASS_LVALUE(Identifiers::CLASS            , Identifiers::LVALUE);
 const XMLAttribute XMLAttributes::CLASS_MOTIONTASK(Identifiers::CLASS        , Identifiers::MOTIONTASK);
