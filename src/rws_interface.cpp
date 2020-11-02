@@ -36,9 +36,16 @@
 
 #include <algorithm>
 #include <sstream>
+#include <stdexcept>
 
 #include "abb_librws/rws_interface.h"
 #include "abb_librws/rws_rapid.h"
+
+namespace
+{
+constexpr char EXCEPTION_GET_CFG[]{"Failed to get configuration instances"};
+constexpr char EXCEPTION_PARSE_CFG[]{"Failed to parse configuration instances"};
+}
 
 namespace abb
 {
@@ -87,32 +94,36 @@ std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
   std::vector<cfg::moc::Arm> result;
 
   RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ARM);
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
   instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
-  for (size_t i = 0; i < instances.size(); ++i)
+  for(size_t i = 0; i < instances.size(); ++i)
   {
     std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
 
     cfg::moc::Arm arm;
 
-    for (size_t j = 0; j < attributes.size(); ++j)
+    for(size_t j = 0; j < attributes.size(); ++j)
     {
       Poco::XML::Node* attribute = attributes[j];
       if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, Identifiers::NAME))
       {
         arm.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(arm.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "lower_joint_bound"))
       {
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> arm.lower_joint_bound;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "upper_joint_bound"))
       {
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> arm.upper_joint_bound;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
     }
 
