@@ -176,6 +176,7 @@ std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
   std::vector<cfg::moc::Transmission> result;
 
   RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "TRANSMISSION");
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
   instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
@@ -187,13 +188,16 @@ std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
     cfg::moc::Transmission transmission;
 
     transmission.name = xmlNodeGetAttributeValue(instances[i], Identifiers::TITLE);
+    if(transmission.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
 
     for(size_t j = 0; j < attributes.size(); ++j)
     {
       Poco::XML::Node* attribute = attributes[j];
       if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "rotating_move"))
       {
-        transmission.rotating_move = (xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE) == "true");
+        std::string temp = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(temp.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+        transmission.rotating_move = (temp == "true");
       }
     }
 
