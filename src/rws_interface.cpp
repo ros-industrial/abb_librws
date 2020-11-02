@@ -137,20 +137,32 @@ std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
 {
   std::vector<cfg::sys::PresentOption> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS,
-                                                                          Identifiers::PRESENT_OPTIONS);
+  RWSClient::RWSResult rws_result;
+  rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::PRESENT_OPTIONS);
 
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_IA_T_LI);
+  std::vector<Poco::XML::Node*> instances;
+  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
-  for (size_t i = 0; i < node_list.size(); i+=2)
+  for(size_t i = 0; i < instances.size(); ++i)
   {
-    if (i + 1 < node_list.size())
+    std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
+
+    cfg::sys::PresentOption present_option;
+
+    for(size_t j = 0; j < attributes.size(); ++j)
     {
-      cfg::sys::PresentOption present_option;
-      present_option.name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_VALUE);
-      present_option.description = xmlFindTextContent(node_list.at(i+1), XMLAttributes::CLASS_VALUE);
-      result.push_back(present_option);
+      Poco::XML::Node* attribute = attributes[j];
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "name"))
+      {
+        present_option.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "desc"))
+      {
+        present_option.description = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
     }
+
+    result.push_back(present_option);
   }
 
   return result;
