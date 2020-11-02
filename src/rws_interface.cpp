@@ -138,6 +138,7 @@ std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
   std::vector<cfg::moc::Joint> result;
 
   RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "JOINT");
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
   instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
@@ -154,24 +155,29 @@ std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
       if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "name"))
       {
         joint.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(joint.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "logical_axis"))
       {
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> joint.logical_axis;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "kinematic_axis_number"))
       {
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> joint.kinematic_axis_number;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_arm"))
       {
         joint.use_arm = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(joint.use_arm.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_transmission"))
       {
         joint.use_transmission = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(joint.use_transmission.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
     }
 
