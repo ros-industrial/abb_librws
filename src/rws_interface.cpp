@@ -152,7 +152,7 @@ std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
     for(size_t j = 0; j < attributes.size(); ++j)
     {
       Poco::XML::Node* attribute = attributes[j];
-      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "name"))
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, Identifiers::NAME))
       {
         joint.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
         if(joint.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
