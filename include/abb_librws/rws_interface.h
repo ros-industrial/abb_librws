@@ -420,6 +420,15 @@ public:
   StaticInfo collectStaticInfo();
 
   /**
+   * \brief Retrieves the configuration instances for the arms defined in the system.
+   *
+   * \return std::vector<cfg::moc::Arm> containing a list of the arms defined in the system.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
+   */
+  std::vector<cfg::moc::Arm> getCFGArms();
+
+  /**
    * \brief A method for retrieving the RobotWare options present on the active robot controller system.
    *
    * \return std::vector<OptionInfo> containing a list of the present RobotWare options.
