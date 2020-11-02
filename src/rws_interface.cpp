@@ -139,6 +139,7 @@ std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
 
   RWSClient::RWSResult rws_result;
   rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::PRESENT_OPTIONS);
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
   instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
@@ -155,10 +156,12 @@ std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
       if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "name"))
       {
         present_option.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(present_option.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "desc"))
       {
         present_option.description = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(present_option.description.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
     }
 

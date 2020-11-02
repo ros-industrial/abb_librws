@@ -432,6 +432,8 @@ public:
    * \brief Retrieves the configuration instances for the present (RobotWare) options.
    *
    * \return std::vector<cfg::sys::PresentOption> containing a list of the present (RobotWare) options.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
    */
   std::vector<cfg::sys::PresentOption> getCFGPresentOptions();
 
