@@ -43,8 +43,8 @@
 
 namespace
 {
-constexpr char EXCEPTION_GET_CFG[]{"Failed to get configuration instances"};
-constexpr char EXCEPTION_PARSE_CFG[]{"Failed to parse configuration instances"};
+static const char EXCEPTION_GET_CFG[]{"Failed to get configuration instances"};
+static const char EXCEPTION_PARSE_CFG[]{"Failed to parse configuration instances"};
 }
 
 namespace abb
