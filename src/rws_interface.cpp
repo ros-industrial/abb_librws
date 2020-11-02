@@ -133,6 +133,44 @@ std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
   return result;
 }
 
+std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
+{
+  std::vector<cfg::sys::PresentOption> result;
+
+  RWSClient::RWSResult rws_result;
+  rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::PRESENT_OPTIONS);
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
+
+  std::vector<Poco::XML::Node*> instances;
+  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+
+  for(size_t i = 0; i < instances.size(); ++i)
+  {
+    std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
+
+    cfg::sys::PresentOption present_option;
+
+    for(size_t j = 0; j < attributes.size(); ++j)
+    {
+      Poco::XML::Node* attribute = attributes[j];
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "name"))
+      {
+        present_option.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(present_option.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "desc"))
+      {
+        present_option.description = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(present_option.description.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+    }
+
+    result.push_back(present_option);
+  }
+
+  return result;
+}
+
 std::vector<RWSInterface::RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
 {
   std::vector<RobotWareOptionInfo> result;

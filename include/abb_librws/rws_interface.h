@@ -429,11 +429,22 @@ public:
   std::vector<cfg::moc::Arm> getCFGArms();
 
   /**
+   * \brief Retrieves the configuration instances for the present (RobotWare) options.
+   *
+   * \return std::vector<cfg::sys::PresentOption> containing a list of the present (RobotWare) options.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
+   */
+  std::vector<cfg::sys::PresentOption> getCFGPresentOptions();
+
+  /**
    * \brief A method for retrieving the RobotWare options present on the active robot controller system.
    *
-   * \return std::vector<OptionInfo> containing a list of the present RobotWare options.
+   * This method has been deprecated, please use 'getCFGPresentOptions()' instead.
+   *
+   * \return std::vector<RobotWareOptionInfo> containing a list of the present RobotWare options.
    */
-  std::vector<RobotWareOptionInfo> getPresentRobotWareOptions();
+  ABB_LIBRWS_DEPRECATED std::vector<RobotWareOptionInfo> getPresentRobotWareOptions();
 
   /**
    * \brief A method for retrieving the value if an IO signal.
