@@ -438,6 +438,8 @@ public:
   /**
    * \brief A method for retrieving the RobotWare options present on the active robot controller system.
    *
+   * This method has been deprecated, please use 'getCFGPresentOptions()' instead.
+   *
    * \return std::vector<RobotWareOptionInfo> containing a list of the present RobotWare options.
    */
   ABB_LIBRWS_DEPRECATED std::vector<RobotWareOptionInfo> getPresentRobotWareOptions();
