@@ -437,6 +437,15 @@ public:
    */
   std::vector<cfg::sys::PresentOption> getCFGPresentOptions();
 
+  /*
+   * \brief Retrieves the configuration instances for the transmissions defined in the system.
+   *
+   * \return std::vector<cfg::moc::Transmission> containing a list of the transmissions defined in the system.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
+   */
+  std::vector<cfg::moc::Transmission> getCFGTransmission();
+
   /**
    * \brief A method for retrieving the RobotWare options present on the active robot controller system.
    *

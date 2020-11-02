@@ -171,6 +171,42 @@ std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
   return result;
 }
 
+std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
+{
+  std::vector<cfg::moc::Transmission> result;
+
+  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "TRANSMISSION");
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
+
+  std::vector<Poco::XML::Node*> instances;
+  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+
+  for(size_t i = 0; i < instances.size(); ++i)
+  {
+    std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
+
+    cfg::moc::Transmission transmission;
+
+    transmission.name = xmlNodeGetAttributeValue(instances[i], Identifiers::TITLE);
+    if(transmission.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+
+    for(size_t j = 0; j < attributes.size(); ++j)
+    {
+      Poco::XML::Node* attribute = attributes[j];
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "rotating_move"))
+      {
+        std::string temp = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(temp.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+        transmission.rotating_move = (temp == "true");
+      }
+    }
+
+    result.push_back(transmission);
+  }
+
+  return result;
+}
+
 std::vector<RWSInterface::RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
 {
   std::vector<RobotWareOptionInfo> result;
