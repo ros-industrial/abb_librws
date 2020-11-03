@@ -241,25 +241,28 @@ std::vector<cfg::sys::MechanicalUnitGroup> RWSInterface::getCFGMechanicalUnitGro
 
   RWSClient::RWSResult rws_result;
   rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::MECHANICAL_UNIT_GROUP);
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
   instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
-  for (size_t i = 0; i < instances.size(); ++i)
+  for(size_t i = 0; i < instances.size(); ++i)
   {
     std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
 
     cfg::sys::MechanicalUnitGroup mechanical_unit_group;
 
-    for (size_t j = 0; j < attributes.size(); ++j)
+    for(size_t j = 0; j < attributes.size(); ++j)
     {
       Poco::XML::Node* attribute = attributes[j];
       if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "Name"))
       {
         mechanical_unit_group.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(mechanical_unit_group.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "Robot"))
       {
+        // Note: The 'Robot' attribute can be empty, since not all groups have a robot (i.e. skip validation).
         mechanical_unit_group.robot = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "MechanicalUnit_1") ||
@@ -269,6 +272,7 @@ std::vector<cfg::sys::MechanicalUnitGroup> RWSInterface::getCFGMechanicalUnitGro
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "MechanicalUnit_5") ||
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "MechanicalUnit_6"))
       {
+        // Note: The 'MechanicalUnit_N' attribute can be empty, since not all groups have units (i.e. skip validation).
         mechanical_unit_group.mechanical_units.push_back(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
       }
     }

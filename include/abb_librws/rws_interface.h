@@ -450,6 +450,8 @@ public:
    * \brief Retrieves the configuration instances for the mechanical unit groups defined in the system.
    *
    * \return std::vector<cfg::sys::MechanicalUnitGroup> containing a list of the mechanical unit groups in the system.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
    */
   std::vector<cfg::sys::MechanicalUnitGroup> getCFGMechanicalUnitGroups();
 
