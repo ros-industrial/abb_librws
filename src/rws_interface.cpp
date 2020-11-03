@@ -354,7 +354,7 @@ std::vector<cfg::moc::Robot> RWSInterface::getCFGRobots()
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_4") ||
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_5"))
       {
-        // Note: The 'use_joint_N' attribute can be empty, since not all robots has 6 joints (i.e. skip validation).
+        // Note: The 'use_joint_N' attribute can be empty, since not all robots have 6 joints (i.e. skip validation).
         robot.use_joints.push_back(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_x"))
