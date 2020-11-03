@@ -193,6 +193,7 @@ std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
 
   RWSClient::RWSResult rws_result;
   rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::MECHANICAL_UNIT);
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
   instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
@@ -209,9 +210,11 @@ std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
       if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, Identifiers::NAME))
       {
         mechanical_unit.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(mechanical_unit.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_robot"))
       {
+        // Note: The 'use_robot' attribute can be empty, since not all groups have a robot (i.e. skip validation).
         mechanical_unit.use_robot = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_0") ||
@@ -221,6 +224,7 @@ std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_4") ||
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_5"))
       {
+        // Note: The 'use_single_N' attribute can be empty, since not all groups have singles (i.e. skip validation).
         mechanical_unit.use_singles.push_back(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
       }
     }
@@ -398,7 +402,7 @@ std::vector<cfg::moc::Robot> RWSInterface::getCFGRobots()
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_4") ||
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint_5"))
       {
-        // Note: The 'use_joint_N' attribute can be empty, since not all robots has 6 joints (i.e. skip validation).
+        // Note: The 'use_joint_N' attribute can be empty, since not all robots have 6 joints (i.e. skip validation).
         robot.use_joints.push_back(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_x"))
