@@ -214,7 +214,7 @@ std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_robot"))
       {
-        // Note: The 'use_robot' attribute can be empty, since not all groups have a robot (i.e. skip validation).
+        // Note: The 'use_robot' attribute can be empty, since not all units have a robot (i.e. skip validation).
         mechanical_unit.use_robot = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_0") ||
@@ -224,7 +224,7 @@ std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_4") ||
               xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_5"))
       {
-        // Note: The 'use_single_N' attribute can be empty, since not all groups have singles (i.e. skip validation).
+        // Note: The 'use_single_N' attribute can be empty, since not all units have singles (i.e. skip validation).
         mechanical_unit.use_singles.push_back(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
       }
     }
