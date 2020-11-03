@@ -419,15 +419,6 @@ public:
    */
   StaticInfo collectStaticInfo();
 
-  /*
-   * \brief Retrieves the configuration instances for the singles defined in the system.
-   *
-   * \return std::vector<cfg::moc::Single> containing a list of the singles defined in the system.
-   *
-   * \throw std::runtime_error if failed to get or parse the configuration instances.
-   */
-  std::vector<cfg::moc::Single> getCFGSingles();
-
   /**
    * \brief Retrieves the configuration instances for the arms defined in the system.
    *
@@ -455,15 +446,6 @@ public:
    */
   std::vector<cfg::sys::PresentOption> getCFGPresentOptions();
 
-  /*
-   * \brief Retrieves the configuration instances for the transmissions defined in the system.
-   *
-   * \return std::vector<cfg::moc::Transmission> containing a list of the transmissions defined in the system.
-   *
-   * \throw std::runtime_error if failed to get or parse the configuration instances.
-   */
-  std::vector<cfg::moc::Transmission> getCFGTransmission();
-
   /**
    * \brief Retrieves the configuration instances for the present robots.
    *
@@ -472,6 +454,24 @@ public:
    * \throw std::runtime_error if failed to get or parse the configuration instances.
    */
   std::vector<cfg::moc::Robot> getCFGRobots();
+
+  /*
+   * \brief Retrieves the configuration instances for the singles defined in the system.
+   *
+   * \return std::vector<cfg::moc::Single> containing a list of the singles defined in the system.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
+   */
+  std::vector<cfg::moc::Single> getCFGSingles();
+
+  /*
+   * \brief Retrieves the configuration instances for the transmissions defined in the system.
+   *
+   * \return std::vector<cfg::moc::Transmission> containing a list of the transmissions defined in the system.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
+   */
+  std::vector<cfg::moc::Transmission> getCFGTransmission();
 
   /**
    * \brief A method for retrieving the RobotWare options present on the active robot controller system.
