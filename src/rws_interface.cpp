@@ -362,21 +362,21 @@ std::vector<cfg::moc::Robot> RWSInterface::getCFGRobots()
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> robot.base_frame.pos.x.value;
         if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
-        robot.base_frame.pos.x.value *= 1000.0;
+        robot.base_frame.pos.x.value *= 1e3;
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_y"))
       {
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> robot.base_frame.pos.y.value;
         if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
-        robot.base_frame.pos.y.value *= 1000.0;
+        robot.base_frame.pos.y.value *= 1e3;
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_z"))
       {
         std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
         ss >> robot.base_frame.pos.z.value;
         if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
-        robot.base_frame.pos.z.value *= 1000.0;
+        robot.base_frame.pos.z.value *= 1e3;
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u0"))
       {
