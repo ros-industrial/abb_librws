@@ -306,6 +306,8 @@ std::vector<cfg::moc::Single> RWSInterface::getCFGSingles()
       }
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_coordinated"))
       {
+        // Note: The 'base_frame_coordinated' attribute can be empty (i.e. skip validation).
+        //       It is only used if this single's base frame is moved by another robot or single.
         single.base_frame_coordinated = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
       }
     }
