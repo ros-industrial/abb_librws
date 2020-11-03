@@ -307,7 +307,6 @@ std::vector<cfg::moc::Single> RWSInterface::getCFGSingles()
       else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_coordinated"))
       {
         single.base_frame_coordinated = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
-        if(single.base_frame_coordinated.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
       }
     }
 
