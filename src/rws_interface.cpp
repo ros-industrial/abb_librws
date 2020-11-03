@@ -225,6 +225,99 @@ std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
   return result;
 }
 
+std::vector<cfg::moc::Single> RWSInterface::getCFGSingles()
+{
+  std::vector<cfg::moc::Single> result;
+
+  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::SINGLE);
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
+
+  std::vector<Poco::XML::Node*> instances;
+  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+
+  for(size_t i = 0; i < instances.size(); ++i)
+  {
+    std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
+
+    cfg::moc::Single single;
+
+    for(size_t j = 0; j < attributes.size(); ++j)
+    {
+      Poco::XML::Node* attribute = attributes[j];
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, Identifiers::NAME))
+      {
+        single.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(single.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_type"))
+      {
+        single.use_single_type = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(single.use_single_type.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_joint"))
+      {
+        single.use_joint = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(single.use_joint.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_x"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> single.base_frame.pos.x.value;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+        single.base_frame.pos.x.value *= 1e3;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_y"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> single.base_frame.pos.y.value;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+        single.base_frame.pos.y.value *= 1e3;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_pos_z"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> single.base_frame.pos.z.value;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+        single.base_frame.pos.z.value *= 1e3;
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u0"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> single.base_frame.rot.q1.value;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u1"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> single.base_frame.rot.q2.value;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u2"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> single.base_frame.rot.q3.value;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_orient_u3"))
+      {
+        std::stringstream ss(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+        ss >> single.base_frame.rot.q4.value;
+        if(ss.fail()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "base_frame_coordinated"))
+      {
+        // Note: The 'base_frame_coordinated' attribute can be empty (i.e. skip validation).
+        //       It is only used if this single's base frame is moved by another robot or single.
+        single.base_frame_coordinated = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+    }
+
+    result.push_back(single);
+  }
+
+  return result;
+}
+
 std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
 {
   std::vector<cfg::moc::Transmission> result;

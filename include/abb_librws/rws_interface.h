@@ -419,6 +419,15 @@ public:
    */
   StaticInfo collectStaticInfo();
 
+  /*
+   * \brief Retrieves the configuration instances for the singles defined in the system.
+   *
+   * \return std::vector<cfg::moc::Single> containing a list of the singles defined in the system.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
+   */
+  std::vector<cfg::moc::Single> getCFGSingles();
+
   /**
    * \brief Retrieves the configuration instances for the arms defined in the system.
    *
