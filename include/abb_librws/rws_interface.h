@@ -437,6 +437,15 @@ public:
    */
   std::vector<cfg::moc::Joint> getCFGJoints();
 
+  /*
+   * \brief Retrieves the configuration instances for the mechanical units defined in the system.
+   *
+   * \return std::vector<cfg::moc::MechanicalUnit> containing a list of the mechanical units defined in the system.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
+   */
+  std::vector<cfg::moc::MechanicalUnit> getCFGMechanicalUnits();
+
   /**
    * \brief Retrieves the configuration instances for the present (RobotWare) options.
    *

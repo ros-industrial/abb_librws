@@ -187,6 +187,54 @@ std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
   return result;
 }
 
+std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
+{
+  std::vector<cfg::moc::MechanicalUnit> result;
+
+  RWSClient::RWSResult rws_result;
+  rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::MECHANICAL_UNIT);
+  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
+
+  std::vector<Poco::XML::Node*> instances;
+  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+
+  for(size_t i = 0; i < instances.size(); ++i)
+  {
+    std::vector<Poco::XML::Node*> attributes = xmlFindNodes(instances[i], XMLAttributes::CLASS_CFG_IA_T_LI);
+
+    cfg::moc::MechanicalUnit mechanical_unit;
+
+    for(size_t j = 0; j < attributes.size(); ++j)
+    {
+      Poco::XML::Node* attribute = attributes[j];
+      if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, Identifiers::NAME))
+      {
+        mechanical_unit.name = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+        if(mechanical_unit.name.empty()) throw std::runtime_error(EXCEPTION_PARSE_CFG);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_robot"))
+      {
+        // Note: The 'use_robot' attribute can be empty, since not all groups have a robot (i.e. skip validation).
+        mechanical_unit.use_robot = xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE);
+      }
+      else if(xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_0") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_1") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_2") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_3") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_4") ||
+              xmlNodeHasAttribute(attribute, Identifiers::TITLE, "use_single_5"))
+      {
+        // Note: The 'use_single_N' attribute can be empty, since not all groups have singles (i.e. skip validation).
+        mechanical_unit.use_singles.push_back(xmlFindTextContent(attribute, XMLAttributes::CLASS_VALUE));
+      }
+    }
+
+    result.push_back(mechanical_unit);
+  }
+
+  return result;
+}
+
 std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
 {
   std::vector<cfg::sys::PresentOption> result;
