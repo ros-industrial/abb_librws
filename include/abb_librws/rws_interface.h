@@ -559,6 +559,8 @@ public:
   /**
    * \brief A method for retrieving the data of a RAPID symbol in raw text format.
    *
+   * See the corresponding "setRAPIDSymbolData(...)" method for examples of RAPID symbols in raw text format.
+   *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
