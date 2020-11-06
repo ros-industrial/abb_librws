@@ -660,7 +660,7 @@ public:
    *
    * Notes:
    * - The absence of square brackets implies the symbol is of atomic data type.
-   * - Square brackets mean that the symbol is of record data type (composed of subcomponents).
+   * - Record data types (composed of subcomponents) are always enclosed in square brackets.
    * - The value '9E9', in the jointtarget record, mean that the joint is not in use.
    *
    * Please see the "Technical reference manual - RAPID overview"
