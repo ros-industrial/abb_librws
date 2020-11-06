@@ -659,7 +659,7 @@ public:
    * - jointtarget: "[[1, -2, 3.3, -4.4, 5, 6], [9E9, 9E9, 9E9, 9E9, 9E9, 9E9]]"
    *
    * Notes:
-   * - No square brackets mean that the symbol is of atomic data type.
+   * - The absence of square brackets implies the symbol is of atomic data type.
    * - Square brackets mean that the symbol is of record data type (composed of subcomponents).
    * - The value '9E9', in the jointtarget record, mean that the joint is not in use.
    *
