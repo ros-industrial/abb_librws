@@ -428,7 +428,7 @@ public:
    */
   std::vector<cfg::moc::Arm> getCFGArms();
 
-  /*
+  /**
    * \brief Retrieves the configuration instances for the joints defined in the system.
    *
    * \return std::vector<cfg::moc::Joint> containing a list of the joints defined in the system.
@@ -437,7 +437,7 @@ public:
    */
   std::vector<cfg::moc::Joint> getCFGJoints();
 
-  /*
+  /**
    * \brief Retrieves the configuration instances for the mechanical units defined in the system.
    *
    * \return std::vector<cfg::moc::MechanicalUnit> containing a list of the mechanical units defined in the system.
@@ -445,6 +445,15 @@ public:
    * \throw std::runtime_error if failed to get or parse the configuration instances.
    */
   std::vector<cfg::moc::MechanicalUnit> getCFGMechanicalUnits();
+
+  /**
+   * \brief Retrieves the configuration instances for the mechanical unit groups defined in the system.
+   *
+   * \return std::vector<cfg::sys::MechanicalUnitGroup> containing a list of the mechanical unit groups in the system.
+   *
+   * \throw std::runtime_error if failed to get or parse the configuration instances.
+   */
+  std::vector<cfg::sys::MechanicalUnitGroup> getCFGMechanicalUnitGroups();
 
   /**
    * \brief Retrieves the configuration instances for the present (RobotWare) options.
@@ -464,7 +473,7 @@ public:
    */
   std::vector<cfg::moc::Robot> getCFGRobots();
 
-  /*
+  /**
    * \brief Retrieves the configuration instances for the singles defined in the system.
    *
    * \return std::vector<cfg::moc::Single> containing a list of the singles defined in the system.
@@ -473,7 +482,7 @@ public:
    */
   std::vector<cfg::moc::Single> getCFGSingles();
 
-  /*
+  /**
    * \brief Retrieves the configuration instances for the transmissions defined in the system.
    *
    * \return std::vector<cfg::moc::Transmission> containing a list of the transmissions defined in the system.

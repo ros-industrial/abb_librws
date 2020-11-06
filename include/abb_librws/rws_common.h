@@ -589,6 +589,11 @@ struct SystemConstants
       static const std::string MECHANICAL_UNIT;
 
       /**
+       * \brief Mechanical unit group.
+       */
+      static const std::string MECHANICAL_UNIT_GROUP;
+
+      /**
        * \brief Motion topic in the system configurations (abbreviated as moc).
        */
       static const std::string MOC;

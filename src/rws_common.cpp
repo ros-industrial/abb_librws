@@ -271,6 +271,7 @@ const std::string Identifiers::IOS_SIGNAL                     = "ios-signal";
 const std::string Identifiers::HOME_DIRECTORY                 = "$home";
 const std::string Identifiers::LVALUE                         = "lvalue";
 const std::string Identifiers::MECHANICAL_UNIT                = "mechanical_unit";
+const std::string Identifiers::MECHANICAL_UNIT_GROUP          = "mechanical_unit_group";
 const std::string Identifiers::MOC                            = "moc";
 const std::string Identifiers::MOTIONTASK                     = "motiontask";
 const std::string Identifiers::NAME                           = "name";
