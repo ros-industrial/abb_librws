@@ -574,13 +574,13 @@ public:
   /**
    * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
    *
-   * Note: The ratio must be an integer [0, 100] in text format.
+   * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
    *
    * \param ratio specifying the new ratio.
    *
    * \return RWSResult containing the result.
    */
-  RWSResult setSpeedRatio(const std::string& ratio);
+  RWSResult setSpeedRatio(unsigned int ratio);
 
   /**
    * \brief A method for retrieving a file from the robot controller.

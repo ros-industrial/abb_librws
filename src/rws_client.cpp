@@ -439,10 +439,18 @@ RWSClient::RWSResult RWSClient::setMotorsOff()
   return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSClient::RWSResult RWSClient::setSpeedRatio(const std::string& ratio)
+RWSClient::RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
 {
+  if(ratio > 100)
+  {
+    ratio = 100;
+  }
+
+  std::stringstream ss;
+  ss << ratio;
+
   std::string uri = "/rw/panel/speedratio?action=setspeedratio";
-  std::string content = "speed-ratio=" + ratio;
+  std::string content = "speed-ratio=" + ss.str();
 
   EvaluationConditions evaluation_conditions;
   evaluation_conditions.parse_message_into_xml = false;
