@@ -650,6 +650,21 @@ public:
   /**
    * \brief A method for setting the data of a RAPID symbol via raw text format.
    *
+   * Examples of RAPID symbols in raw text format:
+   * - num: "1" or "-2.5".
+   * - bool: "TRUE" or "FALSE".
+   * - pos: "[1, -2, 3.3]".
+   * - jointtarget: "[[1, -2, 3.3, -4.4, 5, 6], [9E9, 9E9, 9E9, 9E9, 9E9, 9E9]]"
+   *
+   * Notes:
+   * - No square brackets mean that the symbol is of atomic data type.
+   * - Square brackets mean that the symbol is of record data type (composed of subcomponents).
+   * - The value '9E9', in the jointtarget record, mean that the joint is not in use.
+   *
+   * Please see the "Technical reference manual - RAPID overview"
+   * (document ID: 3HAC050947-001, revision: K) for more information
+   * about basic RAPID data types and programming.
+   *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
