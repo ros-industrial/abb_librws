@@ -745,7 +745,7 @@ public:
   /**
    * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
    *
-   * Note: The ratio must be an integer [0, 100].
+   * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
    *
    * \param ratio specifying the new ratio.
    *
