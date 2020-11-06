@@ -35,10 +35,16 @@
  */
 
 #include <sstream>
+#include <stdexcept>
 
 #include "Poco/SAX/InputSource.h"
 
 #include "abb_librws/rws_client.h"
+
+namespace
+{
+static const char EXCEPTION_CREATE_STRING[]{"Failed to create string"};
+}
 
 namespace abb
 {
@@ -441,13 +447,11 @@ RWSClient::RWSResult RWSClient::setMotorsOff()
 
 RWSClient::RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
 {
-  if(ratio > 100)
-  {
-    ratio = 100;
-  }
+  if(ratio > 100) throw std::out_of_range("Speed ratio argument out of range");
 
   std::stringstream ss;
   ss << ratio;
+  if(ss.fail()) throw std::runtime_error(EXCEPTION_CREATE_STRING);
 
   std::string uri = "/rw/panel/speedratio?action=setspeedratio";
   std::string content = "speed-ratio=" + ss.str();

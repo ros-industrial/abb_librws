@@ -579,6 +579,9 @@ public:
    * \param ratio specifying the new ratio.
    *
    * \return RWSResult containing the result.
+   *
+   * \throw std::out_of_range if argument is out of range.
+   * \throw std::runtime_error if failed to create a string from the argument.
    */
   RWSResult setSpeedRatio(unsigned int ratio);
 
