@@ -493,6 +493,13 @@ public:
   RWSResult getRobotWareSystem();
 
   /**
+   * \brief A method for retrieving the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult getSpeedRatio();
+
+  /**
    * \brief A method for retrieving the controller state.
    *
    * \return RWSResult containing the result.

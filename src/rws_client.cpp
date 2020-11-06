@@ -275,6 +275,17 @@ RWSClient::RWSResult RWSClient::getRobotWareSystem()
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
 
+RWSClient::RWSResult RWSClient::getSpeedRatio()
+{
+  std::string uri = "/rw/panel/speedratio";
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = true;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
+}
+
 RWSClient::RWSResult RWSClient::getPanelControllerState()
 {
   std::string uri = Resources::RW_PANEL_CTRLSTATE;
