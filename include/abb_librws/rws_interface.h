@@ -667,9 +667,9 @@ public:
    * (document ID: 3HAC050947-001, revision: K) for more information
    * about basic RAPID data types and programming.
    *
-   * \param task for the name of the RAPID task containing the RAPID symbol.
-   * \param module for the name of the RAPID module containing the RAPID symbol.
-   * \param name for the name of the RAPID symbol.
+   * \param task name of the RAPID task containing the RAPID symbol.
+   * \param module name of the RAPID module containing the RAPID symbol.
+   * \param name the name of the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
    *
    * \return bool indicating if the communication was successful or not.
