@@ -781,6 +781,14 @@ bool RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
 bool RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const std::string& module,
                                       const std::string& name,
+                                      const std::string& data)
+{
+  return rws_client_.setRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), data).success;
+}
+
+bool RWSInterface::setRAPIDSymbolData(const std::string& task,
+                                      const std::string& module,
+                                      const std::string& name,
                                       const RAPIDSymbolDataAbstract& data)
 {
   return rws_client_.setRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), data).success;
@@ -926,6 +934,14 @@ TriBool RWSInterface::isRAPIDRunning()
 bool RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   return rws_client_.setIOSignal(iosignal, value).success;
+}
+
+std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
+                                             const std::string& module,
+                                             const std::string& name)
+{
+  return xmlFindTextContent(rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name)).p_xml_document,
+                            XMLAttributes::CLASS_VALUE);
 }
 
 bool RWSInterface::getRAPIDSymbolData(const std::string& task,
