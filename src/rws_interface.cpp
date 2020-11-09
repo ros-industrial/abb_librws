@@ -826,6 +826,11 @@ bool RWSInterface::setMotorsOff()
   return rws_client_.setMotorsOff().success;
 }
 
+bool RWSInterface::setSpeedRatio(unsigned int ratio)
+{
+  return rws_client_.setSpeedRatio(ratio).success;
+}
+
 std::vector<RWSInterface::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
 {
   std::vector<RAPIDModuleInfo> result;
@@ -883,6 +888,20 @@ std::vector<RWSInterface::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
   }
 
   return result;
+}
+
+unsigned int RWSInterface::getSpeedRatio()
+{
+  unsigned int speed_ratio = 0;
+
+  RWSClient::RWSResult rws_result = rws_client_.getSpeedRatio();
+  if(!rws_result.success) throw std::runtime_error("Failed to get the speed ratio");
+
+  std::stringstream ss(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute(Identifiers::CLASS, "speedratio")));
+  ss >> speed_ratio;
+  if(ss.fail()) throw std::runtime_error("Failed to parse the speed ratio");
+
+  return speed_ratio;
 }
 
 RWSInterface::SystemInfo RWSInterface::getSystemInfo()

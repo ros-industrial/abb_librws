@@ -493,6 +493,13 @@ public:
   RWSResult getRobotWareSystem();
 
   /**
+   * \brief A method for retrieving the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSResult getSpeedRatio();
+
+  /**
    * \brief A method for retrieving the controller state.
    *
    * \return RWSResult containing the result.
@@ -570,6 +577,20 @@ public:
    * \return RWSResult containing the result.
    */
   RWSResult setMotorsOff();
+
+  /**
+   * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
+   *
+   * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
+   *
+   * \param ratio specifying the new ratio.
+   *
+   * \return RWSResult containing the result.
+   *
+   * \throw std::out_of_range if argument is out of range.
+   * \throw std::runtime_error if failed to create a string from the argument.
+   */
+  RWSResult setSpeedRatio(unsigned int ratio);
 
   /**
    * \brief A method for retrieving a file from the robot controller.

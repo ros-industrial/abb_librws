@@ -612,6 +612,15 @@ public:
   std::vector<RAPIDTaskInfo> getRAPIDTasks();
 
   /**
+   * \brief A method for retrieving the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
+   *
+   * \return unsigned int with the speed ratio in the range [0, 100] (ie: inclusive).
+   *
+   * \throw std::runtime_error if failed to get or parse the speed ratio.
+   */
+  unsigned int getSpeedRatio();
+
+  /**
    * \brief A method for retrieving some system information from the robot controller.
    *
    * \return SystemInfo containing the system information (info will be empty if e.g. a timeout occurred).
@@ -741,6 +750,17 @@ public:
    * \return bool indicating if the communication was successful or not.
    */
   bool setMotorsOff();
+
+  /**
+   * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
+   *
+   * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
+   *
+   * \param ratio specifying the new ratio.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */
+  bool setSpeedRatio(unsigned int ratio);
 
   /**
    * \brief A method for retrieving a file from the robot controller.

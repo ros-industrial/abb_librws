@@ -35,10 +35,16 @@
  */
 
 #include <sstream>
+#include <stdexcept>
 
 #include "Poco/SAX/InputSource.h"
 
 #include "abb_librws/rws_client.h"
+
+namespace
+{
+static const char EXCEPTION_CREATE_STRING[]{"Failed to create string"};
+}
 
 namespace abb
 {
@@ -269,6 +275,17 @@ RWSClient::RWSResult RWSClient::getRobotWareSystem()
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
 
+RWSClient::RWSResult RWSClient::getSpeedRatio()
+{
+  std::string uri = "/rw/panel/speedratio";
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = true;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
+}
+
 RWSClient::RWSResult RWSClient::getPanelControllerState()
 {
   std::string uri = Resources::RW_PANEL_CTRLSTATE;
@@ -431,6 +448,24 @@ RWSClient::RWSResult RWSClient::setMotorsOff()
 {
   std::string uri = Resources::RW_PANEL_CTRLSTATE + "?" + Queries::ACTION_SETCTRLSTATE;
   std::string content = "ctrl-state=motoroff";
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = false;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
+
+  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+}
+
+RWSClient::RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
+{
+  if(ratio > 100) throw std::out_of_range("Speed ratio argument out of range (should be 0 <= ratio <= 100)");
+
+  std::stringstream ss;
+  ss << ratio;
+  if(ss.fail()) throw std::runtime_error(EXCEPTION_CREATE_STRING);
+
+  std::string uri = "/rw/panel/speedratio?action=setspeedratio";
+  std::string content = "speed-ratio=" + ss.str();
 
   EvaluationConditions evaluation_conditions;
   evaluation_conditions.parse_message_into_xml = false;
