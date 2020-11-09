@@ -458,7 +458,7 @@ RWSClient::RWSResult RWSClient::setMotorsOff()
 
 RWSClient::RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
 {
-  if(ratio > 100) throw std::out_of_range("Speed ratio argument out of range");
+  if(ratio > 100) throw std::out_of_range("Speed ratio argument out of range (should be 0 <= ratio <= 100)");
 
   std::stringstream ss;
   ss << ratio;
