@@ -593,25 +593,24 @@ public:
   RWSResult setSpeedRatio(unsigned int ratio);
 
   /**
-   * \brief A method for loading a module to the robot controller.
+   * \brief A method for loading a program to the robot controller.
    *
    * \param task specifying the RAPID task.
    * \param resource specifying the file's directory and name.
-   * \param replace indicating if the actual module into the controller must be replaced by the new one or not.
+   * \param replace indicating if the actual program into the controller must be replaced by the new one or not.
    *
    * \return RWSResult containing the result.
    */ 
-  RWSResult loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
+  RWSResult loadProgramIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
   
   /**
-   * \brief A method for unloading a module to the robot controller.
+   * \brief A method for unloading a program to the robot controller.
    *
    * \param task specifying the RAPID task.
-   * \param resource specifying the file's directory and name.
    *
    * \return RWSResult containing the result.
    */ 
-  RWSResult unloadModuleFromTask(const std::string& task, const FileResource& resource);
+  RWSResult unloadProgramFromTask(const std::string& task);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -854,6 +853,15 @@ private:
    * \return std::string containing the path.
    */
   std::string generateRAPIDTasksPath(const std::string& task);
+  
+  /**
+   * \brief Method for generating a task program resource URI path.
+   *
+   * \param task for the task name.
+   *
+   * \return std::string containing the path.
+   */
+  std::string generateRAPIDTasksProgramPath(const std::string& task);
 
   /**
    * \brief Static constant for the log's size.

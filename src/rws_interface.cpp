@@ -978,14 +978,14 @@ bool RWSInterface::getRAPIDSymbolData(const std::string& task,
   return rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, symbol), p_data).success;
 }
 
-bool RWSInterface::loadModuleIntoTask(const std::string& task, const RWSClient::FileResource& resource, const bool replace)
+bool RWSInterface::loadProgramIntoTask(const std::string& task, const RWSClient::FileResource& resource, const bool replace)
 {
-  return rws_client_.loadModuleIntoTask(task, resource, replace).success;
+  return rws_client_.loadProgramIntoTask(task, resource, replace).success;
 }
 
-bool RWSInterface::unloadModuleFromTask(const std::string& task, const RWSClient::FileResource& resource)
+bool RWSInterface::unloadProgramFromTask(const std::string &task)
 {
-  return rws_client_.unloadModuleFromTask(task, resource).success;
+  return rws_client_.unloadProgramFromTask(task).success;
 }
 
 bool RWSInterface::getFile(const RWSClient::FileResource& resource, std::string* p_file_content)
