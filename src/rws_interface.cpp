@@ -978,21 +978,14 @@ bool RWSInterface::getRAPIDSymbolData(const std::string& task,
   return rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, symbol), p_data).success;
 }
 
-bool RWSInterface::setLeadThroughOn(const std::string& mechunit)
+bool RWSInterface::loadModuleIntoTask(const std::string& task, const RWSClient::FileResource& resource, const bool replace)
 {
-  return rws_client_.setLeadThrough(mechunit, Identifiers::ACTIVE).success;
+  return rws_client_.loadModuleIntoTask(task, resource, replace).success;
 }
 
-bool RWSInterface::setLeadThroughOff(const std::string& mechunit)
+bool RWSInterface::unloadModuleFromTask(const std::string& task, const RWSClient::FileResource& resource)
 {
-  return rws_client_.setLeadThrough(mechunit, Identifiers::INACTIVE).success;
-}
-
-TriBool RWSInterface::isLeadThroughOn(const std::string& mechunit)
-{
-  return compareSingleContent(rws_client_.getLeadThrough(mechunit),
-                              XMLAttributes::CLASS_STATUS,
-                              ContollerStates::ACTIVE);
+  return rws_client_.unloadModuleFromTask(task, resource).success;
 }
 
 bool RWSInterface::getFile(const RWSClient::FileResource& resource, std::string* p_file_content)

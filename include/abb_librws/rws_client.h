@@ -593,23 +593,25 @@ public:
   RWSResult setSpeedRatio(unsigned int ratio);
 
   /**
-   * \brief A method for retrieving the lead-through state of the controller.
+   * \brief A method for loading a module to the robot controller.
    *
-   * \param mechunit for the mechanical unit's name.
-   *   
+   * \param task specifying the RAPID task.
+   * \param resource specifying the file's directory and name.
+   * \param replace indicating if the actual module into the controller must be replaced by the new one or not.
+   *
    * \return RWSResult containing the result.
-   */  
-  RWSResult getLeadThrough(const std::string& mechunit);
-
+   */ 
+  RWSResult loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
+  
   /**
-   * \brief A method for setting the lead-through state of the controller.
+   * \brief A method for unloading a module to the robot controller.
    *
-   * \param mechunit for the mechanical unit's name.
-   * \param value for the lead-through new value.
+   * \param task specifying the RAPID task.
+   * \param resource specifying the file's directory and name.
    *
    * \return RWSResult containing the result.
-   */  
-  RWSResult setLeadThrough(const std::string& mechunit, const std::string& value);
+   */ 
+  RWSResult unloadModuleFromTask(const std::string& task, const FileResource& resource);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -843,6 +845,15 @@ private:
    * \return std::string containing the path.
    */
   std::string generateFilePath(const FileResource& resource);
+
+  /**
+   * \brief Method for generating a task resource URI path.
+   *
+   * \param task for the task name.
+   *
+   * \return std::string containing the path.
+   */
+  std::string generateRAPIDTasksPath(const std::string& task);
 
   /**
    * \brief Static constant for the log's size.

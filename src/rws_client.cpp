@@ -474,26 +474,27 @@ RWSClient::RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
   return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSClient::RWSResult RWSClient::getLeadThrough(const std::string& mechunit)
+RWSClient::RWSResult RWSClient::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
 {
-  std::string uri = generateMechanicalUnitPath(mechunit) + "?" + Queries::RESOURCE_LEAD_THROUGH;
-  
-  EvaluationConditions evaluation_conditions;
-  evaluation_conditions.parse_message_into_xml = true;
-  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
-  
-  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
-}
-
-RWSClient::RWSResult RWSClient::setLeadThrough(const std::string& mechunit, const std::string& value)
-{
-  std::string uri = generateMechanicalUnitPath(mechunit) + "?" + Queries::ACTION_SET_LEAD_THROUGH;
-  std::string content = Identifiers::STATUS + "=" + value;
-  
+  std::string uri = generateRAPIDTasksPath(task) + "?" + Queries::ACTION_LOAD_MODULE;
+  std::string content = Identifiers::MODULEPATH + "=" + generateFilePath(resource) + "&replace=" + ((replace) ? "true" : "false");
+      
   EvaluationConditions evaluation_conditions;
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
-  
+
+  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+}
+
+RWSClient::RWSResult RWSClient::unloadModuleFromTask(const std::string& task, const FileResource& resource)
+{
+  std::string uri = generateRAPIDTasksPath(task) + "?" + Queries::ACTION_UNLOAD_MODULE;
+  std::string content = Identifiers::MODULE + "=" + resource.filename;
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = false;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
+
   return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
@@ -819,6 +820,11 @@ std::string RWSClient::generateRAPIDPropertiesPath(const RAPIDResource& resource
 std::string RWSClient::generateFilePath(const FileResource& resource)
 {
   return Services::FILESERVICE + "/" + resource.directory + "/" + resource.filename;
+}
+
+std::string RWSClient::generateRAPIDTasksPath(const std::string& task)
+{
+  return Resources::RW_RAPID_TASKS + "/" + task;
 }
 
 } // end namespace rws

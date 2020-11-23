@@ -763,31 +763,25 @@ public:
   bool setSpeedRatio(unsigned int ratio);
 
   /**
-   * \brief A method for turning on the lead-through modes.
+   * \brief A method for loading a module to the robot controller.
    *
-   * \param mechunit for the mechanical unit's name.
-   *
-   * \return bool indicating if the communication was successful or not.
-   */  
-  bool setLeadThroughOn(const std::string& mechunit);
-  
-  /**
-   * \brief A method for turning off the lead-through modes.
-   *
-   * \param mechunit for the mechanical unit's name.
+   * \param task specifying the RAPID task.
+   * \param resource specifying the file's directory and name.
+   * \param replace indicating if the actual module into the controller must be replaced by the new one or not.
    *
    * \return bool indicating if the communication was successful or not.
-   */  
-  bool setLeadThroughOff(const std::string& mechunit);
-  
-  /**
-   * \brief A method for checking if the lead-through are on.
-   *
-   * \param mechunit for the mechanical unit's name.
-   *   
-   * \return TriBool indicating if the lead-through are on or not or unknown.
    */ 
-  TriBool isLeadThroughOn(const std::string& mechunit);
+  bool loadModuleIntoTask(const std::string& task, const RWSClient::FileResource& resource, const bool replace = false);
+  
+  /**
+   * \brief A method for unloading a module to the robot controller.
+   *
+   * \param task specifying the RAPID task.
+   * \param resource specifying the file's directory and name.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */ 
+  bool unloadModuleFromTask(const std::string& task, const RWSClient::FileResource& resource);
 
   /**
    * \brief A method for retrieving a file from the robot controller.

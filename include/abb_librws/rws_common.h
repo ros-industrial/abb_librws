@@ -162,11 +162,6 @@ struct SystemConstants
   struct ABB_LIBRWS_EXPORT ContollerStates
   {
     /**
-     * \brief Robot controller active state.
-     */
-    static const std::string ACTIVE;
-
-    /**
      * \brief Robot controller motor on.
      */
     static const std::string CONTROLLER_MOTOR_ON;
@@ -498,11 +493,6 @@ struct SystemConstants
       static const XMLAttribute CLASS_STATE;
 
       /**
-       * \brief Class & status.
-       */
-      static const XMLAttribute CLASS_STATUS;
-
-      /**
        * \brief Class & sys-option-li.
        */
       static const XMLAttribute CLASS_SYS_OPTION_LI;
@@ -589,11 +579,6 @@ struct SystemConstants
       static const std::string HOME_DIRECTORY;
 
       /**
-       * \brief Inactive type.
-       */
-      static const std::string INACTIVE;
-
-      /**
        * \brief IO signal.
        */
       static const std::string IOS_SIGNAL;
@@ -612,6 +597,16 @@ struct SystemConstants
        * \brief Motion topic in the system configurations (abbreviated as moc).
        */
       static const std::string MOC;
+
+      /**
+       * \brief Module name.
+       */
+      static const std::string MODULE;
+
+      /**
+       * \brief Module path.
+       */
+      static const std::string MODULEPATH;
 
       /**
        * \brief Motion task.
@@ -669,11 +664,6 @@ struct SystemConstants
       static const std::string STATE;
 
       /**
-       * \brief Status.
-       */
-      static const std::string STATUS;
-
-      /**
        * \brief Controller topic in the system configurations (abbreviated as sys).
        */
       static const std::string SYS;
@@ -715,6 +705,11 @@ struct SystemConstants
     struct ABB_LIBRWS_EXPORT Queries
     {
       /**
+       * \brief Load module action query.
+       */
+      static const std::string ACTION_LOAD_MODULE;
+
+      /**
        * \brief Release action query.
        */
       static const std::string ACTION_RELEASE;
@@ -730,11 +725,6 @@ struct SystemConstants
       static const std::string ACTION_RESETPP;
 
       /**
-       * \brief Get lead-through resource query.
-       */
-      static const std::string RESOURCE_LEAD_THROUGH;
-
-      /**
        * \brief Set action query.
        */
       static const std::string ACTION_SET;
@@ -743,11 +733,6 @@ struct SystemConstants
        * \brief Set controller state action query.
        */
       static const std::string ACTION_SETCTRLSTATE;
-
-      /**
-       * \brief Set lead-through action query.
-       */
-      static const std::string ACTION_SET_LEAD_THROUGH;
 
       /**
        * \brief Set locale.
@@ -763,6 +748,11 @@ struct SystemConstants
        * \brief Stop action query.
        */
       static const std::string ACTION_STOP;
+
+      /**
+       * \brief Unload module action query.
+       */
+      static const std::string ACTION_UNLOAD_MODULE;
 
       /**
        * \brief Task query.
