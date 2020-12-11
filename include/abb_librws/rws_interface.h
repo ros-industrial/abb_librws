@@ -242,6 +242,18 @@ public:
     {}
 
     /**
+     * \brief Operator for equal to comparison.
+     *
+     * \param rhs for right hand side value.
+     *
+     * \return bool indicating if the comparision was equal or not.
+     */
+    bool operator==(const RAPIDModuleInfo& rhs)
+    {
+      return name == rhs.name;
+    }
+
+    /**
      * \brief The module's name.
      */
     std::string name;
@@ -275,6 +287,18 @@ public:
     is_active(is_active),
     execution_state(execution_state)
     {}
+
+    /**
+     * \brief Operator for equal to comparison.
+     *
+     * \param rhs for right hand side value.
+     *
+     * \return bool indicating if the comparision was equal or not.
+     */
+    bool operator==(const RAPIDTaskInfo& rhs)
+    {
+      return name == rhs.name;
+    }
 
     /**
      * \brief The task's name.

@@ -70,6 +70,19 @@ namespace moc
  */
 struct Arm
 {
+
+  /**
+   * \brief Operator for equal to comparison.
+   *
+   * \param rhs for right hand side value.
+   *
+   * \return bool indicating if the comparision was equal or not.
+   */
+  bool operator==(const Arm& rhs)
+  {
+    return name == rhs.name;
+  }
+
   /**
    * \brief The instance's name.
    */
@@ -96,6 +109,19 @@ struct Arm
  */
 struct Joint
 {
+
+  /**
+   * \brief Operator for equal to comparison.
+   *
+   * \param rhs for right hand side value.
+   *
+   * \return bool indicating if the comparision was equal or not.
+   */
+  bool operator==(const Joint& rhs)
+  {
+    return name == rhs.name;
+  }
+
   /**
    * \brief The instance's name.
    */
@@ -128,6 +154,18 @@ struct Joint
 struct MechanicalUnit
 {
   /**
+   * \brief Operator for equal to comparison.
+   *
+   * \param rhs for right hand side value.
+   *
+   * \return bool indicating if the comparision was equal or not.
+   */
+  bool operator==(const MechanicalUnit& rhs)
+  {
+    return name == rhs.name;
+  }
+
+  /**
    * \brief The instance's name.
    */
   std::string name;
@@ -148,6 +186,18 @@ struct MechanicalUnit
  */
 struct Robot
 {
+  /**
+   * \brief Operator for equal to comparison.
+   *
+   * \param rhs for right hand side value.
+   *
+   * \return bool indicating if the comparision was equal or not.
+   */
+  bool operator==(const Robot& rhs)
+  {
+    return name == rhs.name;
+  }
+
   /**
    * \brief The instance's name.
    */
@@ -180,6 +230,18 @@ struct Robot
 struct Single
 {
   /**
+   * \brief Operator for equal to comparison.
+   *
+   * \param rhs for right hand side value.
+   *
+   * \return bool indicating if the comparision was equal or not.
+   */
+  bool operator==(const Single& rhs)
+  {
+    return name == rhs.name;
+  }
+
+  /**
    * \brief The instance's name.
    */
   std::string name;
@@ -211,6 +273,18 @@ struct Single
 struct Transmission
 {
   /**
+   * \brief Operator for equal to comparison.
+   *
+   * \param rhs for right hand side value.
+   *
+   * \return bool indicating if the comparision was equal or not.
+   */
+  bool operator==(const Transmission& rhs)
+  {
+    return name == rhs.name;
+  }
+
+  /**
    * \brief The instance's name.
    */
   std::string name;
@@ -233,6 +307,18 @@ namespace sys
 struct MechanicalUnitGroup
 {
   /**
+   * \brief Operator for equal to comparison.
+   *
+   * \param rhs for right hand side value.
+   *
+   * \return bool indicating if the comparision was equal or not.
+   */
+  bool operator==(const MechanicalUnitGroup& rhs)
+  {
+    return name == rhs.name;
+  }
+
+  /**
    * \brief The instance's name.
    */
   std::string name;
@@ -253,6 +339,18 @@ struct MechanicalUnitGroup
  */
 struct PresentOption
 {
+  /**
+   * \brief Operator for equal to comparison.
+   *
+   * \param rhs for right hand side value.
+   *
+   * \return bool indicating if the comparision was equal or not.
+   */
+  bool operator==(const PresentOption& rhs)
+  {
+    return name == rhs.name;
+  }
+
   /**
    * \brief The instance's name.
    */
