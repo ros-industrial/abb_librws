@@ -41,16 +41,237 @@
 #include <sstream>
 #include <vector>
 
-#include "Poco/DOM/DOMParser.h"
+#include <Poco/DOM/DOMParser.h>
 
 #include "rws_common.h"
 #include "rws_rapid.h"
 #include "rws_poco_client.h"
 
+
 namespace abb
 {
 namespace rws
 {
+/**
+ * \brief A struct for containing an evaluated communication result.
+ */
+struct RWSResult
+{
+  /**
+   * \brief For indicating if the communication was successfull or not.
+   */
+  bool success;
+
+  /**
+   * \brief For containing any parsed result in XML format. If no data is parsed, then it will be null.
+   */
+  Poco::AutoPtr<Poco::XML::Document> p_xml_document;
+
+  /**
+   * \brief Container for an error message (if one occurred).
+   */
+  std::string error_message;
+
+  /**
+   * \brief A default constructor.
+   */
+  RWSResult() : success(false) {}
+};
+
+
+/**
+ * \brief A class for representing a RAPID symbol resource.
+ */
+struct RAPIDSymbolResource
+{
+  /**
+   * \brief A constructor.
+   *
+   * \param module specifying the name of the RAPID module containing the symbol.
+   * \param name specifying the name of the RAPID symbol.
+   */
+  RAPIDSymbolResource(const std::string& module, const std::string& name)
+  :
+  module(module),
+  name(name)
+  {}
+
+  /**
+   * \brief The RAPID module name.
+   */
+  std::string module;
+
+  /**
+   * \brief The RAPID symbol name.
+   */
+  std::string name;
+};
+
+
+/**
+ * \brief A class for representing a RAPID resource.
+ */
+struct RAPIDResource
+{
+  /**
+   * \brief A constructor.
+   *
+   * \param task specifying the name of the RAPID task containing the symbol.
+   * \param module specifying the name of the RAPID module containing the symbol.
+   * \param name specifying the name of the RAPID symbol.
+   */
+  RAPIDResource(const std::string& task, const std::string& module, const std::string& name)
+  :
+  task(task),
+  module(module),
+  name(name)
+  {}
+
+  /**
+   * \brief A constructor.
+   *
+   * \param task specifying the name of the RAPID task containing the symbol.
+   * \param symbol specifying the names of the RAPID module and the the symbol.
+   */
+  RAPIDResource(const std::string& task, const RAPIDSymbolResource& symbol)
+  :
+  task(task),
+  module(symbol.module),
+  name(symbol.name)
+  {}
+
+  /**
+   * \brief The RAPID task name.
+   */
+  std::string task;
+
+  /**
+   * \brief The RAPID module name.
+   */
+  std::string module;
+
+  /**
+   * \brief The RAPID symbol name.
+   */
+  std::string name;
+};
+
+
+/**
+ * \brief A class for representing a file resource.
+ */
+struct FileResource
+{
+  /**
+   * \brief A constructor.
+   *
+   * \param filename specifying the name of the file.
+   * \param directory specifying the directory of the file on the robot controller (set to $home by default).
+   */
+  FileResource(const std::string& filename,
+                const std::string& directory = SystemConstants::RWS::Identifiers::HOME_DIRECTORY)
+  :
+  filename(filename),
+  directory(directory)
+  {}
+
+  /**
+   * \brief The file's name.
+   */
+  std::string filename;
+
+  /**
+   * \brief The file's directory on the robot controller.
+   */
+  std::string directory;
+};
+
+
+/**
+ * \brief An enum for specifying subscription priority.
+ */
+enum SubscriptionPriority
+{
+  LOW,    ///< Low priority.
+  MEDIUM, ///< Medium priority.
+  HIGH    ///< High priority. Only RobotWare 6.05 (or newer) and for IO signals and persistant RAPID variables.
+};
+
+
+/**
+ * \brief A struct for containing information about a subscription resource.
+ */
+struct SubscriptionResource
+{
+  /**
+   * \brief URI of the resource.
+   */
+  std::string resource_uri;
+
+  /**
+   * \brief Priority of the subscription.
+   */
+  SubscriptionPriority priority;
+
+  /**
+   * \brief A constructor.
+   *
+   * \param resource_uri for the URI of the resource.
+   * \param priority for the priority of the subscription.
+   */
+  SubscriptionResource(const std::string& resource_uri, const SubscriptionPriority priority)
+  :
+  resource_uri(resource_uri),
+  priority(priority)
+  {}
+};
+
+
+/**
+ * \brief A class for representing subscription resources.
+ */
+class SubscriptionResources
+{
+public:
+  /**
+   * \brief A method to add information about a subscription resource.
+   *
+   * \param resource_uri for the URI of the resource.
+   * \param priority for the priority of the subscription.
+   */
+  void add(const std::string& resource_uri, const SubscriptionPriority priority);
+
+  /**
+   * \brief A method to add information about a IO signal subscription resource.
+   *
+   * \param iosignal for the IO signal's name.
+   * \param priority for the priority of the subscription.
+   */
+  void addIOSignal(const std::string& iosignal, const SubscriptionPriority priority);
+
+  /**
+   * \brief A method to add information about a RAPID persistant symbol subscription resource.
+   *
+   * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
+   * \param priority for the priority of the subscription.
+   */
+  void addRAPIDPersistantVariable(const RAPIDResource& resource, const SubscriptionPriority priority);
+
+  /**
+   * \brief A method for retrieving the contained subscription resources information.
+   *
+   * \return std::vector<SubscriptionResource> containing information of the subscription resources.
+   */
+  const std::vector<SubscriptionResource>& getResources() const { return resources_; }
+
+private:
+  /**
+   * \brief A vector of subscription resources.
+   */
+  std::vector<SubscriptionResource> resources_;
+};
+
+
 /**
  * \brief A class for a Robot Web Services (RWS) client based on a POCO client.
  *
@@ -65,219 +286,6 @@ namespace rws
 class RWSClient : public POCOClient
 {
 public:
-  /**
-   * \brief A struct for containing an evaluated communication result.
-   */
-  struct RWSResult
-  {
-    /**
-     * \brief For indicating if the communication was successfull or not.
-     */
-    bool success;
-
-    /**
-     * \brief For containing any parsed result in XML format. If no data is parsed, then it will be null.
-     */
-    Poco::AutoPtr<Poco::XML::Document> p_xml_document;
-
-    /**
-     * \brief Container for an error message (if one occurred).
-     */
-    std::string error_message;
-
-    /**
-     * \brief A default constructor.
-     */
-    RWSResult() : success(false) {}
-  };
-
-  /**
-   * \brief A class for representing a RAPID symbol resource.
-   */
-  struct RAPIDSymbolResource
-  {
-    /**
-     * \brief A constructor.
-     *
-     * \param module specifying the name of the RAPID module containing the symbol.
-     * \param name specifying the name of the RAPID symbol.
-     */
-    RAPIDSymbolResource(const std::string& module, const std::string& name)
-    :
-    module(module),
-    name(name)
-    {}
-
-    /**
-     * \brief The RAPID module name.
-     */
-    std::string module;
-
-    /**
-     * \brief The RAPID symbol name.
-     */
-    std::string name;
-  };
-
-  /**
-   * \brief A class for representing a RAPID resource.
-   */
-  struct RAPIDResource
-  {
-    /**
-     * \brief A constructor.
-     *
-     * \param task specifying the name of the RAPID task containing the symbol.
-     * \param module specifying the name of the RAPID module containing the symbol.
-     * \param name specifying the name of the RAPID symbol.
-     */
-    RAPIDResource(const std::string& task, const std::string& module, const std::string& name)
-    :
-    task(task),
-    module(module),
-    name(name)
-    {}
-
-    /**
-     * \brief A constructor.
-     *
-     * \param task specifying the name of the RAPID task containing the symbol.
-     * \param symbol specifying the names of the RAPID module and the the symbol.
-     */
-    RAPIDResource(const std::string& task, const RAPIDSymbolResource& symbol)
-    :
-    task(task),
-    module(symbol.module),
-    name(symbol.name)
-    {}
-
-    /**
-     * \brief The RAPID task name.
-     */
-    std::string task;
-
-    /**
-     * \brief The RAPID module name.
-     */
-    std::string module;
-
-    /**
-     * \brief The RAPID symbol name.
-     */
-    std::string name;
-  };
-
-  /**
-   * \brief A class for representing a file resource.
-   */
-  struct FileResource
-  {
-    /**
-     * \brief A constructor.
-     *
-     * \param filename specifying the name of the file.
-     * \param directory specifying the directory of the file on the robot controller (set to $home by default).
-     */
-    FileResource(const std::string& filename,
-                 const std::string& directory = SystemConstants::RWS::Identifiers::HOME_DIRECTORY)
-    :
-    filename(filename),
-    directory(directory)
-    {}
-
-    /**
-     * \brief The file's name.
-     */
-    std::string filename;
-
-    /**
-     * \brief The file's directory on the robot controller.
-     */
-    std::string directory;
-  };
-
-  /**
-   * \brief A class for representing subscription resources.
-   */
-  class SubscriptionResources
-  {
-  public:
-    /**
-     * \brief An enum for specifying subscription priority.
-     */
-    enum Priority
-    {
-      LOW,    ///< Low priority.
-      MEDIUM, ///< Medium priority.
-      HIGH    ///< High priority. Only RobotWare 6.05 (or newer) and for IO signals and persistant RAPID variables.
-    };
-
-    /**
-     * \brief A struct for containing information about a subscription resource.
-     */
-    struct SubscriptionResource
-    {
-      /**
-       * \brief URI of the resource.
-       */
-      std::string resource_uri;
-
-      /**
-       * \brief Priority of the subscription.
-       */
-      Priority priority;
-
-      /**
-       * \brief A constructor.
-       *
-       * \param resource_uri for the URI of the resource.
-       * \param priority for the priority of the subscription.
-       */
-      SubscriptionResource(const std::string& resource_uri, const Priority priority)
-      :
-      resource_uri(resource_uri),
-      priority(priority)
-      {}
-    };
-
-    /**
-     * \brief A method to add information about a subscription resource.
-     *
-     * \param resource_uri for the URI of the resource.
-     * \param priority for the priority of the subscription.
-     */
-    void add(const std::string& resource_uri, const Priority priority);
-
-    /**
-     * \brief A method to add information about a IO signal subscription resource.
-     *
-     * \param iosignal for the IO signal's name.
-     * \param priority for the priority of the subscription.
-     */
-    void addIOSignal(const std::string& iosignal, const Priority priority);
-
-    /**
-     * \brief A method to add information about a RAPID persistant symbol subscription resource.
-     *
-     * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
-     * \param priority for the priority of the subscription.
-     */
-    void addRAPIDPersistantVariable(const RAPIDResource& resource, const Priority priority);
-
-    /**
-     * \brief A method for retrieving the contained subscription resources information.
-     *
-     * \return std::vector<SubscriptionResource> containing information of the subscription resources.
-     */
-    const std::vector<SubscriptionResource>& getResources() const { return resources_; }
-
-  private:
-    /**
-     * \brief A vector of subscription resources.
-     */
-    std::vector<SubscriptionResource> resources_;
-  };
-
   /**
    * \brief An enumeration of controller coordinate frames.
    */

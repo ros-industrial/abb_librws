@@ -65,7 +65,7 @@ typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
  * Primary methods
  */
 
-RWSInterface::RuntimeInfo RWSInterface::collectRuntimeInfo()
+RuntimeInfo RWSInterface::collectRuntimeInfo()
 {
   RuntimeInfo runtime_info;
 
@@ -79,7 +79,7 @@ RWSInterface::RuntimeInfo RWSInterface::collectRuntimeInfo()
   return runtime_info;
 }
 
-RWSInterface::StaticInfo RWSInterface::collectStaticInfo()
+StaticInfo RWSInterface::collectStaticInfo()
 {
   StaticInfo static_info;
 
@@ -93,7 +93,7 @@ std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
 {
   std::vector<cfg::moc::Arm> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ARM);
+  RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ARM);
   if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
@@ -137,7 +137,7 @@ std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
 {
   std::vector<cfg::moc::Joint> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "JOINT");
+  RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "JOINT");
   if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
@@ -191,7 +191,7 @@ std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
 {
   std::vector<cfg::moc::MechanicalUnit> result;
 
-  RWSClient::RWSResult rws_result;
+  RWSResult rws_result;
   rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::MECHANICAL_UNIT);
   if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
@@ -239,7 +239,7 @@ std::vector<cfg::sys::MechanicalUnitGroup> RWSInterface::getCFGMechanicalUnitGro
 {
   std::vector<cfg::sys::MechanicalUnitGroup> result;
 
-  RWSClient::RWSResult rws_result;
+  RWSResult rws_result;
   rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::MECHANICAL_UNIT_GROUP);
   if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
@@ -287,7 +287,7 @@ std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
 {
   std::vector<cfg::sys::PresentOption> result;
 
-  RWSClient::RWSResult rws_result;
+  RWSResult rws_result;
   rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::PRESENT_OPTIONS);
   if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
@@ -325,7 +325,7 @@ std::vector<cfg::moc::Robot> RWSInterface::getCFGRobots()
 {
   std::vector<cfg::moc::Robot> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ROBOT);
+  RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ROBOT);
   if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
@@ -423,7 +423,7 @@ std::vector<cfg::moc::Single> RWSInterface::getCFGSingles()
 {
   std::vector<cfg::moc::Single> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::SINGLE);
+  RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::SINGLE);
   if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
@@ -516,7 +516,7 @@ std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
 {
   std::vector<cfg::moc::Transmission> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "TRANSMISSION");
+  RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "TRANSMISSION");
   if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
@@ -548,11 +548,11 @@ std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
   return result;
 }
 
-std::vector<RWSInterface::RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
+std::vector<RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
 {
   std::vector<RobotWareOptionInfo> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS,
+  RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS,
                                                                           Identifiers::PRESENT_OPTIONS);
 
   std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_IA_T_LI);
@@ -573,7 +573,7 @@ std::string RWSInterface::getIOSignal(const std::string& iosignal)
 {
   std::string result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getIOSignal(iosignal);
+  RWSResult rws_result = rws_client_.getIOSignal(iosignal);
 
   if (rws_result.success)
   {
@@ -587,7 +587,7 @@ bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
 {
   bool result = false;
 
-  RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitStaticInfo(mechunit);
+  RWSResult rws_result = rws_client_.getMechanicalUnitStaticInfo(mechunit);
 
   if(rws_result.success)
   {
@@ -642,7 +642,7 @@ bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
 {
   bool result = false;
 
-  RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitDynamicInfo(mechunit);
+  RWSResult rws_result = rws_client_.getMechanicalUnitDynamicInfo(mechunit);
 
   if(rws_result.success)
   {
@@ -707,7 +707,7 @@ bool RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit, Joi
 
   if (p_jointtarget)
   {
-    RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitJointTarget(mechunit);
+    RWSResult rws_result = rws_client_.getMechanicalUnitJointTarget(mechunit);
     result = rws_result.success;
 
     if (result)
@@ -745,7 +745,7 @@ bool RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
 
   if (p_robtarget)
   {
-    RWSClient::RWSResult rws_result = rws_client_.getMechanicalUnitRobTarget(mechunit, coordinate, tool, wobj);
+    RWSResult rws_result = rws_client_.getMechanicalUnitRobTarget(mechunit, coordinate, tool, wobj);
     result = rws_result.success;
 
     if (result)
@@ -783,7 +783,7 @@ bool RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const std::string& name,
                                       const std::string& data)
 {
-  return rws_client_.setRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), data).success;
+  return rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data).success;
 }
 
 bool RWSInterface::setRAPIDSymbolData(const std::string& task,
@@ -791,14 +791,14 @@ bool RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const std::string& name,
                                       const RAPIDSymbolDataAbstract& data)
 {
-  return rws_client_.setRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), data).success;
+  return rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data).success;
 }
 
 bool RWSInterface::setRAPIDSymbolData(const std::string& task,
-                                      const RWSClient::RAPIDSymbolResource& symbol,
+                                      const RAPIDSymbolResource& symbol,
                                       const RAPIDSymbolDataAbstract& data)
 {
-  return rws_client_.setRAPIDSymbolData(RWSClient::RAPIDResource(task, symbol), data).success;
+  return rws_client_.setRAPIDSymbolData(RAPIDResource(task, symbol), data).success;
 }
 
 bool RWSInterface::startRAPIDExecution()
@@ -831,11 +831,11 @@ bool RWSInterface::setSpeedRatio(unsigned int ratio)
   return rws_client_.setSpeedRatio(ratio).success;
 }
 
-std::vector<RWSInterface::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
+std::vector<RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
 {
   std::vector<RAPIDModuleInfo> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getRAPIDModulesInfo(task);
+  RWSResult rws_result = rws_client_.getRAPIDModulesInfo(task);
   std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document,
                                                          XMLAttributes::CLASS_RAP_MODULE_INFO_LI);
 
@@ -850,11 +850,11 @@ std::vector<RWSInterface::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(con
   return result;
 }
 
-std::vector<RWSInterface::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
+std::vector<RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
 {
   std::vector<RAPIDTaskInfo> result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getRAPIDTasks();
+  RWSResult rws_result = rws_client_.getRAPIDTasks();
   std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_RAP_TASK_LI);
 
   for (size_t i = 0; i < node_list.size(); ++i)
@@ -894,7 +894,7 @@ unsigned int RWSInterface::getSpeedRatio()
 {
   unsigned int speed_ratio = 0;
 
-  RWSClient::RWSResult rws_result = rws_client_.getSpeedRatio();
+  RWSResult rws_result = rws_client_.getSpeedRatio();
   if(!rws_result.success) throw std::runtime_error("Failed to get the speed ratio");
 
   std::stringstream ss(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute(Identifiers::CLASS, "speedratio")));
@@ -904,11 +904,11 @@ unsigned int RWSInterface::getSpeedRatio()
   return speed_ratio;
 }
 
-RWSInterface::SystemInfo RWSInterface::getSystemInfo()
+SystemInfo RWSInterface::getSystemInfo()
 {
   SystemInfo result;
 
-  RWSClient::RWSResult rws_result = rws_client_.getRobotWareSystem();
+  RWSResult rws_result = rws_client_.getRobotWareSystem();
 
   std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_SYS_SYSTEM_LI);
   for (size_t i = 0; i < node_list.size(); ++i)
@@ -959,7 +959,7 @@ std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
                                              const std::string& module,
                                              const std::string& name)
 {
-  return xmlFindTextContent(rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name)).p_xml_document,
+  return xmlFindTextContent(rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name)).p_xml_document,
                             XMLAttributes::CLASS_VALUE);
 }
 
@@ -968,39 +968,39 @@ bool RWSInterface::getRAPIDSymbolData(const std::string& task,
                                       const std::string& name,
                                       RAPIDSymbolDataAbstract* p_data)
 {
-  return rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, module, name), p_data).success;
+  return rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name), p_data).success;
 }
 
 bool RWSInterface::getRAPIDSymbolData(const std::string& task,
-                                      const RWSClient::RAPIDSymbolResource& symbol,
+                                      const RAPIDSymbolResource& symbol,
                                       RAPIDSymbolDataAbstract* p_data)
 {
-  return rws_client_.getRAPIDSymbolData(RWSClient::RAPIDResource(task, symbol), p_data).success;
+  return rws_client_.getRAPIDSymbolData(RAPIDResource(task, symbol), p_data).success;
 }
 
-bool RWSInterface::getFile(const RWSClient::FileResource& resource, std::string* p_file_content)
+bool RWSInterface::getFile(const FileResource& resource, std::string* p_file_content)
 {
   return rws_client_.getFile(resource, p_file_content).success;
 }
 
-bool RWSInterface::uploadFile(const RWSClient::FileResource& resource, const std::string& file_content)
+bool RWSInterface::uploadFile(const FileResource& resource, const std::string& file_content)
 {
   return rws_client_.uploadFile(resource, file_content).success;
 }
 
-bool RWSInterface::deleteFile(const RWSClient::FileResource& resource)
+bool RWSInterface::deleteFile(const FileResource& resource)
 {
   return rws_client_.deleteFile(resource).success;
 }
 
-bool RWSInterface::startSubscription (const RWSClient::SubscriptionResources& resources)
+bool RWSInterface::startSubscription (const SubscriptionResources& resources)
 {
   return rws_client_.startSubscription(resources).success;
 }
 
 bool RWSInterface::waitForSubscriptionEvent()
 {
-  RWSClient::RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
+  RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
 
   return (rws_result.success && !rws_result.p_xml_document.isNull());
 }
@@ -1011,7 +1011,7 @@ bool RWSInterface::waitForSubscriptionEvent(Poco::AutoPtr<Poco::XML::Document>* 
 
   if (p_xml_document)
   {
-    RWSClient::RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
+    RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
 
     if (rws_result.success && !rws_result.p_xml_document.isNull())
     {
@@ -1061,7 +1061,7 @@ std::string RWSInterface::getLogTextLatestEvent(const bool verbose)
  * Auxiliary methods
  */
 
-TriBool RWSInterface::compareSingleContent(const RWSClient::RWSResult& rws_result,
+TriBool RWSInterface::compareSingleContent(const RWSResult& rws_result,
                                            const XMLAttribute& attribute,
                                            const std::string& compare_string)
 {
