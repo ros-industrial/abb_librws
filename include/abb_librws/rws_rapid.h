@@ -98,11 +98,21 @@ public:
    *
    * \param value_string containing the string to parse.
    */
-  void parseString(const std::string& value_string)
+  void parseString(const std::string& value_string) override
   {
     std::stringstream ss(value_string);
     ss >> value;
   }
+
+
+  /**
+   * \brief Conversion to a standard data type.
+   */
+  operator T const&() const
+  {
+    return value;
+  }
+
 
   /**
    * \brief Container for the data's value.
@@ -141,21 +151,21 @@ struct RAPIDAtomic<RAPID_BOOL> : public RAPIDAtomicTemplate<bool>
    *
    * \return std::string containing the data type name.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
    */
-  void parseString(const std::string& value_string);
+  void parseString(const std::string& value_string) override;
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 };
 
 /**
@@ -176,14 +186,14 @@ struct RAPIDAtomic<RAPID_NUM> : public RAPIDAtomicTemplate<float>
    *
    * \return std::string containing the data type name.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 };
 
 /**
@@ -204,14 +214,14 @@ struct RAPIDAtomic<RAPID_DNUM> : public RAPIDAtomicTemplate<double>
    *
    * \return std::string containing the data type name.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 };
 
 /**
@@ -232,21 +242,21 @@ struct RAPIDAtomic<RAPID_STRING> : public RAPIDAtomicTemplate<std::string>
    *
    * \return std::string containing the data type name.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
    */
-  void parseString(const std::string& value_string);
+  void parseString(const std::string& value_string) override;
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 };
 
 /**
@@ -287,21 +297,21 @@ public:
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 
   /**
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
    */
-  void parseString(const std::string& value_string);
+  void parseString(const std::string& value_string) override;
 
   /**
    * \brief A method for getting the type of the RAPID record.
    *
    * \return std::string containing the type.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief Operator for copying the RAPID record to another RAPID record.
