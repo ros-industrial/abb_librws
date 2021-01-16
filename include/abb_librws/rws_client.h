@@ -273,6 +273,19 @@ private:
 
 
 /**
+ * \brief An enumeration of controller coordinate frames.
+ */
+enum class Coordinate
+{
+  BASE,  ///< \brief Base frame coordinate.
+  WORLD, ///< \brief World frame coordinate.
+  TOOL,  ///< \brief Tool frame coordinate.
+  WOBJ,  ///< \brief Work object (wobj) frame coordinate.
+  ACTIVE ///< \brief Currently active coordinate.
+};
+
+
+/**
  * \brief A class for a Robot Web Services (RWS) client based on a POCO client.
  *
  * Note: Only a subset of the features available in RWS are implemented here.
@@ -286,18 +299,6 @@ private:
 class RWSClient : public POCOClient
 {
 public:
-  /**
-   * \brief An enumeration of controller coordinate frames.
-   */
-  enum Coordinate
-  {
-    BASE,  ///< \brief Base frame coordinate.
-    WORLD, ///< \brief World frame coordinate.
-    TOOL,  ///< \brief Tool frame coordinate.
-    WOBJ,  ///< \brief Work object (wobj) frame coordinate.
-    ACTIVE ///< \brief Currently active coordinate.
-  };
-
   /**
    * \brief A constructor.
    *
@@ -438,7 +439,7 @@ public:
    * \return RWSResult containing the result.
    */
   RWSResult getMechanicalUnitRobTarget(const std::string& mechunit,
-                                       const Coordinate& coordinate = ACTIVE,
+                                       const Coordinate& coordinate = Coordinate::ACTIVE,
                                        const std::string& tool = "",
                                        const std::string& wobj = "");
 

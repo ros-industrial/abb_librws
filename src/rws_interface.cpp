@@ -670,19 +670,19 @@ bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
     }
 
     // Assume mechanical unit coordinate system is world, update based on contents of 'coord_system'.
-    dynamic_info.coord_system = RWSClient::WORLD;
+    dynamic_info.coord_system = Coordinate::WORLD;
 
     if(coord_system == "Base")
     {
-      dynamic_info.coord_system = RWSClient::BASE;
+      dynamic_info.coord_system = Coordinate::BASE;
     }
     else if(coord_system == "Tool")
     {
-      dynamic_info.coord_system = RWSClient::TOOL;
+      dynamic_info.coord_system = Coordinate::TOOL;
     }
     else if(coord_system == "Wobj")
     {
-      dynamic_info.coord_system = RWSClient::WOBJ;
+      dynamic_info.coord_system = Coordinate::WOBJ;
     }
 
     // Basic verification.
@@ -737,7 +737,7 @@ bool RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit, Joi
 
 bool RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
                                               RobTarget* p_robtarget,
-                                              const RWSClient::Coordinate& coordinate,
+                                              Coordinate coordinate,
                                               const std::string& tool,
                                               const std::string& wobj)
 {

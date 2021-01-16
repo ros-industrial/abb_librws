@@ -207,16 +207,16 @@ RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
   const std::string coordinate_arg = "?coordinate=";
   switch (coordinate)
   {
-    case BASE:
+    case Coordinate::BASE:
       uri += coordinate_arg + SystemConstants::General::COORDINATE_BASE + args;
     break;
-    case WORLD:
+    case Coordinate::WORLD:
       uri += coordinate_arg + SystemConstants::General::COORDINATE_WORLD + args;
     break;
-    case TOOL:
+    case Coordinate::TOOL:
       uri += coordinate_arg + SystemConstants::General::COORDINATE_TOOL + args;
     break;
-    case WOBJ:
+    case Coordinate::WOBJ:
       uri += coordinate_arg + SystemConstants::General::COORDINATE_WOBJ + args;
     break;
     default:

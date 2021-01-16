@@ -162,7 +162,7 @@ struct MechanicalUnitDynamicInfo
   /**
    * \brief The unit's current coordinate system type.
    */
-  RWSClient::Coordinate coord_system;
+  Coordinate coord_system;
 };
 
 /**
@@ -555,7 +555,7 @@ public:
    */
   bool getMechanicalUnitRobTarget(const std::string& mechunit,
                                   RobTarget* p_robtarget,
-                                  const RWSClient::Coordinate& coordinate = RWSClient::ACTIVE,
+                                  Coordinate coordinate = Coordinate::ACTIVE,
                                   const std::string& tool = "",
                                   const std::string& wobj = "");
 
