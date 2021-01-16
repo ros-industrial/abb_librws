@@ -50,14 +50,14 @@ namespace abb
 namespace rws
 {
 /***********************************************************************************************************************
- * Struct definitions: POCOClient::POCOResult
+ * Struct definitions: POCOResult
  */
 
 /************************************************************
  * Primary methods
  */
 
-void POCOClient::POCOResult::addHTTPRequestInfo(const Poco::Net::HTTPRequest& request,
+void POCOResult::addHTTPRequestInfo(const Poco::Net::HTTPRequest& request,
                                                 const std::string& request_content)
 {
   poco_info.http.request.method = request.getMethod();
@@ -65,7 +65,7 @@ void POCOClient::POCOResult::addHTTPRequestInfo(const Poco::Net::HTTPRequest& re
   poco_info.http.request.content = request_content;
 }
 
-void POCOClient::POCOResult::addHTTPResponseInfo(const Poco::Net::HTTPResponse& response,
+void POCOResult::addHTTPResponseInfo(const Poco::Net::HTTPResponse& response,
                                                  const std::string& response_content)
 {
   std::string header_info;
@@ -80,7 +80,7 @@ void POCOClient::POCOResult::addHTTPResponseInfo(const Poco::Net::HTTPResponse& 
   poco_info.http.response.content = response_content;
 }
 
-void POCOClient::POCOResult::addWebSocketFrameInfo(const int flags,
+void POCOResult::addWebSocketFrameInfo(const int flags,
                                                    const std::string& frame_content)
 {
   poco_info.websocket.flags = flags;
@@ -91,7 +91,7 @@ void POCOClient::POCOResult::addWebSocketFrameInfo(const int flags,
  * Auxiliary methods
  */
 
-std::string POCOClient::POCOResult::mapGeneralStatus() const
+std::string POCOResult::mapGeneralStatus() const
 {
   std::string result;
 
@@ -133,7 +133,7 @@ std::string POCOClient::POCOResult::mapGeneralStatus() const
   return result;
 }
 
-std::string POCOClient::POCOResult::mapWebSocketOpcode() const
+std::string POCOResult::mapWebSocketOpcode() const
 {
   std::string result;
 
@@ -171,7 +171,7 @@ std::string POCOClient::POCOResult::mapWebSocketOpcode() const
   return result;
 }
 
-std::string POCOClient::POCOResult::toString(const bool verbose, const size_t indent) const
+std::string POCOResult::toString(const bool verbose, const size_t indent) const
 {
   std::stringstream ss;
 
@@ -213,27 +213,27 @@ std::string POCOClient::POCOResult::toString(const bool verbose, const size_t in
  * Primary methods
  */
 
-POCOClient::POCOResult POCOClient::httpGet(const std::string& uri)
+POCOResult POCOClient::httpGet(const std::string& uri)
 {
   return makeHTTPRequest(HTTPRequest::HTTP_GET, uri);
 }
 
-POCOClient::POCOResult POCOClient::httpPost(const std::string& uri, const std::string& content)
+POCOResult POCOClient::httpPost(const std::string& uri, const std::string& content)
 {
   return makeHTTPRequest(HTTPRequest::HTTP_POST, uri, content);
 }
 
-POCOClient::POCOResult POCOClient::httpPut(const std::string& uri, const std::string& content)
+POCOResult POCOClient::httpPut(const std::string& uri, const std::string& content)
 {
   return makeHTTPRequest(HTTPRequest::HTTP_PUT, uri, content);
 }
 
-POCOClient::POCOResult POCOClient::httpDelete(const std::string& uri)
+POCOResult POCOClient::httpDelete(const std::string& uri)
 {
   return makeHTTPRequest(HTTPRequest::HTTP_DELETE, uri);
 }
 
-POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string& method,
+POCOResult POCOClient::makeHTTPRequest(const std::string& method,
                                                    const std::string& uri,
                                                    const std::string& content)
 {
@@ -314,171 +314,6 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string& method,
   return result;
 }
 
-POCOClient::POCOResult POCOClient::webSocketConnect(const std::string& uri,
-                                                    const std::string& protocol,
-                                                    const Poco::Int64 timeout)
-{
-  // Lock the object's mutex. It is released when the method goes out of scope.
-  ScopedLock<Mutex> lock(http_mutex_);
-
-  // Result of the communication.
-  POCOResult result;
-
-  // The response and the request.
-  HTTPResponse response;
-  HTTPRequest request(HTTPRequest::HTTP_GET, uri, HTTPRequest::HTTP_1_1);
-  request.set("Sec-WebSocket-Protocol", protocol);
-  request.setCookies(cookies_);
-
-  // Attempt the communication.
-  try
-  {
-    result.addHTTPRequestInfo(request);
-
-    {
-      // We must have at least websocket_connect_mutext_.
-      // If a connection already exists, we must also have websocket_use_mutex_.
-      // If not, nobody should have the mutex anyway, so we should get it immediately.
-      ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
-      ScopedLock<Mutex> use_lock(websocket_use_mutex_);
-
-      p_websocket_ = new WebSocket(http_client_session_, request, response);
-      p_websocket_->setReceiveTimeout(Poco::Timespan(timeout));
-    }
-
-    result.addHTTPResponseInfo(response);
-    result.status = POCOResult::OK;
-  }
-  catch (InvalidArgumentException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT;
-    result.exception_message = e.displayText();
-  }
-  catch (TimeoutException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_TIMEOUT;
-    result.exception_message = e.displayText();
-  }
-  catch (WebSocketException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_WEBSOCKET;
-    result.exception_message = e.displayText();
-  }
-  catch (NetException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_NET;
-    result.exception_message = e.displayText();
-  }
-
-  if (result.status != POCOResult::OK)
-  {
-    http_client_session_.reset();
-  }
-
-  return result;
-}
-
-POCOClient::POCOResult POCOClient::webSocketReceiveFrame()
-{
-  // Lock the object's mutex. It is released when the method goes out of scope.
-  ScopedLock<Mutex> lock(websocket_use_mutex_);
-
-  // Result of the communication.
-  POCOResult result;
-
-  // Attempt the communication.
-  try
-  {
-    if (!p_websocket_.isNull())
-    {
-      int flags = 0;
-      std::string content;
-
-      // Wait for (non-ping) WebSocket frames.
-      do
-      {
-        flags = 0;
-        int number_of_bytes_received = p_websocket_->receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
-        content = std::string(websocket_buffer_, number_of_bytes_received);
-
-        // Check for ping frame.
-        if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING)
-        {
-          // Reply with a pong frame.
-          p_websocket_->sendFrame(websocket_buffer_,
-                                  number_of_bytes_received,
-                                  WebSocket::FRAME_FLAG_FIN | WebSocket::FRAME_OP_PONG);
-        }
-      } while ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING);
-
-      // Check for closing frame.
-      if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_CLOSE)
-      {
-        // Do not pass content of a closing frame to end user,
-        // according to "The WebSocket Protocol" RFC6455.
-        content.clear();
-
-        // Shutdown the WebSocket.
-        p_websocket_->shutdown();
-        p_websocket_ = 0;
-      }
-
-      result.addWebSocketFrameInfo(flags, content);
-      result.status = POCOResult::OK;
-    }
-    else
-    {
-      result.status = POCOResult::WEBSOCKET_NOT_ALLOCATED;
-    }
-  }
-  catch (InvalidArgumentException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT;
-    result.exception_message = e.displayText();
-  }
-  catch (TimeoutException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_TIMEOUT;
-    result.exception_message = e.displayText();
-  }
-  catch (WebSocketException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_WEBSOCKET;
-    result.exception_message = e.displayText();
-  }
-  catch (NetException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_NET;
-    result.exception_message = e.displayText();
-  }
-
-  if (result.status != POCOResult::OK)
-  {
-    http_client_session_.reset();
-  }
-
-  return result;
-}
-
-void POCOClient::webSocketShutdown()
-{
-  // Make sure nobody is connecting while we're closing.
-  ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
-
-  // Make sure there is actually a connection to close.
-  if (!webSocketExist())
-  {
-    return;
-  }
-
-  // Shut down the socket. This should make webSocketReceiveFrame() return as soon as possible.
-  p_websocket_->shutdown();
-
-  // Also acquire the websocket lock before invalidating the pointer,
-  // or we will break running calls to webSocketReceiveFrame().
-  ScopedLock<Mutex> use_lock(websocket_use_mutex_);
-  p_websocket_ = Poco::SharedPtr<Poco::Net::WebSocket>();
-}
 
 /************************************************************
  * Auxiliary methods

@@ -48,12 +48,6 @@ namespace abb
 {
 namespace rws
 {
-/**
- * \brief A class for a simple client based on POCO.
- */
-class POCOClient
-{
-public:
   /**
    * \brief A struct for containing the result of a communication.
    */
@@ -242,6 +236,13 @@ public:
     std::string toString(const bool verbose = false, const size_t indent = 0) const;
   };
 
+
+/**
+ * \brief A class for a simple client based on POCO.
+ */
+class POCOClient
+{
+public:
   /**
    * \brief A constructor.
    *
@@ -320,44 +321,7 @@ public:
     http_client_session_.reset();
   }
 
-  /**
-   * \brief A method for checking if the WebSocket exist.
-   *
-   * \return bool flag indicating if the WebSocket exist or not.
-   */
-  bool webSocketExist() { return !p_websocket_.isNull(); }
-
-  /**
-   * \brief A method for connecting a WebSocket.
-   *
-   * \param uri for the URI (path and query).
-   * \param protocol for the WebSocket protocol.
-   * \param timeout for the WebSocket communication timeout [microseconds].
-   *
-   * \return POCOResult containing the result.
-   */
-  POCOResult webSocketConnect(const std::string& uri, const std::string& protocol, const Poco::Int64 timeout);
-
-  /**
-   * \brief A method for receiving a WebSocket frame.
-   *
-   * \return POCOResult containing the result.
-   */
-  POCOResult webSocketReceiveFrame();
-
-  /**
-   * \brief Forcibly shut down the websocket connection.
-   *
-   * The connection is shut down immediately.
-   * Subsequently, the function will block until a current call to webSocketReceiveFrame() has finished,
-   * before cleaning up the local state.
-   *
-   * Note that since mutexes do not guarantee the order of acquisition for multiple contenders,
-   * it is undefined how many calls to webSocketReceiveFrame() will still attempt to use the shut down
-   * connection before the local state is cleaned. Those invocation will throw a runtime error.
-   */
-  void webSocketShutdown();
-
+  
   /**
    * \brief A method for retrieving a substring in a string.
    *
@@ -434,29 +398,6 @@ private:
   Poco::Mutex http_mutex_;
 
   /**
-   * \brief A mutex for protecting the client's WebSocket pointer.
-   *
-   * This mutex must be held while setting or invalidating the p_websocket_ member.
-   * Note that the websocket_use_mutex_ must also be held while invalidating the pointer,
-   * since someone may be using it otherwise.
-   *
-   * If acquiring both websocket_connect_mutex_ and websocket_use_mutex_,
-   * the connect mutex must be acquired first.
-   */
-  Poco::Mutex websocket_connect_mutex_;
-
-  /**
-   * \brief A mutex for protecting the client's WebSocket resources.
-   *
-   * This mutex must be held while using the p_websocket_ member,
-   * and while invalidating the pointer.
-   *
-   * If acquiring both websocket_connect_mutex_ and websocket_use_mutex_,
-   * the connect mutex must be acquired first.
-   */
-  Poco::Mutex websocket_use_mutex_;
-
-  /**
    * \brief A HTTP client session.
    */
   Poco::Net::HTTPClientSession http_client_session_;
@@ -470,16 +411,6 @@ private:
    * \brief A container for cookies received from a server.
    */
   Poco::Net::NameValueCollection cookies_;
-
-  /**
-   * \brief A buffer for a WebSocket.
-   */
-  char websocket_buffer_[BUFFER_SIZE];
-
-  /**
-   * \brief A pointer to a WebSocket client.
-   */
-  Poco::SharedPtr<Poco::Net::WebSocket> p_websocket_;
 };
 
 } // end namespace rws

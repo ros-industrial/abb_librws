@@ -59,48 +59,6 @@ typedef SystemConstants::RWS::Resources     Resources;
 typedef SystemConstants::RWS::Services      Services;
 typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
 
-/***********************************************************************************************************************
- * Class definitions: SubscriptionResources
- */
-
-/************************************************************
- * Primary methods
- */
-
-void SubscriptionResources::addIOSignal(const std::string& iosignal, const SubscriptionPriority priority)
-{
-  std::string resource_uri = Resources::RW_IOSYSTEM_SIGNALS;
-  resource_uri += "/";
-  resource_uri += iosignal;
-  resource_uri += ";";
-  resource_uri += Identifiers::STATE;
-
-  add(resource_uri, priority);
-}
-
-void SubscriptionResources::addRAPIDPersistantVariable(const RAPIDResource& resource,
-                                                                  const SubscriptionPriority priority)
-{
-  std::string resource_uri = Resources::RW_RAPID_SYMBOL_DATA_RAPID;
-  resource_uri += "/";
-  resource_uri += resource.task;
-  resource_uri += "/";
-  resource_uri += resource.module;
-  resource_uri += "/";
-  resource_uri += resource.name;
-  resource_uri += ";";
-  resource_uri += Identifiers::VALUE;
-
-  add(resource_uri, priority);
-}
-
-void SubscriptionResources::add(const std::string& resource_uri, const SubscriptionPriority priority)
-{
-  resources_.push_back(SubscriptionResource(resource_uri, priority));
-}
-
-
-
 
 /***********************************************************************************************************************
  * Class definitions: RWSClient
