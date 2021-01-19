@@ -599,23 +599,23 @@ bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
     std::string type = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "type"));
 
     // Assume mechanical unit type is undefined, update based on contents of 'type'.
-    static_info.type = UNDEFINED;
+    static_info.type = MechanicalUnitType::UNDEFINED;
 
     if(type == "None")
     {
-      static_info.type = NONE;
+      static_info.type = MechanicalUnitType::NONE;
     }
     else if(type == "TCPRobot")
     {
-      static_info.type = TCP_ROBOT;
+      static_info.type = MechanicalUnitType::TCP_ROBOT;
     }
     else if(type == "Robot")
     {
-      static_info.type = ROBOT;
+      static_info.type = MechanicalUnitType::ROBOT;
     }
     else if(type == "Single")
     {
-      static_info.type = SINGLE;
+      static_info.type = MechanicalUnitType::SINGLE;
     }
 
     std::stringstream axes(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes")));
@@ -628,7 +628,7 @@ bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
     if(!static_info.task_name.empty() &&
        !static_info.is_integrated_unit.empty() &&
        !static_info.has_integrated_unit.empty() &&
-       static_info.type != UNDEFINED &&
+       static_info.type != MechanicalUnitType::UNDEFINED &&
        !axes.fail() && !axes_total.fail())
     {
       result = true;
@@ -658,15 +658,15 @@ bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
     std::string coord_system = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "coord-system"));
 
     // Assume mechanical unit mode is unknown, update based on contents of 'mode'.
-    dynamic_info.mode = UNKNOWN_MODE;
+    dynamic_info.mode = MechanicalUnitMode::UNKNOWN_MODE;
 
     if(mode == "Activated")
     {
-      dynamic_info.mode = ACTIVATED;
+      dynamic_info.mode = MechanicalUnitMode::ACTIVATED;
     }
     else if(mode == "Deactivated")
     {
-      dynamic_info.mode = DEACTIVATED;
+      dynamic_info.mode = MechanicalUnitMode::DEACTIVATED;
     }
 
     // Assume mechanical unit coordinate system is world, update based on contents of 'coord_system'.
@@ -692,7 +692,7 @@ bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
        !dynamic_info.total_payload_name.empty() &&
        !dynamic_info.status.empty() &&
        !dynamic_info.jog_mode.empty() &&
-       dynamic_info.mode != UNKNOWN_MODE)
+       dynamic_info.mode != MechanicalUnitMode::UNKNOWN_MODE)
     {
       result = true;
     }
@@ -865,23 +865,23 @@ std::vector<RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
     std::string temp = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_EXCSTATE);
 
     // Assume task state is unknown, update based on contents of 'temp'.
-    RAPIDTaskExecutionState execution_state = UNKNOWN;
+    RAPIDTaskExecutionState execution_state = RAPIDTaskExecutionState::UNKNOWN;
 
     if(temp == "read")
     {
-      execution_state = READY;
+      execution_state = RAPIDTaskExecutionState::READY;
     }
     else if(temp == "stop")
     {
-      execution_state = STOPPED;
+      execution_state = RAPIDTaskExecutionState::STOPPED;
     }
     else if(temp == "star")
     {
-      execution_state = STARTED;
+      execution_state = RAPIDTaskExecutionState::STARTED;
     }
     else if(temp == "unin")
     {
-      execution_state = UNINITIALIZED;
+      execution_state = RAPIDTaskExecutionState::UNINITIALIZED;
     }
 
     result.push_back(RAPIDTaskInfo(name, is_motion_task, is_active, execution_state));

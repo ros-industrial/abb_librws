@@ -94,6 +94,12 @@ struct RAPIDAtomicTemplate : public RAPIDSymbolDataAbstract
 {
 public:
   /**
+   * \brief Type of contained value.
+   */
+  using value_type = T;
+
+
+  /**
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.

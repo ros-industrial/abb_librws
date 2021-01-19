@@ -48,7 +48,7 @@ namespace rws
 /**
 * \brief Execution state of a RAPID task.
 */
-enum RAPIDTaskExecutionState
+enum class RAPIDTaskExecutionState
 {
   UNKNOWN,      ///< The task state is unknown.
   READY,        ///< The task is ready.
@@ -60,7 +60,7 @@ enum RAPIDTaskExecutionState
 /**
  * \brief Type of a mechanical unit.
  */
-enum MechanicalUnitType
+enum class MechanicalUnitType
 {
   NONE,      ///< The unit has no type.
   TCP_ROBOT, ///< The unit is a TCP robot (has more than one joint, and can process commands in Cartesian space).
@@ -72,7 +72,7 @@ enum MechanicalUnitType
 /**
  * \brief Mode of a mechanical unit.
  */
-enum MechanicalUnitMode
+enum class MechanicalUnitMode
 {
   UNKNOWN_MODE, ///< The unit mode is unknown.
   ACTIVATED,    ///< The unit has been activated.
