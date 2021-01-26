@@ -44,7 +44,6 @@ namespace rws
  * Struct definitions: RWSStateMachineInterface::ResourceIdentifiers
  */
 
-typedef RWSClient::RAPIDSymbolResource                                   RAPIDSymbolResource;
 typedef RWSStateMachineInterface::States                                 States;
 typedef RWSStateMachineInterface::EGMActions                             EGMActions;
 typedef RWSStateMachineInterface::ResourceIdentifiers::RAPID::Symbols    Symbols;

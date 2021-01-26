@@ -282,96 +282,96 @@ public:
          *
          * Note: Requires that the EGM option exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource EGM_CURRENT_ACTION;
+        static const RAPIDSymbolResource EGM_CURRENT_ACTION;
 
         /**
          * \brief RAPID symbol containing settings to different EGM RAPID instructions.
          *
          * Note: Requires that the EGM option exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource EGM_SETTINGS;
+        static const RAPIDSymbolResource EGM_SETTINGS;
 
         /**
          * \brief RAPID symbol indicating the current state of a RAPID motion task.
          */
-        static const RWSClient::RAPIDSymbolResource MAIN_CURRENT_STATE;
+        static const RAPIDSymbolResource MAIN_CURRENT_STATE;
 
         /**
          * \brief RAPID symbol containing name input to the predefined routine "runCallByVar".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_CALL_BY_VAR_NAME_INPUT;
+        static const RAPIDSymbolResource RAPID_CALL_BY_VAR_NAME_INPUT;
 
         /**
          * \brief RAPID symbol containing number input to the predefined routine "runCallByVar".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_CALL_BY_VAR_NUM_INPUT;
+        static const RAPIDSymbolResource RAPID_CALL_BY_VAR_NUM_INPUT;
 
         /**
          * \brief RAPID symbol containing module file path input to the predefined routines
          *        "runModuleLoad" and "runModuleUnload".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_MODULE_FILE_PATH_INPUT;
+        static const RAPIDSymbolResource RAPID_MODULE_FILE_PATH_INPUT;
 
         /**
          * \brief RAPID symbol containing jointtarget input to the predefined routine "runMoveAbsJ".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_MOVE_JOINT_TARGET_INPUT;
+        static const RAPIDSymbolResource RAPID_MOVE_JOINT_TARGET_INPUT;
 
         /**
          * \brief RAPID symbol containing robtarget input to the predefined routine "runMoveJ".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_MOVE_ROB_TARGET_INPUT;
+        static const RAPIDSymbolResource RAPID_MOVE_ROB_TARGET_INPUT;
 
         /**
          * \brief RAPID symbol containing speed input to the predefined routines "runMoveAbsJ" and "runMoveJ".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_MOVE_SPEED_INPUT;
+        static const RAPIDSymbolResource RAPID_MOVE_SPEED_INPUT;
 
         /**
          * \brief RAPID symbol containing routine name input specifying a RAPID routine to run.
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_ROUTINE_NAME_INPUT;
+        static const RAPIDSymbolResource RAPID_ROUTINE_NAME_INPUT;
 
         /**
          * \brief RAPID symbol containing command input for specifying the desired gripper command.
          *
          * Note: Requires that the SmartGripper product exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource SG_COMMAND_INPUT;
+        static const RAPIDSymbolResource SG_COMMAND_INPUT;
 
         /**
          * \brief RAPID symbol containing settings to different SmartGripper RAPID instructions.
          *
          * Note: Requires that the SmartGripper product exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource SG_SETTINGS;
+        static const RAPIDSymbolResource SG_SETTINGS;
 
         /**
          * \brief RAPID symbol containing position input for specifying the position a SmartGripper should move to.
          *
          * Note: Requires that the SmartGripper product exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource SG_TARGET_POSTION_INPUT;
+        static const RAPIDSymbolResource SG_TARGET_POSTION_INPUT;
 
         /**
          * \brief RAPID symbol containing base frame extracted during initialization, for a RAPID motion task.
          */
-        static const RWSClient::RAPIDSymbolResource UTILITY_BASE_FRAME;
+        static const RAPIDSymbolResource UTILITY_BASE_FRAME;
 
         /**
          * \brief RAPID symbol containing calibration target extracted during initialization, for a RAPID motion task.
          */
-        static const RWSClient::RAPIDSymbolResource UTILITY_CALIBRATION_TARGET;
+        static const RAPIDSymbolResource UTILITY_CALIBRATION_TARGET;
 
         /**
          * \brief RAPID symbol indicating if a watchdog is active or not.
          */
-        static const RWSClient::RAPIDSymbolResource WATCHDOG_ACTIVE;
+        static const RAPIDSymbolResource WATCHDOG_ACTIVE;
 
         /**
          * \brief RAPID symbol indicating if a watchdog should check an external status signal or not.
          */
-        static const RWSClient::RAPIDSymbolResource WATCHDOG_CHECK_EXTERNAL_STATUS;
+        static const RAPIDSymbolResource WATCHDOG_CHECK_EXTERNAL_STATUS;
       };
     };
   };
