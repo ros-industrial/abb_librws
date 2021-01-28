@@ -46,7 +46,7 @@
 #include "rws_common.h"
 #include "rws_rapid.h"
 #include "rws_poco_client.h"
-#include "rws_subscription.h"
+#include "rws_resource.h"
 
 
 namespace abb
@@ -107,6 +107,9 @@ enum class Coordinate
 class RWSClient : public POCOClient
 {
 public:
+  class Subscription;
+
+
   /**
    * \brief A constructor.
    *
@@ -440,44 +443,7 @@ public:
    */
   RWSResult deleteFile(const FileResource& resource);
 
-  /**
-   * \brief A method for starting for a subscription.
-   *
-   * \param resources specifying the resources to subscribe to.
-   *
-   * \return RWSResult containing the result.
-   */
-  RWSResult startSubscription(const SubscriptionResources& resources);
-
-  /**
-   * \brief A method for waiting for a subscription event.
-   *
-   * \return RWSResult containing the result.
-   */
-  RWSResult waitForSubscriptionEvent();
-
-  /**
-   * \brief A method for ending a active subscription.
-   *
-   * \return RWSResult containing the result.
-   */
-  RWSResult endSubscription();
-
-  /**
-   * \brief Force close the active subscription connection.
-   *
-   * This will cause waitForSubscriptionEvent() to return or throw.
-   * It does not delete the subscription from the controller.
-   *
-   * The preferred way to close the subscription is to request the robot controller to end it via
-   * endSubscription(). This function can be used to force the connection to close immediately in
-   * case the robot controller is not responding.
-   *
-   * This function blocks until an active waitForSubscriptionEvent() has finished.
-   *
-   */
-  void forceCloseSubscription();
-
+  
   /**
    * \brief A method for logging out the currently active RWS session.
    *
@@ -656,11 +622,6 @@ private:
    * \brief Container for logging communication results.
    */
   std::deque<POCOResult> log_;
-
-  /**
-   * \brief A subscription group id.
-   */
-  std::string subscription_group_id_;
 };
 
 } // end namespace rws

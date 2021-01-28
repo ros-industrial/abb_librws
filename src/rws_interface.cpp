@@ -993,44 +993,9 @@ bool RWSInterface::deleteFile(const FileResource& resource)
   return rws_client_.deleteFile(resource).success;
 }
 
-bool RWSInterface::startSubscription (const SubscriptionResources& resources)
+RWSClient::Subscription RWSInterface::startSubscription (const SubscriptionResources& resources)
 {
-  return rws_client_.startSubscription(resources).success;
-}
-
-bool RWSInterface::waitForSubscriptionEvent()
-{
-  RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
-
-  return (rws_result.success && !rws_result.p_xml_document.isNull());
-}
-
-bool RWSInterface::waitForSubscriptionEvent(Poco::AutoPtr<Poco::XML::Document>* p_xml_document)
-{
-  bool result = false;
-
-  if (p_xml_document)
-  {
-    RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
-
-    if (rws_result.success && !rws_result.p_xml_document.isNull())
-    {
-      *p_xml_document = rws_result.p_xml_document;
-      result = true;
-    }
-  }
-
-  return result;
-}
-
-bool RWSInterface::endSubscription()
-{
-  return rws_client_.endSubscription().success;
-}
-
-void RWSInterface::forceCloseSubscription()
-{
-  rws_client_.webSocketShutdown();
+  return RWSClient::Subscription {rws_client_, resources};
 }
 
 bool RWSInterface::registerLocalUser(const std::string& username,

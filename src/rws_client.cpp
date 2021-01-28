@@ -436,7 +436,7 @@ RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
 RWSResult RWSClient::getFile(const FileResource& resource, std::string* p_file_content)
 {
   RWSResult rws_result;
-  POCOClient::POCOResult poco_result;
+  POCOResult poco_result;
 
   if (p_file_content)
   {
@@ -483,90 +483,6 @@ RWSResult RWSClient::deleteFile(const FileResource& resource)
   return evaluatePOCOResult(httpDelete(uri), evaluation_conditions);
 }
 
-RWSResult RWSClient::startSubscription(const SubscriptionResources& resources)
-{
-  RWSResult result;
-
-  if (!webSocketExist())
-  {
-    std::vector<SubscriptionResource> temp = resources.getResources();
-
-    // Generate content for a subscription HTTP post request.
-    std::stringstream subscription_content;
-    for (std::size_t i = 0; i < temp.size(); ++i)
-    {
-      subscription_content << "resources=" << i
-                           << "&"
-                           << i << "=" << temp.at(i).resource_uri
-                           << "&"
-                           << i << "-p=" << temp.at(i).priority
-                           << (i < temp.size() - 1 ? "&" : "");
-    }
-
-    // Make a subscription request.
-    EvaluationConditions evaluation_conditions;
-    evaluation_conditions.parse_message_into_xml = false;
-    evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
-    POCOClient::POCOResult poco_result = httpPost(Services::SUBSCRIPTION, subscription_content.str());
-    result = evaluatePOCOResult(poco_result, evaluation_conditions);
-
-    if (result.success)
-    {
-      std::string poll = "/poll/";
-      subscription_group_id_ = findSubstringContent(poco_result.poco_info.http.response.header_info, poll, "\n");
-      poll += subscription_group_id_;
-
-      // Create a WebSocket for receiving subscription events.
-      EvaluationConditions evaluation_conditions;
-      evaluation_conditions.parse_message_into_xml = false;
-      evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_SWITCHING_PROTOCOLS);
-      result = evaluatePOCOResult(webSocketConnect(poll, "robapi2_subscription", DEFAULT_SUBSCRIPTION_TIMEOUT),
-                                  evaluation_conditions);
-
-      if (!result.success)
-      {
-        subscription_group_id_.clear();
-      }
-    }
-  }
-
-  return result;
-}
-
-RWSResult RWSClient::waitForSubscriptionEvent()
-{
-  EvaluationConditions evaluation_conditions;
-  evaluation_conditions.parse_message_into_xml = true;
-  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
-
-  return evaluatePOCOResult(webSocketReceiveFrame(), evaluation_conditions);
-}
-
-RWSResult RWSClient::endSubscription()
-{
-  RWSResult result;
-
-  if (webSocketExist())
-  {
-    if (!subscription_group_id_.empty())
-    {
-      std::string uri = Services::SUBSCRIPTION + "/" + subscription_group_id_;
-
-      EvaluationConditions evaluation_conditions;
-      evaluation_conditions.parse_message_into_xml = false;
-      evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
-
-      result = evaluatePOCOResult(httpDelete(uri), evaluation_conditions);
-    }
-  }
-
-  return result;
-}
-
-void RWSClient::forceCloseSubscription()
-{
-  webSocketShutdown();
-}
 
 RWSResult RWSClient::logout()
 {
@@ -578,6 +494,7 @@ RWSResult RWSClient::logout()
 
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
+
 
 RWSResult RWSClient::registerLocalUser(const std::string& username,
                                                   const std::string& application,
@@ -703,7 +620,7 @@ void RWSClient::parseMessage(RWSResult* result, const POCOResult& poco_result)
   }
 }
 
-std::string RWSClient::getLogText(const bool verbose) const
+std::string RWSClient::getLogText(bool verbose) const
 {
   if (log_.size() == 0)
   {
@@ -722,7 +639,7 @@ std::string RWSClient::getLogText(const bool verbose) const
   return ss.str();
 }
 
-std::string RWSClient::getLogTextLatestEvent(const bool verbose) const
+std::string RWSClient::getLogTextLatestEvent(bool verbose) const
 {
   return (log_.size() == 0 ? "" : log_[0].toString(verbose, 0));
 }

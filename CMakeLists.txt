@@ -38,6 +38,7 @@ set(
     src/rws_common.cpp
     src/rws_interface.cpp
     src/rws_poco_client.cpp
+    src/rws_poco_result.cpp
     src/rws_rapid.cpp
     src/rws_state_machine_interface.cpp
     src/rws_subscription.cpp

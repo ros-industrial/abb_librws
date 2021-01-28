@@ -1,10 +1,16 @@
 #include <abb_librws/rws_subscription.h>
 
+#include <iostream>
+
 
 namespace abb :: rws
 {
-  using Resources = SystemConstants::RWS::Resources;
-  using Identifiers = SystemConstants::RWS::Identifiers;
+  using namespace Poco::Net;
+
+
+  typedef SystemConstants::RWS::Resources     Resources;
+  typedef SystemConstants::RWS::Identifiers   Identifiers;
+  typedef SystemConstants::RWS::Services      Services;
 
 
   /***********************************************************************************************************************
@@ -47,176 +53,151 @@ namespace abb :: rws
   }
 
 
-  Subscription::Subscription()
+  RWSClient::Subscription::Subscription(RWSClient& client, SubscriptionResources const& resources)
+  : client_ {client}
   {
+    RWSResult result;
 
+    std::vector<SubscriptionResource> temp = resources.getResources();
+
+    // Generate content for a subscription HTTP post request.
+    std::stringstream subscription_content;
+    for (std::size_t i = 0; i < temp.size(); ++i)
+    {
+      subscription_content << "resources=" << i
+                            << "&"
+                            << i << "=" << temp.at(i).resource_uri
+                            << "&"
+                            << i << "-p=" << static_cast<int>(temp.at(i).priority)
+                            << (i < temp.size() - 1 ? "&" : "");
+    }
+
+    // Make a subscription request.
+    EvaluationConditions evaluation_conditions;
+    evaluation_conditions.parse_message_into_xml = false;
+    evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
+    POCOResult poco_result = client_.httpPost(Services::SUBSCRIPTION, subscription_content.str());
+    result = client_.evaluatePOCOResult(poco_result, evaluation_conditions);
+
+    if (!result.success)
+      throw std::runtime_error("Unable to create RWSClient::Subscription: " + result.error_message);
+
+    std::string poll = "/poll/";
+    subscription_group_id_ = findSubstringContent(poco_result.poco_info.http.response.header_info, poll, "\n");
+    poll += subscription_group_id_;
+
+    p_websocket_ = client_.webSocketConnect(poll, "robapi2_subscription", DEFAULT_SUBSCRIPTION_TIMEOUT);
   }
 
 
-  POCOResult Subscription::webSocketConnect(const std::string& uri,
-                                                    const std::string& protocol,
-                                                    const Poco::Int64 timeout)
+
+  RWSClient::Subscription::~Subscription()
   {
-    // Lock the object's mutex. It is released when the method goes out of scope.
-    ScopedLock<Mutex> lock(http_mutex_);
-
-    // Result of the communication.
-    POCOResult result;
-
-    // The response and the request.
-    HTTPResponse response;
-    HTTPRequest request(HTTPRequest::HTTP_GET, uri, HTTPRequest::HTTP_1_1);
-    request.set("Sec-WebSocket-Protocol", protocol);
-    request.setCookies(cookies_);
-
-    // Attempt the communication.
     try
     {
-      result.addHTTPRequestInfo(request);
+      // Unsubscribe from events
+      endSubscription();
+    }
+    catch (...)
+    {
+      // Catch all exceptions in dtor
+    }
+  }
 
-      {
-        // We must have at least websocket_connect_mutext_.
-        // If a connection already exists, we must also have websocket_use_mutex_.
-        // If not, nobody should have the mutex anyway, so we should get it immediately.
-        ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
-        ScopedLock<Mutex> use_lock(websocket_use_mutex_);
 
-        p_websocket_ = new WebSocket(http_client_session_, request, response);
-        p_websocket_->setReceiveTimeout(Poco::Timespan(timeout));
-      }
+  bool RWSClient::Subscription::waitForSubscriptionEvent(SubscriptionEvent& event)
+  {
+    WebSocketInfo frame;
+    if (webSocketReceiveFrame(frame))
+    {
+      // std::clog << "WebSocket frame received: flags=" << frame.flags << ", frame_content=" << frame.frame_content << std::endl;
+      Poco::AutoPtr<Poco::XML::Document> doc = parser_.parseString(frame.frame_content);
 
-      result.addHTTPResponseInfo(response);
-      result.status = POCOResult::OK;
-    }
-    catch (InvalidArgumentException& e)
-    {
-      result.status = POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT;
-      result.exception_message = e.displayText();
-    }
-    catch (TimeoutException& e)
-    {
-      result.status = POCOResult::EXCEPTION_POCO_TIMEOUT;
-      result.exception_message = e.displayText();
-    }
-    catch (WebSocketException& e)
-    {
-      result.status = POCOResult::EXCEPTION_POCO_WEBSOCKET;
-      result.exception_message = e.displayText();
-    }
-    catch (NetException& e)
-    {
-      result.status = POCOResult::EXCEPTION_POCO_NET;
-      result.exception_message = e.displayText();
-    }
+      event.value = xmlFindTextContent(doc, XMLAttribute {"class", "lvalue"});
+      if (Poco::AutoPtr<Poco::XML::Node> node = doc->getNodeByPath("html/body/div/ul/li/a"))
+        event.resourceUri = xmlNodeGetAttributeValue(node, "href");
 
-    if (result.status != POCOResult::OK)
-    {
-      http_client_session_.reset();
+      return true;
     }
+    
+    return false;
+  }
+
+
+  RWSResult RWSClient::Subscription::endSubscription()
+  {
+    RWSResult result;
+
+    std::string uri = Services::SUBSCRIPTION + "/" + subscription_group_id_;
+
+    EvaluationConditions evaluation_conditions;
+    evaluation_conditions.parse_message_into_xml = false;
+    evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+    result = client_.evaluatePOCOResult(client_.httpDelete(uri), evaluation_conditions);
 
     return result;
   }
 
-  POCOResult Subscription::webSocketReceiveFrame()
+
+  bool RWSClient::Subscription::webSocketReceiveFrame(WebSocketInfo& frame)
   {
-    // Lock the object's mutex. It is released when the method goes out of scope.
-    ScopedLock<Mutex> lock(websocket_use_mutex_);
-
-    // Result of the communication.
-    POCOResult result;
-
-    // Attempt the communication.
-    try
+    // If the connection is still active...
+    if (p_websocket_)
     {
-      if (!p_websocket_.isNull())
+      int flags = 0;
+      std::string content;
+
+      // Wait for (non-ping) WebSocket frames.
+      do
       {
-        int flags = 0;
-        std::string content;
+        flags = 0;
+        int number_of_bytes_received = p_websocket_->receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
+        content = std::string(websocket_buffer_, number_of_bytes_received);
+        // std::clog << "WebSocket frame received: flags=" << flags << ", content=" << content << std::endl;
 
-        // Wait for (non-ping) WebSocket frames.
-        do
+        // Check for ping frame.
+        if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING)
         {
-          flags = 0;
-          int number_of_bytes_received = p_websocket_->receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
-          content = std::string(websocket_buffer_, number_of_bytes_received);
-
-          // Check for ping frame.
-          if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING)
-          {
-            // Reply with a pong frame.
-            p_websocket_->sendFrame(websocket_buffer_,
-                                    number_of_bytes_received,
-                                    WebSocket::FRAME_FLAG_FIN | WebSocket::FRAME_OP_PONG);
-          }
-        } while ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING);
-
-        // Check for closing frame.
-        if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_CLOSE)
-        {
-          // Do not pass content of a closing frame to end user,
-          // according to "The WebSocket Protocol" RFC6455.
-          content.clear();
-
-          // Shutdown the WebSocket.
-          p_websocket_->shutdown();
-          p_websocket_ = 0;
+          // Reply with a pong frame.
+          p_websocket_->sendFrame(websocket_buffer_,
+                                  number_of_bytes_received,
+                                  WebSocket::FRAME_FLAG_FIN | WebSocket::FRAME_OP_PONG);
         }
+      } while ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING);
 
-        result.addWebSocketFrameInfo(flags, content);
-        result.status = POCOResult::OK;
-      }
-      else
+      frame.flags = flags;
+      frame.frame_content = content;
+
+      // Check for closing frame.
+      if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_CLOSE)
       {
-        result.status = POCOResult::WEBSOCKET_NOT_ALLOCATED;
+        // Do not pass content of a closing frame to end user,
+        // according to "The WebSocket Protocol" RFC6455.
+        content.clear();
+
+        // Shutdown the WebSocket.
+        p_websocket_->shutdown();
+
+        // Destroy the WebSocket.
       }
     }
-    catch (InvalidArgumentException& e)
-    {
-      result.status = POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT;
-      result.exception_message = e.displayText();
-    }
-    catch (TimeoutException& e)
-    {
-      result.status = POCOResult::EXCEPTION_POCO_TIMEOUT;
-      result.exception_message = e.displayText();
-    }
-    catch (WebSocketException& e)
-    {
-      result.status = POCOResult::EXCEPTION_POCO_WEBSOCKET;
-      result.exception_message = e.displayText();
-    }
-    catch (NetException& e)
-    {
-      result.status = POCOResult::EXCEPTION_POCO_NET;
-      result.exception_message = e.displayText();
-    }
 
-    if (result.status != POCOResult::OK)
-    {
-      http_client_session_.reset();
-    }
-
-    return result;
+    return (bool)p_websocket_;
   }
 
-  void Subscription::webSocketShutdown()
+
+  void RWSClient::Subscription::webSocketShutdown()
   {
-    // Make sure nobody is connecting while we're closing.
-    ScopedLock<Mutex> connect_lock(websocket_connect_mutex_);
-
-    // Make sure there is actually a connection to close.
-    if (!webSocketExist())
-    {
-      return;
-    }
-
-    // Shut down the socket. This should make webSocketReceiveFrame() return as soon as possible.
-    p_websocket_->shutdown();
-
-    // Also acquire the websocket lock before invalidating the pointer,
-    // or we will break running calls to webSocketReceiveFrame().
-    ScopedLock<Mutex> use_lock(websocket_use_mutex_);
-    p_websocket_ = Poco::SharedPtr<Poco::Net::WebSocket>();
+    if (p_websocket_)
+      // Shut down the socket. This should make webSocketReceiveFrame() return as soon as possible.
+      p_websocket_->shutdown();
   }
 
+
+  std::ostream& operator<<(std::ostream& os, SubscriptionEvent const& event)
+  {
+    return os << "resourceUri=" << event.resourceUri << std::endl
+      << "value=" << event.value;
+  }
 }

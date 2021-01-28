@@ -39,6 +39,7 @@
 
 #include "rws_cfg.h"
 #include "rws_client.h"
+#include "rws_subscription.h"
 
 namespace abb
 {
@@ -801,46 +802,11 @@ public:
    *
    * \param resources specifying the resources to subscribe to.
    *
-   * \return bool indicating if the communication was successful or not.
+   * \return \a RWSClient::Subscription object.
+   * 
+   * \throw \a std::runtime_error if something goes wrong
    */
-  bool startSubscription(const SubscriptionResources& resources);
-
-  /**
-   * \brief A method for waiting for a subscription event (use if the event content is irrelevant).
-   *
-   * \return bool indicating if the communication was successful or not.
-   */
-  bool waitForSubscriptionEvent();
-
-  /**
-   * \brief A method for waiting for a subscription event (use if the event content is important).
-   *
-   * \param p_xml_document for storing the data received in the subscription event.
-   *
-   * \return bool indicating if the communication was successful or not.
-   */
-  bool waitForSubscriptionEvent(Poco::AutoPtr<Poco::XML::Document>* p_xml_document);
-
-  /**
-   * \brief A method for ending a active subscription.
-   *
-   * \return bool indicating if the communication was successful or not.
-   */
-  bool endSubscription();
-
-  /**
-   * \brief Force close the active subscription connection.
-   *
-   * This will cause waitForSubscriptionEvent() to return or throw.
-   * It does not delete the subscription from the controller.
-   *
-   * The preferred way to close the subscription is to request the robot controller to end it via
-   * endSubscription(). This function can be used to force the connection to close immediately in
-   * case the robot controller is not responding.
-   *
-   * This function blocks until an active waitForSubscriptionEvent() has finished.
-   */
-  void forceCloseSubscription();
+  RWSClient::Subscription startSubscription(const SubscriptionResources& resources);
 
   /**
    * \brief A method for registering a user as local.
