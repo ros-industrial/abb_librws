@@ -147,6 +147,14 @@ namespace abb :: rws
 
 
     /**
+     * \brief A method for ending a active subscription.
+     *
+     * \return RWSResult containing the result.
+     */
+    RWSResult endSubscription();
+
+
+    /**
      * \brief Force close the active subscription connection.
      *
      * This will cause waitForSubscriptionEvent() to return or throw.
@@ -215,13 +223,5 @@ namespace abb :: rws
      * connection before the local state is cleaned. Those invocation will throw a runtime error.
      */
     void webSocketShutdown();
-
-
-    /**
-     * \brief A method for ending a active subscription.
-     *
-     * \return RWSResult containing the result.
-     */
-    RWSResult endSubscription();
   };
 }

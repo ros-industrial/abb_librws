@@ -114,7 +114,10 @@ namespace abb :: rws
       Poco::AutoPtr<Poco::XML::Document> doc = parser_.parseString(frame.frame_content);
 
       event.value = xmlFindTextContent(doc, XMLAttribute {"class", "lvalue"});
-      if (Poco::AutoPtr<Poco::XML::Node> node = doc->getNodeByPath("html/body/div/ul/li/a"))
+
+      // IMPORTANT: don't use AutoPtr<XML::Node> here! Otherwise you will get memory corruption:
+      // https://github.com/NoMagicAi/monomagic/issues/4893
+      if (Poco::XML::Node const * node = doc->getNodeByPath("html/body/div/ul/li/a"))
         event.resourceUri = xmlNodeGetAttributeValue(node, "href");
 
       return true;
@@ -153,8 +156,10 @@ namespace abb :: rws
       {
         flags = 0;
         int number_of_bytes_received = p_websocket_->receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
+
+        std::clog << "RWSClient::Subscription::webSocketReceiveFrame: " << number_of_bytes_received << " bytes received\n";
         content = std::string(websocket_buffer_, number_of_bytes_received);
-        // std::clog << "WebSocket frame received: flags=" << flags << ", content=" << content << std::endl;
+        std::clog << "WebSocket frame received: flags=" << flags << ", content=" << content << std::endl;
 
         // Check for ping frame.
         if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING)
@@ -166,9 +171,6 @@ namespace abb :: rws
         }
       } while ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING);
 
-      frame.flags = flags;
-      frame.frame_content = content;
-
       // Check for closing frame.
       if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_CLOSE)
       {
@@ -176,11 +178,12 @@ namespace abb :: rws
         // according to "The WebSocket Protocol" RFC6455.
         content.clear();
 
-        // Shutdown the WebSocket.
-        p_websocket_->shutdown();
-
-        // Destroy the WebSocket.
+        // Shutdown and destroy the WebSocket.
+        webSocketShutdown();        
       }
+
+      frame.flags = flags;
+      frame.frame_content = content;
     }
 
     return (bool)p_websocket_;
@@ -190,8 +193,13 @@ namespace abb :: rws
   void RWSClient::Subscription::webSocketShutdown()
   {
     if (p_websocket_)
+    {
       // Shut down the socket. This should make webSocketReceiveFrame() return as soon as possible.
       p_websocket_->shutdown();
+
+      // Destroy the WebSocket.
+      p_websocket_.release();
+    }
   }
 
 
