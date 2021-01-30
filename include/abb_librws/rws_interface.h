@@ -802,11 +802,11 @@ public:
    *
    * \param resources specifying the resources to subscribe to.
    *
-   * \return \a RWSClient::Subscription object.
+   * \return \a Subscription object.
    * 
    * \throw \a std::runtime_error if something goes wrong
    */
-  RWSClient::Subscription startSubscription(const SubscriptionResources& resources);
+  Subscription startSubscription(const SubscriptionResources& resources);
 
   /**
    * \brief A method for registering a user as local.

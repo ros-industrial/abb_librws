@@ -1,6 +1,7 @@
 #include <abb_librws/rws_subscription.h>
 
 #include <iostream>
+#include <sstream>
 
 
 namespace abb :: rws
@@ -53,11 +54,9 @@ namespace abb :: rws
   }
 
 
-  RWSClient::Subscription::Subscription(RWSClient& client, SubscriptionResources const& resources)
+  SubscriptionGroup::SubscriptionGroup(POCOClient& client, SubscriptionResources const& resources)
   : client_ {client}
   {
-    RWSResult result;
-
     std::vector<SubscriptionResource> temp = resources.getResources();
 
     // Generate content for a subscription HTTP post request.
@@ -73,39 +72,35 @@ namespace abb :: rws
     }
 
     // Make a subscription request.
-    EvaluationConditions evaluation_conditions;
-    evaluation_conditions.parse_message_into_xml = false;
-    evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
-    POCOResult poco_result = client_.httpPost(Services::SUBSCRIPTION, subscription_content.str());
-    result = client_.evaluatePOCOResult(poco_result, evaluation_conditions);
+    POCOResult const poco_result = client_.httpPost(Services::SUBSCRIPTION, subscription_content.str());
 
-    if (!result.success)
-      throw std::runtime_error("Unable to create RWSClient::Subscription: " + result.error_message);
+    if (poco_result.poco_info.http.response.status != HTTPResponse::HTTP_CREATED)
+      throw std::runtime_error("Unable to create Subscription: " + poco_result.poco_info.http.response.content);
 
-    std::string poll = "/poll/";
-    subscription_group_id_ = findSubstringContent(poco_result.poco_info.http.response.header_info, poll, "\n");
-    poll += subscription_group_id_;
-
-    p_websocket_ = client_.webSocketConnect(poll, "robapi2_subscription", DEFAULT_SUBSCRIPTION_TIMEOUT);
+    subscription_group_id_ = findSubstringContent(poco_result.poco_info.http.response.header_info, "/poll/", "\n");
   }
 
 
-
-  RWSClient::Subscription::~Subscription()
+  SubscriptionGroup::~SubscriptionGroup()
   {
-    try
-    {
-      // Unsubscribe from events
-      endSubscription();
-    }
-    catch (...)
-    {
-      // Catch all exceptions in dtor
-    }
+    // Unsubscribe from events
+    std::string const uri = Services::SUBSCRIPTION + "/" + subscription_group_id_;
+    client_.httpDelete(uri);
   }
 
 
-  bool RWSClient::Subscription::waitForSubscriptionEvent(SubscriptionEvent& event)
+  SubscriptionReceiver::SubscriptionReceiver(POCOClient& client, std::string const& subscription_group_id)
+  : p_websocket_ {client.webSocketConnect("/poll/" + subscription_group_id, "robapi2_subscription", DEFAULT_SUBSCRIPTION_TIMEOUT)}
+  {
+  }
+
+
+  SubscriptionReceiver::~SubscriptionReceiver()
+  {
+  }
+  
+  
+  bool SubscriptionReceiver::waitForEvent(SubscriptionEvent& event)
   {
     WebSocketInfo frame;
     if (webSocketReceiveFrame(frame))
@@ -115,8 +110,7 @@ namespace abb :: rws
 
       event.value = xmlFindTextContent(doc, XMLAttribute {"class", "lvalue"});
 
-      // IMPORTANT: don't use AutoPtr<XML::Node> here! Otherwise you will get memory corruption:
-      // https://github.com/NoMagicAi/monomagic/issues/4893
+      // IMPORTANT: don't use AutoPtr<XML::Node> here! Otherwise you will get memory corruption.
       if (Poco::XML::Node const * node = doc->getNodeByPath("html/body/div/ul/li/a"))
         event.resourceUri = xmlNodeGetAttributeValue(node, "href");
 
@@ -127,24 +121,11 @@ namespace abb :: rws
   }
 
 
-  RWSResult RWSClient::Subscription::endSubscription()
+  bool SubscriptionReceiver::webSocketReceiveFrame(WebSocketInfo& frame)
   {
-    RWSResult result;
+    // Lock the object's mutex. It is released when the method goes out of scope.
+    std::lock_guard<std::mutex> lock {websocket_use_mutex_};
 
-    std::string uri = Services::SUBSCRIPTION + "/" + subscription_group_id_;
-
-    EvaluationConditions evaluation_conditions;
-    evaluation_conditions.parse_message_into_xml = false;
-    evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
-
-    result = client_.evaluatePOCOResult(client_.httpDelete(uri), evaluation_conditions);
-
-    return result;
-  }
-
-
-  bool RWSClient::Subscription::webSocketReceiveFrame(WebSocketInfo& frame)
-  {
     // If the connection is still active...
     if (p_websocket_)
     {
@@ -157,9 +138,9 @@ namespace abb :: rws
         flags = 0;
         int number_of_bytes_received = p_websocket_->receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
 
-        std::clog << "RWSClient::Subscription::webSocketReceiveFrame: " << number_of_bytes_received << " bytes received\n";
+        // std::clog << "Subscription::webSocketReceiveFrame: " << number_of_bytes_received << " bytes received\n";
         content = std::string(websocket_buffer_, number_of_bytes_received);
-        std::clog << "WebSocket frame received: flags=" << flags << ", content=" << content << std::endl;
+        // std::clog << "WebSocket frame received: flags=" << flags << ", content=" << content << std::endl;
 
         // Check for ping frame.
         if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING)
@@ -178,8 +159,8 @@ namespace abb :: rws
         // according to "The WebSocket Protocol" RFC6455.
         content.clear();
 
-        // Shutdown and destroy the WebSocket.
-        webSocketShutdown();        
+        // Destroy the WebSocket to indicate that the connection is shut down.
+        p_websocket_.reset();
       }
 
       frame.flags = flags;
@@ -190,15 +171,23 @@ namespace abb :: rws
   }
 
 
-  void RWSClient::Subscription::webSocketShutdown()
+  void SubscriptionReceiver::forceClose()
+  {
+    webSocketShutdown();
+  }
+
+
+  void SubscriptionReceiver::webSocketShutdown()
   {
     if (p_websocket_)
     {
       // Shut down the socket. This should make webSocketReceiveFrame() return as soon as possible.
       p_websocket_->shutdown();
 
-      // Destroy the WebSocket.
-      p_websocket_.release();
+      // Also acquire the websocket lock before invalidating the pointer,
+      // or we will break running calls to webSocketReceiveFrame().
+      std::lock_guard<std::mutex> use_lock(websocket_use_mutex_);
+      p_websocket_.reset();
     }
   }
 

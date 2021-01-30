@@ -1,10 +1,13 @@
 #pragma once
 
 #include "rws_resource.h"
-#include "rws_client.h"
+#include "rws_poco_client.h"
+
+#include <Poco/DOM/DOMParser.h>
 
 #include <string>
 #include <iosfwd>
+#include <mutex>
 
 
 namespace abb :: rws
@@ -94,85 +97,122 @@ namespace abb :: rws
   };
 
 
+  /**
+   * \brief Contains info about a subscribed event.
+   */ 
   struct SubscriptionEvent
   {
+    /**
+     * \brief URI of the subscribed resource
+     */
     std::string resourceUri;
+
+    /**
+     * \brief Value associated with the resource
+     */
     std::string value;
   };
 
 
+  /**
+   * \brief Outputs a \a SubscriptionEvent in a human-readable format.
+   */
   std::ostream& operator<<(std::ostream& os, SubscriptionEvent const& event);
 
 
   /**
-   * \brief Manages RWS event subscription.
+   * \brief Manages an RWS subscription group.
    */
-  class RWSClient::Subscription
+  class SubscriptionGroup
   {
   public:
-    using WebSocket = Poco::Net::WebSocket;
-
-
     /**
-     * \brief A constructor.
+     * \brief Registers a subscription at the server.
      *
-     * \param client a client to subscribe
+     * \param client a client to subscribe. The lifetime of the client must exceed the lifetime of the subscription group.
      * \param resources list of resources to subscribe
      */
-    Subscription(RWSClient& client, SubscriptionResources const& resources);
-
+    SubscriptionGroup(POCOClient& client, SubscriptionResources const& resources);
 
     /**
-     * \brief Move constructor.
+     * \brief Ends an active subscription.
+     */
+    ~SubscriptionGroup();
+
+    /**
+     * \brief Get ID of the subscription group.
      * 
-     * \a Subscription objects are moveable.
+     * \return ID of the subscription group.
      */
-    Subscription(Subscription&&) = default;
+    std::string const& id() const noexcept
+    {
+      return subscription_group_id_;
+    }
+
+  private:
+    POCOClient& client_;
+
+    /**
+     * \brief A subscription group id.
+     */
+    std::string subscription_group_id_;
+  };
+
+
+  /**
+   * \brief Receives RWS events.
+   */
+  class SubscriptionReceiver
+  {
+  public:
+    /**
+     * \brief Establishes WebSocket connection with the server and prepares to receive events
+     * for a specified subscription group.
+     * 
+     * \param client \a POCOClient used to establish WebSocket connection.
+     * \param subscription_group_id ID of the subscription group to receive events for.
+     */
+    SubscriptionReceiver(POCOClient& client, std::string const& subscription_group_id);
+    
+
+    /**
+     * \brief Closes the WebSocket connection but does not delete the subscription.
+     */
+    ~SubscriptionReceiver();
 
 
     /**
-     * \brief A destructor.
-     */
-    ~Subscription();
-
-
-    /**
-     * \brief A method for waiting for a subscription event.
+     * \brief Waits for a subscription event.
      * 
      * \param event event data
      *
-     * \return true if the connection is still alive.
+     * \return true if the connection is still alive, false if the connection
+     * has been closed by removing the subscription.
      */
-    bool waitForSubscriptionEvent(SubscriptionEvent& event);
-
-
-    /**
-     * \brief A method for ending a active subscription.
-     *
-     * \return RWSResult containing the result.
-     */
-    RWSResult endSubscription();
+    bool waitForEvent(SubscriptionEvent& event);
 
 
     /**
      * \brief Force close the active subscription connection.
      *
-     * This will cause waitForSubscriptionEvent() to return or throw.
+     * This will cause waitForEvent() to return or throw.
      * It does not delete the subscription from the controller.
      *
-     * The preferred way to close the subscription is to request the robot controller to end it via
-     * endSubscription(). This function can be used to force the connection to close immediately in
+     * The preferred way to close the subscription is the destruction of the \a SubscriptionGroup object.
+     * This function can be used to force the connection to close immediately in
      * case the robot controller is not responding.
      *
-     * This function blocks until an active waitForSubscriptionEvent() has finished.
+     * This function blocks until an active waitForEvent() has finished.
      *
      */
-    void forceCloseSubscription();
+    void forceClose();
 
 
   private:
-    RWSClient& client_;
-
+    /**
+     * \brief Default RWS subscription timeout [microseconds].
+     */
+    static constexpr Poco::Int64 DEFAULT_SUBSCRIPTION_TIMEOUT = 40e6;
 
     /**
      * \brief Static constant for the socket's buffer size.
@@ -185,15 +225,17 @@ namespace abb :: rws
     char websocket_buffer_[BUFFER_SIZE];
 
     /**
-     * \brief A pointer to a Subscription client.
+     * \brief A mutex for protecting the client's WebSocket resources.
+     *
+     * This mutex must be held while using the p_websocket_ member,
+     * and while invalidating the pointer.
      */
-    std::unique_ptr<WebSocket> p_websocket_;
+    std::mutex websocket_use_mutex_;
 
     /**
-     * \brief A subscription group id.
+     * \brief A pointer to a Subscription client.
      */
-    std::string subscription_group_id_;
-
+    std::unique_ptr<Poco::Net::WebSocket> p_websocket_;
 
     /**
      * \brief Parser for XML in WebSocket frames.
@@ -223,5 +265,69 @@ namespace abb :: rws
      * connection before the local state is cleaned. Those invocation will throw a runtime error.
      */
     void webSocketShutdown();
+  };
+
+
+  /**
+   * \brief Manages RWS event subscription.
+   */
+  class Subscription
+  {
+  public:
+    /**
+     * \brief A constructor.
+     *
+     * \param client a client to subscribe
+     * \param resources list of resources to subscribe
+     */
+    Subscription(POCOClient& client, SubscriptionResources const& resources)
+    : group_ {new SubscriptionGroup {client, resources}}
+    , receiver_ {new SubscriptionReceiver {client, group_->id()}}
+    {
+    }
+
+
+    /**
+     * \brief No copy constructor.
+     */
+    Subscription(Subscription const&) = delete;
+
+
+    /**
+     * \brief Ends an active subscription.
+     */
+    ~Subscription()
+    {
+
+    }
+
+
+    /**
+     * \brief Waits for a subscription event.
+     * 
+     * \param event event data
+     *
+     * \return true if the connection is still alive, false if the connection
+     * has been closed by removing the subscription.
+     */
+    bool waitForEvent(SubscriptionEvent& event)
+    {
+      return receiver_->waitForEvent(event);
+    }
+
+
+    /**
+     * \brief Ends an active subscription but does not destroy the receiver,
+     * s.t. if waitForEvent() is being executed in another thread it can exit gracefully.
+     */
+    void endSubscription()
+    {
+      group_.reset();
+    }
+
+
+  private:
+    std::unique_ptr<SubscriptionGroup> group_;
+    std::unique_ptr<SubscriptionReceiver> receiver_;    
   };
 }

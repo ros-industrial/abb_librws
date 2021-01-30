@@ -993,9 +993,9 @@ bool RWSInterface::deleteFile(const FileResource& resource)
   return rws_client_.deleteFile(resource).success;
 }
 
-RWSClient::Subscription RWSInterface::startSubscription (const SubscriptionResources& resources)
+Subscription RWSInterface::startSubscription (const SubscriptionResources& resources)
 {
-  return RWSClient::Subscription {rws_client_, resources};
+  return {rws_client_, resources};
 }
 
 bool RWSInterface::registerLocalUser(const std::string& username,
