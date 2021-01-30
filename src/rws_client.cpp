@@ -592,10 +592,6 @@ void RWSClient::parseMessage(RWSResult* result, const POCOResult& poco_result)
     {
       ss << poco_result.poco_info.http.response.content;
     }
-    else if (!poco_result.poco_info.websocket.frame_content.empty())
-    {
-      ss << poco_result.poco_info.websocket.frame_content;
-    }
     else
     {
       // XML parsing: Missing message

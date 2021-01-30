@@ -2,6 +2,7 @@
 
 #include "rws_resource.h"
 #include "rws_poco_client.h"
+#include "rws_websocket.h"
 
 #include <Poco/DOM/DOMParser.h>
 
@@ -160,7 +161,7 @@ namespace abb :: rws
 
 
   /**
-   * \brief Receives RWS events.
+   * \brief Receives RWS subscription events.
    */
   class SubscriptionReceiver
   {
@@ -250,7 +251,7 @@ namespace abb :: rws
      *
      * \return true if the connection is still active, false otherwise.
      */
-    bool webSocketReceiveFrame(WebSocketInfo& frame);
+    bool webSocketReceiveFrame(WebSocketFrame& frame);
 
 
     /**
@@ -282,7 +283,7 @@ namespace abb :: rws
      */
     Subscription(POCOClient& client, SubscriptionResources const& resources)
     : group_ {new SubscriptionGroup {client, resources}}
-    , receiver_ {new SubscriptionReceiver {client, group_->id()}}
+    , receiver_ {client, group_->id()}
     {
     }
 
@@ -298,7 +299,6 @@ namespace abb :: rws
      */
     ~Subscription()
     {
-
     }
 
 
@@ -312,7 +312,7 @@ namespace abb :: rws
      */
     bool waitForEvent(SubscriptionEvent& event)
     {
-      return receiver_->waitForEvent(event);
+      return receiver_.waitForEvent(event);
     }
 
 
@@ -328,6 +328,6 @@ namespace abb :: rws
 
   private:
     std::unique_ptr<SubscriptionGroup> group_;
-    std::unique_ptr<SubscriptionReceiver> receiver_;    
+    SubscriptionReceiver receiver_;
   };
 }

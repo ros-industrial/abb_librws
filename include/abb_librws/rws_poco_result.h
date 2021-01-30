@@ -1,7 +1,5 @@
 #pragma once
 
-#include <abb_librws/rws_websocket_info.h>
-
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
 
@@ -101,11 +99,6 @@ namespace abb :: rws
        * \brief Container for HTTP info.
        */
       HTTPInfo http;
-
-      /**
-       * \brief Container for WebSocket info.
-       */
-      WebSocketInfo websocket;
     };
 
     /**
@@ -145,26 +138,11 @@ namespace abb :: rws
     void addHTTPResponseInfo(const Poco::Net::HTTPResponse& response, const std::string& response_content = "");
 
     /**
-     * \brief A method for adding info from a received WebSocket frame.
-     *
-     * \param flags for the received WebSocket frame's flags.
-     * \param frame_content for the received WebSocket frame's content.
-     */
-    void addWebSocketFrameInfo(const int flags, const std::string& frame_content);
-
-    /**
      * \brief A method to map the general status to a std::string.
      *
      * \return std::string containing the mapped general status.
      */
     std::string mapGeneralStatus() const;
-
-    /**
-     * \brief A method to map the opcode of a received WebSocket frame.
-     *
-     * \return std::string containing the mapped opcode.
-     */
-    std::string mapWebSocketOpcode() const;
 
     /**
      * \brief A method to construct a text representation of the result.

@@ -42,6 +42,7 @@ set(
     src/rws_rapid.cpp
     src/rws_state_machine_interface.cpp
     src/rws_subscription.cpp
+    src/rws_websocket.cpp
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES})

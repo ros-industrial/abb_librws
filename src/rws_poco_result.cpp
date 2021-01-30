@@ -42,13 +42,6 @@ namespace abb :: rws
     poco_info.http.response.content = response_content;
   }
 
-  void POCOResult::addWebSocketFrameInfo(const int flags,
-                                                    const std::string& frame_content)
-  {
-    poco_info.websocket.flags = flags;
-    poco_info.websocket.frame_content = frame_content;
-  }
-
   /************************************************************
    * Auxiliary methods
    */
@@ -95,44 +88,6 @@ namespace abb :: rws
     return result;
   }
 
-  std::string POCOResult::mapWebSocketOpcode() const
-  {
-    std::string result;
-
-    switch (poco_info.websocket.flags & WebSocket::FRAME_OP_BITMASK)
-    {
-      case WebSocket::FRAME_OP_CONT:
-        result = "FRAME_OP_CONT";
-      break;
-
-      case WebSocket::FRAME_OP_TEXT:
-        result = "FRAME_OP_TEXT";
-      break;
-
-      case WebSocket::FRAME_OP_BINARY:
-        result = "FRAME_OP_BINARY";
-      break;
-
-      case WebSocket::FRAME_OP_CLOSE:
-        result = "FRAME_OP_CLOSE";
-      break;
-
-      case WebSocket::FRAME_OP_PING:
-        result = "FRAME_OP_PING";
-      break;
-
-      case WebSocket::FRAME_OP_PONG:
-        result = "FRAME_OP_PONG";
-      break;
-
-      default:
-        result = "FRAME_OP_UNDEFINED";
-      break;
-    }
-
-    return result;
-  }
-
   std::string POCOResult::toString(const bool verbose, const size_t indent) const
   {
     std::stringstream ss;
@@ -155,10 +110,6 @@ namespace abb :: rws
           ss << seperator << "HTTP Response Content: " << poco_info.http.response.content;
         }
       }
-    }
-    else if (status == OK)
-    {
-      ss << seperator << "WebSocket frame: " << mapWebSocketOpcode();
     }
 
     return ss.str();

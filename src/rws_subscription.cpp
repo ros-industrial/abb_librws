@@ -1,6 +1,5 @@
 #include <abb_librws/rws_subscription.h>
 
-#include <iostream>
 #include <sstream>
 
 
@@ -102,7 +101,7 @@ namespace abb :: rws
   
   bool SubscriptionReceiver::waitForEvent(SubscriptionEvent& event)
   {
-    WebSocketInfo frame;
+    WebSocketFrame frame;
     if (webSocketReceiveFrame(frame))
     {
       // std::clog << "WebSocket frame received: flags=" << frame.flags << ", frame_content=" << frame.frame_content << std::endl;
@@ -121,7 +120,7 @@ namespace abb :: rws
   }
 
 
-  bool SubscriptionReceiver::webSocketReceiveFrame(WebSocketInfo& frame)
+  bool SubscriptionReceiver::webSocketReceiveFrame(WebSocketFrame& frame)
   {
     // Lock the object's mutex. It is released when the method goes out of scope.
     std::lock_guard<std::mutex> lock {websocket_use_mutex_};
@@ -137,10 +136,7 @@ namespace abb :: rws
       {
         flags = 0;
         int number_of_bytes_received = p_websocket_->receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
-
-        // std::clog << "Subscription::webSocketReceiveFrame: " << number_of_bytes_received << " bytes received\n";
         content = std::string(websocket_buffer_, number_of_bytes_received);
-        // std::clog << "WebSocket frame received: flags=" << flags << ", content=" << content << std::endl;
 
         // Check for ping frame.
         if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING)
