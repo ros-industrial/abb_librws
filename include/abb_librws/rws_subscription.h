@@ -8,7 +8,6 @@
 
 #include <string>
 #include <iosfwd>
-#include <mutex>
 
 
 namespace abb :: rws
@@ -215,57 +214,16 @@ namespace abb :: rws
      */
     static constexpr Poco::Int64 DEFAULT_SUBSCRIPTION_TIMEOUT = 40e6;
 
-    /**
-     * \brief Static constant for the socket's buffer size.
-     */
-    static const size_t BUFFER_SIZE = 1024;
 
     /**
-     * \brief A buffer for a Subscription.
+     * \brief WebSocket for receiving events.
      */
-    char websocket_buffer_[BUFFER_SIZE];
-
-    /**
-     * \brief A mutex for protecting the client's WebSocket resources.
-     *
-     * This mutex must be held while using the p_websocket_ member,
-     * and while invalidating the pointer.
-     */
-    std::mutex websocket_use_mutex_;
-
-    /**
-     * \brief A pointer to a Subscription client.
-     */
-    std::unique_ptr<Poco::Net::WebSocket> p_websocket_;
+    WebSocket webSocket_;
 
     /**
      * \brief Parser for XML in WebSocket frames.
      */
     Poco::XML::DOMParser parser_;
-
-
-    /**
-     * \brief A method for receiving a WebSocket frame.
-     * 
-     * \brief frame the received frame
-     *
-     * \return true if the connection is still active, false otherwise.
-     */
-    bool webSocketReceiveFrame(WebSocketFrame& frame);
-
-
-    /**
-     * \brief Forcibly shut down the websocket connection.
-     *
-     * The connection is shut down immediately.
-     * Subsequently, the function will block until a current call to webSocketReceiveFrame() has finished,
-     * before cleaning up the local state.
-     *
-     * Note that since mutexes do not guarantee the order of acquisition for multiple contenders,
-     * it is undefined how many calls to webSocketReceiveFrame() will still attempt to use the shut down
-     * connection before the local state is cleaned. Those invocation will throw a runtime error.
-     */
-    void webSocketShutdown();
   };
 
 

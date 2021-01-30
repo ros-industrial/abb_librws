@@ -141,13 +141,12 @@ namespace rws
      *
      * \param uri for the URI (path and query).
      * \param protocol for the WebSocket protocol.
-     * \param timeout for the WebSocket communication timeout [microseconds].
      *
      * \return Pointer to a client WebSocket.
      * 
      * \throw \a std::runtime_error if something goes wrong
      */
-    std::unique_ptr<Poco::Net::WebSocket> webSocketConnect(const std::string& uri, const std::string& protocol, const Poco::Int64 timeout);
+    std::unique_ptr<Poco::Net::WebSocket> webSocketConnect(const std::string& uri, const std::string& protocol);
 
 
   private:

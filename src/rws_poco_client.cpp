@@ -160,8 +160,7 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
 
 
 std::unique_ptr<Poco::Net::WebSocket> POCOClient::webSocketConnect(const std::string& uri,
-                                                    const std::string& protocol,
-                                                    const Poco::Int64 timeout)
+                                                    const std::string& protocol)
 {
   // Lock the object's mutex. It is released when the method goes out of scope.
   ScopedLock<Mutex> lock(http_mutex_);
@@ -178,8 +177,7 @@ std::unique_ptr<Poco::Net::WebSocket> POCOClient::webSocketConnect(const std::st
     std::unique_ptr<Poco::Net::WebSocket> websocket {new WebSocket {http_client_session_, request, response}};
     if (response.getStatus() != HTTPResponse::HTTP_SWITCHING_PROTOCOLS)
       throw std::runtime_error("webSocketConnect() failed: HTTP response " + std::to_string(response.getStatus()));
-    
-	  websocket->setReceiveTimeout(Poco::Timespan(timeout));
+
     return websocket;
   }
   catch (std::exception const& e)
