@@ -12,7 +12,7 @@ namespace abb :: rws
   typedef SystemConstants::RWS::Identifiers   Identifiers;
   typedef SystemConstants::RWS::Services      Services;
 
-
+  
   /***********************************************************************************************************************
    * Class definitions: SubscriptionResources
    */
@@ -88,9 +88,19 @@ namespace abb :: rws
   }
 
 
-  SubscriptionReceiver::SubscriptionReceiver(POCOClient& client, std::string const& subscription_group_id)
-  : webSocket_ {client, "/poll/" + subscription_group_id, "robapi2_subscription", DEFAULT_SUBSCRIPTION_TIMEOUT}
+  Poco::Net::WebSocket SubscriptionGroup::connect() const
   {
+    return client_.webSocketConnect("/poll/" + subscription_group_id_, "robapi2_subscription");
+  }
+
+
+  const Poco::Timespan SubscriptionReceiver::DEFAULT_SUBSCRIPTION_TIMEOUT {40000000000};
+
+
+  SubscriptionReceiver::SubscriptionReceiver(SubscriptionGroup const& group)
+  : webSocket_ {group.connect()}
+  {
+    webSocket_.setReceiveTimeout(DEFAULT_SUBSCRIPTION_TIMEOUT);
   }
 
 
@@ -102,7 +112,7 @@ namespace abb :: rws
   bool SubscriptionReceiver::waitForEvent(SubscriptionEvent& event)
   {
     WebSocketFrame frame;
-    if (webSocket_.receiveFrame(frame))
+    if (webSocketReceiveFrame(frame))
     {
       // std::clog << "WebSocket frame received: flags=" << frame.flags << ", frame_content=" << frame.frame_content << std::endl;
       Poco::AutoPtr<Poco::XML::Document> doc = parser_.parseString(frame.frame_content);
@@ -120,8 +130,51 @@ namespace abb :: rws
   }
 
 
-  void SubscriptionReceiver::forceClose()
+  bool SubscriptionReceiver::webSocketReceiveFrame(WebSocketFrame& frame)
   {
+    // If the connection is still active...
+    int flags = 0;
+    std::string content;
+    int number_of_bytes_received = 0;
+
+    // Wait for (non-ping) WebSocket frames.
+    do
+    {
+      flags = 0;
+      number_of_bytes_received = webSocket_.receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
+      content = std::string(websocket_buffer_, number_of_bytes_received);
+
+      // Check for ping frame.
+      if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING)
+      {
+        // Reply with a pong frame.
+        webSocket_.sendFrame(websocket_buffer_,
+                                number_of_bytes_received,
+                                WebSocket::FRAME_FLAG_FIN | WebSocket::FRAME_OP_PONG);
+      }
+    } while ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_PING);
+
+    // Check for closing frame.
+    if ((flags & WebSocket::FRAME_OP_BITMASK) == WebSocket::FRAME_OP_CLOSE)
+    {
+      // Do not pass content of a closing frame to end user,
+      // according to "The WebSocket Protocol" RFC6455.
+      frame.frame_content.clear();
+      frame.flags = flags;
+
+      return false;
+    }
+
+    frame.flags = flags;
+    frame.frame_content = content;
+
+    return number_of_bytes_received != 0;
+  }
+
+
+  void SubscriptionReceiver::shutdown()
+  {
+    // Shut down the socket. This should make webSocketReceiveFrame() return as soon as possible.
     webSocket_.shutdown();
   }
 

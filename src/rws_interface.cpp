@@ -993,7 +993,7 @@ bool RWSInterface::deleteFile(const FileResource& resource)
   return rws_client_.deleteFile(resource).success;
 }
 
-Subscription RWSInterface::startSubscription (const SubscriptionResources& resources)
+SubscriptionGroup RWSInterface::openSubscription (const SubscriptionResources& resources)
 {
   return {rws_client_, resources};
 }

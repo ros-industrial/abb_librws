@@ -142,11 +142,11 @@ namespace rws
      * \param uri for the URI (path and query).
      * \param protocol for the WebSocket protocol.
      *
-     * \return Pointer to a client WebSocket.
+     * \return Newly created client WebSocket.
      * 
      * \throw \a std::runtime_error if something goes wrong
      */
-    std::unique_ptr<Poco::Net::WebSocket> webSocketConnect(const std::string& uri, const std::string& protocol);
+    Poco::Net::WebSocket webSocketConnect(const std::string& uri, const std::string& protocol);
 
 
   private:

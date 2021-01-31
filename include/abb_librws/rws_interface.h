@@ -798,15 +798,15 @@ public:
   bool deleteFile(const FileResource& resource);
 
   /**
-   * \brief A method for starting for a subscription.
+   * \brief Creates a subscription group.
    *
    * \param resources specifying the resources to subscribe to.
    *
-   * \return \a Subscription object.
+   * \return Newly created \a SubscriptionGroup for specified subscription resources.
    * 
    * \throw \a std::runtime_error if something goes wrong
    */
-  Subscription startSubscription(const SubscriptionResources& resources);
+  SubscriptionGroup openSubscription(const SubscriptionResources& resources);
 
   /**
    * \brief A method for registering a user as local.

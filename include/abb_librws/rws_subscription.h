@@ -134,6 +134,13 @@ namespace abb :: rws
      */
     SubscriptionGroup(POCOClient& client, SubscriptionResources const& resources);
 
+
+    /**
+     * \a SubscriptionGroup objects are moveable, but not copyable.
+     */
+    SubscriptionGroup(SubscriptionGroup&&) = default;
+
+
     /**
      * \brief Ends an active subscription.
      */
@@ -148,6 +155,15 @@ namespace abb :: rws
     {
       return subscription_group_id_;
     }
+
+
+    /**
+     * \brief Establish WebSocket connection to receive subscription events.
+     * 
+     * \return A WebSocket that will receive the subscription events.
+     */
+    Poco::Net::WebSocket connect() const;
+    
 
   private:
     POCOClient& client_;
@@ -169,10 +185,9 @@ namespace abb :: rws
      * \brief Establishes WebSocket connection with the server and prepares to receive events
      * for a specified subscription group.
      * 
-     * \param client \a POCOClient used to establish WebSocket connection.
-     * \param subscription_group_id ID of the subscription group to receive events for.
+     * \param group Subscription group to receive events for.
      */
-    SubscriptionReceiver(POCOClient& client, std::string const& subscription_group_id);
+    SubscriptionReceiver(SubscriptionGroup const& group);
     
 
     /**
@@ -186,106 +201,61 @@ namespace abb :: rws
      * 
      * \param event event data
      *
-     * \return true if the connection is still alive, false if the connection
-     * has been closed by removing the subscription.
+     * \return true if the connection is still alive, false if the connection has been closed.
      */
     bool waitForEvent(SubscriptionEvent& event);
 
 
     /**
-     * \brief Force close the active subscription connection.
+     * \brief Shutdown the active subscription connection.
      *
-     * This will cause waitForEvent() to return or throw.
+     * If waitForEvent() is being executed on a different thread, it will return or throw.
      * It does not delete the subscription from the controller.
      *
      * The preferred way to close the subscription is the destruction of the \a SubscriptionGroup object.
      * This function can be used to force the connection to close immediately in
      * case the robot controller is not responding.
      *
-     * This function blocks until an active waitForEvent() has finished.
+     * This function will return immediately and does not block until an active waitForEvent() has finished.
      *
      */
-    void forceClose();
+    void shutdown();
 
 
   private:
     /**
      * \brief Default RWS subscription timeout [microseconds].
      */
-    static constexpr Poco::Int64 DEFAULT_SUBSCRIPTION_TIMEOUT = 40e6;
+    static const Poco::Timespan DEFAULT_SUBSCRIPTION_TIMEOUT;
 
+    /**
+     * \brief Static constant for the socket's buffer size.
+     */
+    static const size_t BUFFER_SIZE = 1024;
+
+    /**
+     * \brief A buffer for a Subscription.
+     */
+    char websocket_buffer_[BUFFER_SIZE];
 
     /**
      * \brief WebSocket for receiving events.
      */
-    WebSocket webSocket_;
+    Poco::Net::WebSocket webSocket_;
 
     /**
      * \brief Parser for XML in WebSocket frames.
      */
     Poco::XML::DOMParser parser_;
-  };
-
-
-  /**
-   * \brief Manages RWS event subscription.
-   */
-  class Subscription
-  {
-  public:
-    /**
-     * \brief A constructor.
-     *
-     * \param client a client to subscribe
-     * \param resources list of resources to subscribe
-     */
-    Subscription(POCOClient& client, SubscriptionResources const& resources)
-    : group_ {new SubscriptionGroup {client, resources}}
-    , receiver_ {client, group_->id()}
-    {
-    }
 
 
     /**
-     * \brief No copy constructor.
-     */
-    Subscription(Subscription const&) = delete;
-
-
-    /**
-     * \brief Ends an active subscription.
-     */
-    ~Subscription()
-    {
-    }
-
-
-    /**
-     * \brief Waits for a subscription event.
+     * \brief A method for receiving a WebSocket frame.
      * 
-     * \param event event data
+     * \brief frame the received frame
      *
-     * \return true if the connection is still alive, false if the connection
-     * has been closed by removing the subscription.
+     * \return true if the connection is still active, false otherwise.
      */
-    bool waitForEvent(SubscriptionEvent& event)
-    {
-      return receiver_.waitForEvent(event);
-    }
-
-
-    /**
-     * \brief Ends an active subscription but does not destroy the receiver,
-     * s.t. if waitForEvent() is being executed in another thread it can exit gracefully.
-     */
-    void endSubscription()
-    {
-      group_.reset();
-    }
-
-
-  private:
-    std::unique_ptr<SubscriptionGroup> group_;
-    SubscriptionReceiver receiver_;
+    bool webSocketReceiveFrame(WebSocketFrame& frame);
   };
 }
