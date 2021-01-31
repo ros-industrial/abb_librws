@@ -133,26 +133,12 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
 
     result.status = POCOResult::OK;
   }
-  catch (InvalidArgumentException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_INVALID_ARGUMENT;
-    result.exception_message = e.displayText();
-  }
-  catch (TimeoutException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_TIMEOUT;
-    result.exception_message = e.displayText();
-  }
-  catch (NetException& e)
-  {
-    result.status = POCOResult::EXCEPTION_POCO_NET;
-    result.exception_message = e.displayText();
-  }
-
-  if (result.status != POCOResult::OK)
+  catch (Poco::Exception const&)
   {
     cookies_.clear();
     http_client_session_.reset();
+
+    throw;
   }
 
   return result;
@@ -246,38 +232,6 @@ void POCOClient::extractAndStoreCookie(const std::string& cookie_string)
 
     cookies_.add(result, result2);
   }
-}
-
-std::string findSubstringContent(const std::string& whole_string,
-                                             const std::string& substring_start,
-                                             const std::string& substring_end)
-{
-  std::string result;
-  size_t start_postion = whole_string.find(substring_start);
-
-  if (start_postion != std::string::npos)
-  {
-    start_postion += substring_start.size();
-    size_t end_postion = whole_string.find_first_of(substring_end, start_postion);
-
-    if (end_postion != std::string::npos)
-    {
-      result = whole_string.substr(start_postion, end_postion - start_postion);
-    }
-  }
-
-  std::string quot = "&quot;";
-  size_t quot_position = 0;
-  do
-  {
-    quot_position = result.find(quot);
-    if (quot_position != std::string::npos)
-    {
-      result.replace(quot_position, quot.size(), "");
-    }
-  } while (quot_position != std::string::npos);
-
-  return result;
 }
 
 } // end namespace rws

@@ -547,6 +547,12 @@ RWSResult RWSClient::evaluatePOCOResult(const POCOResult& poco_result,
 
   checkAcceptedOutcomes(&result, poco_result, conditions);
 
+  if (poco_result.status != POCOResult::OK)
+  {
+    result.success = false;
+    result.error_message = poco_result.exception_message;
+  }
+
   if (result.success && conditions.parse_message_into_xml)
   {
     parseMessage(&result, poco_result);

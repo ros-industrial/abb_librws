@@ -222,20 +222,6 @@ namespace rws
      */
     Poco::Net::NameValueCollection cookies_;
   };
-
-
-  /**
-   * \brief A function for retrieving a substring in a string.
-   *
-   * \param whole_string for the string containing the substring.
-   * \param substring_start start of the substring.
-   * \param substring_end end of the substring.
-   *
-   * \return string containing the substring.
-   */
-  std::string findSubstringContent(const std::string& whole_string,
-                                   const std::string& substring_start,
-                                   const std::string& substring_end);
 } // end namespace rws
 } // end namespace abb
 

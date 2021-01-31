@@ -201,6 +201,37 @@ bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const std::string& name,
 }
 
 
+std::string findSubstringContent(const std::string& whole_string,
+                                             const std::string& substring_start,
+                                             const std::string& substring_end)
+{
+  std::string result;
+  size_t start_postion = whole_string.find(substring_start);
+
+  if (start_postion != std::string::npos)
+  {
+    start_postion += substring_start.size();
+    size_t end_postion = whole_string.find_first_of(substring_end, start_postion);
+
+    if (end_postion != std::string::npos)
+    {
+      result = whole_string.substr(start_postion, end_postion - start_postion);
+    }
+  }
+
+  std::string quot = "&quot;";
+  size_t quot_position = 0;
+  do
+  {
+    quot_position = result.find(quot);
+    if (quot_position != std::string::npos)
+    {
+      result.replace(quot_position, quot.size(), "");
+    }
+  } while (quot_position != std::string::npos);
+
+  return result;
+}
 
 
 /***********************************************************************************************************************
