@@ -73,10 +73,25 @@ namespace abb :: rws
     // Make a subscription request.
     POCOResult const poco_result = client_.httpPost(Services::SUBSCRIPTION, subscription_content.str());
 
-    if (poco_result.poco_info.http.response.status != HTTPResponse::HTTP_CREATED)
-      throw std::runtime_error("Unable to create Subscription: " + poco_result.poco_info.http.response.content);
+    if (poco_result.httpStatus() != HTTPResponse::HTTP_CREATED)
+      throw std::runtime_error("Unable to create Subscription: " + poco_result.content());
 
-    subscription_group_id_ = findSubstringContent(poco_result.poco_info.http.response.header_info, "/poll/", "\n");
+    // Find "Location" header attribute
+    auto const h = std::find_if(
+      poco_result.headerInfo().begin(), poco_result.headerInfo().end(), 
+      [] (auto const& p) { return p.first == "Location"; });
+
+    if (h != poco_result.headerInfo().end())
+    {
+      std::string const poll = "/poll/";
+      auto const start_postion = h->second.find(poll);
+
+      if (start_postion != std::string::npos)
+        subscription_group_id_ = h->second.substr(start_postion + poll.size());
+    }
+
+    if (subscription_group_id_.empty())
+      throw std::runtime_error("Cannot get subscription group from HTTP response");
   }
 
 

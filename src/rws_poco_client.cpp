@@ -84,14 +84,14 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
   // Lock the object's mutex. It is released when the method goes out of scope.
   ScopedLock<Mutex> lock(http_mutex_);
 
-  // Result of the communication.
-  POCOResult result;
-
   // The response and the request.
   HTTPResponse response;
+  std::string response_content;
+
   HTTPRequest request(method, uri, HTTPRequest::HTTP_1_1);
   request.setCookies(cookies_);
   request.setContentLength(content.length());
+
   if (method == HTTPRequest::HTTP_POST || !content.empty())
   {
     request.setContentType("application/x-www-form-urlencoded");
@@ -100,7 +100,7 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
   // Attempt the communication.
   try
   {
-    sendAndReceive(result, request, response, content);
+    sendAndReceive(request, response, content, response_content);
 
     // Check if the server has sent an update for the cookies.
     std::vector<HTTPCookie> temp_cookies;
@@ -122,16 +122,17 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
     {
       http_client_session_.reset();
       request.erase(HTTPRequest::COOKIE);
-      sendAndReceive(result, request, response, content);
+      sendAndReceive(request, response, content, response_content);
     }
 
     // Check if the request was unauthorized, if so add credentials.
     if (response.getStatus() == HTTPResponse::HTTP_UNAUTHORIZED)
     {
-      authenticate(result, request, response, content);
+      authenticate(request, response, content, response_content);
     }
 
-    result.status = POCOResult::OK;
+
+    return POCOResult {response.getStatus(), response, response_content};
   }
   catch (Poco::Exception const&)
   {
@@ -140,13 +141,10 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
 
     throw;
   }
-
-  return result;
 }
 
 
-Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri,
-                                                    const std::string& protocol)
+Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const std::string& protocol)
 {
   // Lock the object's mutex. It is released when the method goes out of scope.
   ScopedLock<Mutex> lock(http_mutex_);
@@ -179,27 +177,39 @@ Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri,
  * Auxiliary methods
  */
 
-void POCOClient::sendAndReceive(POCOResult& result,
-                                HTTPRequest& request,
+void POCOClient::sendAndReceive(HTTPRequest& request,
                                 HTTPResponse& response,
-                                const std::string& request_content)
+                                const std::string& request_content,
+                                std::string& response_content)
 {
-  // Add request info to the result.
-  result.addHTTPRequestInfo(request, request_content);
+  HTTPInfo log_entry;
+
+  // Add request info to the log entry.
+  log_entry.addHTTPRequestInfo(request, request_content);
 
   // Contact the server.
-  std::string response_content;
   http_client_session_.sendRequest(request) << request_content;
+  
+  response_content.clear();
   StreamCopier::copyToString(http_client_session_.receiveResponse(response), response_content);
 
-  // Add response info to the result.
-  result.addHTTPResponseInfo(response, response_content);
+  // Add response info to the log entry.
+  log_entry.addHTTPResponseInfo(response, response_content);
+
+  // Add entry to the log
+  if (log_.size() >= LOG_SIZE)
+  {
+    log_.pop_back();
+  }
+  
+  log_.push_front(log_entry);
 }
 
-void POCOClient::authenticate(POCOResult& result,
-                              HTTPRequest& request,
+
+void POCOClient::authenticate(HTTPRequest& request,
                               HTTPResponse& response,
-                              const std::string& request_content)
+                              const std::string& request_content,
+                              std::string& response_content)
 {
   // Remove any old cookies.
   cookies_.clear();
@@ -208,7 +218,7 @@ void POCOClient::authenticate(POCOResult& result,
   http_credentials_.authenticate(request, response);
 
   // Contact the server, and extract and store the received cookies.
-  sendAndReceive(result, request, response, request_content);
+  sendAndReceive(request, response, request_content, response_content);
   std::vector<HTTPCookie> temp_cookies;
   response.getCookies(temp_cookies);
 
@@ -233,6 +243,80 @@ void POCOClient::extractAndStoreCookie(const std::string& cookie_string)
     cookies_.add(result, result2);
   }
 }
+
+
+std::string POCOClient::getLogText(bool verbose) const
+{
+  if (log_.size() == 0)
+  {
+    return "";
+  }
+
+  std::stringstream ss;
+
+  for (size_t i = 0; i < log_.size(); ++i)
+  {
+    std::stringstream temp;
+    temp << i + 1 << ". ";
+    ss << temp.str() << log_[i].toString(verbose, temp.str().size()) << std::endl;
+  }
+
+  return ss.str();
+}
+
+
+std::string POCOClient::getLogTextLatestEvent(bool verbose) const
+{
+  return (log_.size() == 0 ? "" : log_[0].toString(verbose, 0));
+}
+
+
+void POCOClient::HTTPInfo::addHTTPRequestInfo(const Poco::Net::HTTPRequest& request,
+                                                const std::string& request_content)
+{
+  this->request = {request.getMethod(), request.getURI(), request_content};
+}
+
+
+void POCOClient::HTTPInfo::addHTTPResponseInfo(const Poco::Net::HTTPResponse& response,
+                                                const std::string& response_content)
+{
+  std::string header_info;
+
+  for (HTTPResponse::ConstIterator i = response.begin(); i != response.end(); ++i)
+  {
+    header_info += i->first + "=" + i->second + "\n";
+  }
+
+  this->response = HTTPInfo::ResponseInfo {response.getStatus(), header_info, response_content};
+}
+
+
+std::string POCOClient::HTTPInfo::toString(bool verbose, size_t indent) const
+{
+  std::stringstream ss;
+
+  std::string seperator = (indent == 0 ? " | " : "\n" + std::string(indent, ' '));
+
+  if (request)
+  {
+    ss << seperator << "HTTP Request: " << request->method << " " << request->uri;
+  }
+
+  if (response)
+  {
+    ss << seperator << "HTTP Response: " << response->status << " - "
+      << HTTPResponse::getReasonForStatus(response->status);
+
+    if (verbose)
+    {
+      ss << seperator << "HTTP Response Content: " << response->content;
+    }
+  }
+
+  return ss.str();
+}
+
 
 } // end namespace rws
 } // end namespace abb

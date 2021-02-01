@@ -41,6 +41,8 @@
 
 #include <abb_librws/rws_client.h>
 
+#include <iostream>
+
 
 namespace
 {
@@ -67,6 +69,21 @@ typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
 /************************************************************
  * Primary methods
  */
+
+
+RWSClient::~RWSClient()
+{
+  try
+  {
+    logout();
+  }
+  catch (std::exception const& e)
+  {
+    // Catch all exceptions in dtor.
+    std::cerr << "Exception in RWSClient::~RWSClient(): " << e.what() << std::endl;
+  }
+}
+
 
 RWSResult RWSClient::getContollerService()
 {
@@ -278,42 +295,30 @@ RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource)
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
 
-RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract* p_data)
+void RWSClient::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract& data)
 {
   RWSResult result;
   std::string data_type;
 
-  if (p_data)
+  RWSResult const temp_result = getRAPIDSymbolProperties(resource);
+
+  data_type = xmlFindTextContent(temp_result, XMLAttributes::CLASS_DATTYP);
+
+  if (data.getType().compare(data_type) == 0)
   {
-    RWSResult temp_result = getRAPIDSymbolProperties(resource);
+    result = getRAPIDSymbolData(resource);
 
-    if (temp_result.success)
+    std::string value = xmlFindTextContent(result, XMLAttributes::CLASS_VALUE);
+
+    if (!value.empty())
     {
-      data_type = xmlFindTextContent(temp_result.p_xml_document, XMLAttributes::CLASS_DATTYP);
-
-      if (p_data->getType().compare(data_type) == 0)
-      {
-        result = getRAPIDSymbolData(resource);
-
-        if (result.success)
-        {
-          std::string value = xmlFindTextContent(result.p_xml_document, XMLAttributes::CLASS_VALUE);
-
-          if (!value.empty())
-          {
-            p_data->parseString(value);
-          }
-          else
-          {
-            result.success = false;
-            result.error_message = "getRAPIDSymbolData(...): RAPID value string was empty";
-          }
-        }
-      }
+      data.parseString(value);
+    }
+    else
+    {
+      throw std::logic_error("getRAPIDSymbolData(...): RAPID value string was empty");
     }
   }
-
-  return result;
 }
 
 RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource& resource)
@@ -327,7 +332,7 @@ RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource& resource)
   return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
 
-RWSResult RWSClient::setIOSignal(const std::string& iosignal, const std::string& value)
+void RWSClient::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   std::string uri = generateIOSignalPath(iosignal) + "?" + Queries::ACTION_SET;
   std::string content = Identifiers::LVALUE + "=" + value;
@@ -336,10 +341,10 @@ RWSResult RWSClient::setIOSignal(const std::string& iosignal, const std::string&
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data)
+void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data)
 {
   std::string uri = generateRAPIDDataPath(resource) + "?" + Queries::ACTION_SET;
   std::string content = Identifiers::VALUE + "=" + data;
@@ -348,15 +353,15 @@ RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const std
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
+void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
 {
-  return setRAPIDSymbolData(resource, data.constructString());
+  setRAPIDSymbolData(resource, data.constructString());
 }
 
-RWSResult RWSClient::startRAPIDExecution()
+void RWSClient::startRAPIDExecution()
 {
   std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_START;
   std::string content = "regain=continue&execmode=continue&cycle=forever&condition=none&stopatbp=disabled&alltaskbytsp=false";
@@ -365,10 +370,10 @@ RWSResult RWSClient::startRAPIDExecution()
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::stopRAPIDExecution()
+void RWSClient::stopRAPIDExecution()
 {
   std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_STOP;
   std::string content = "stopmode=stop";
@@ -377,10 +382,10 @@ RWSResult RWSClient::stopRAPIDExecution()
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::resetRAPIDProgramPointer()
+void RWSClient::resetRAPIDProgramPointer()
 {
   std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_RESETPP;
 
@@ -388,10 +393,10 @@ RWSResult RWSClient::resetRAPIDProgramPointer()
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpPost(uri), evaluation_conditions);
+  evaluatePOCOResult(httpPost(uri), evaluation_conditions);
 }
 
-RWSResult RWSClient::setMotorsOn()
+void RWSClient::setMotorsOn()
 {
   std::string uri = Resources::RW_PANEL_CTRLSTATE + "?" + Queries::ACTION_SETCTRLSTATE;
   std::string content = "ctrl-state=motoron";
@@ -400,10 +405,10 @@ RWSResult RWSClient::setMotorsOn()
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::setMotorsOff()
+void RWSClient::setMotorsOff()
 {
   std::string uri = Resources::RW_PANEL_CTRLSTATE + "?" + Queries::ACTION_SETCTRLSTATE;
   std::string content = "ctrl-state=motoroff";
@@ -412,10 +417,10 @@ RWSResult RWSClient::setMotorsOff()
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
+void RWSClient::setSpeedRatio(unsigned int ratio)
 {
   if(ratio > 100) throw std::out_of_range("Speed ratio argument out of range (should be 0 <= ratio <= 100)");
 
@@ -430,35 +435,26 @@ RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
   evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::getFile(const FileResource& resource, std::string* p_file_content)
+void RWSClient::getFile(const FileResource& resource, std::string* p_file_content)
 {
-  RWSResult rws_result;
-  POCOResult poco_result;
-
   if (p_file_content)
   {
     std::string uri = generateFilePath(resource);
-    poco_result = httpGet(uri);
+    POCOResult const poco_result = httpGet(uri);
 
     EvaluationConditions evaluation_conditions;
     evaluation_conditions.parse_message_into_xml = false;
     evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
 
-    rws_result = evaluatePOCOResult(poco_result, evaluation_conditions);
-
-    if (rws_result.success)
-    {
-      *p_file_content = poco_result.poco_info.http.response.content;
-    }
+    evaluatePOCOResult(poco_result, evaluation_conditions);
+    *p_file_content = poco_result.content();
   }
-
-  return rws_result;
 }
 
-RWSResult RWSClient::uploadFile(const FileResource& resource, const std::string& file_content)
+void RWSClient::uploadFile(const FileResource& resource, const std::string& file_content)
 {
   std::string uri = generateFilePath(resource);
   std::string content = file_content;
@@ -468,10 +464,10 @@ RWSResult RWSClient::uploadFile(const FileResource& resource, const std::string&
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
 
-  return evaluatePOCOResult(httpPut(uri, content), evaluation_conditions);
+  evaluatePOCOResult(httpPut(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::deleteFile(const FileResource& resource)
+void RWSClient::deleteFile(const FileResource& resource)
 {
   std::string uri = generateFilePath(resource);
 
@@ -480,23 +476,23 @@ RWSResult RWSClient::deleteFile(const FileResource& resource)
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
 
-  return evaluatePOCOResult(httpDelete(uri), evaluation_conditions);
+  evaluatePOCOResult(httpDelete(uri), evaluation_conditions);
 }
 
 
-RWSResult RWSClient::logout()
+void RWSClient::logout()
 {
   std::string uri = Resources::LOGOUT;
 
   EvaluationConditions evaluation_conditions;
-  evaluation_conditions.parse_message_into_xml = true;
+  evaluation_conditions.parse_message_into_xml = false;
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
 
-  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
+  evaluatePOCOResult(httpGet(uri), evaluation_conditions);
 }
 
 
-RWSResult RWSClient::registerLocalUser(const std::string& username,
+void RWSClient::registerLocalUser(const std::string& username,
                                                   const std::string& application,
                                                   const std::string& location)
 {
@@ -511,12 +507,10 @@ RWSResult RWSClient::registerLocalUser(const std::string& username,
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
 
-  RWSResult result = evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
-
-  return result;
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-RWSResult RWSClient::registerRemoteUser(const std::string& username,
+void RWSClient::registerRemoteUser(const std::string& username,
                                                    const std::string& application,
                                                    const std::string& location)
 {
@@ -531,9 +525,7 @@ RWSResult RWSClient::registerRemoteUser(const std::string& username,
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
   evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_CREATED);
 
-  RWSResult result = evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
-
-  return result;
+  evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
 /************************************************************
@@ -545,106 +537,43 @@ RWSResult RWSClient::evaluatePOCOResult(const POCOResult& poco_result,
 {
   RWSResult result;
 
-  checkAcceptedOutcomes(&result, poco_result, conditions);
+  checkAcceptedOutcomes(poco_result, conditions);
 
-  if (poco_result.status != POCOResult::OK)
+  if (conditions.parse_message_into_xml)
   {
-    result.success = false;
-    result.error_message = poco_result.exception_message;
+    parseMessage(result, poco_result);
   }
-
-  if (result.success && conditions.parse_message_into_xml)
-  {
-    parseMessage(&result, poco_result);
-  }
-
-  if (log_.size() >= LOG_SIZE)
-  {
-    log_.pop_back();
-  }
-  log_.push_front(poco_result);
 
   return result;
 }
 
-void RWSClient::checkAcceptedOutcomes(RWSResult* result,
-                                      const POCOResult& poco_result,
+void RWSClient::checkAcceptedOutcomes(const POCOResult& poco_result,
                                       const EvaluationConditions& conditions)
 {
-  if (result)
+  if (std::find(conditions.accepted_outcomes.begin(), conditions.accepted_outcomes.end(), poco_result.httpStatus()) == conditions.accepted_outcomes.end())
   {
-    if (poco_result.status == POCOResult::OK && poco_result.exception_message.empty())
-    {
-      for (size_t i = 0; i < conditions.accepted_outcomes.size() && !result->success; ++i)
-      {
-        result->success = (poco_result.poco_info.http.response.status == conditions.accepted_outcomes.at(i));
-      }
-
-      if (!result->success)
-      {
-        result->error_message = "checkAcceptedOutcomes(...): RWS response status not accepted";
-      }
-    }
+    throw std::runtime_error("checkAcceptedOutcomes(...): RWS response status " + std::to_string(poco_result.httpStatus()) + " not accepted");
   }
 }
 
-void RWSClient::parseMessage(RWSResult* result, const POCOResult& poco_result)
+void RWSClient::parseMessage(RWSResult& result, const POCOResult& poco_result)
 {
-  if (result)
-  {
-    std::stringstream ss;
-
-    if (!poco_result.poco_info.http.response.content.empty())
-    {
-      ss << poco_result.poco_info.http.response.content;
-    }
-    else
-    {
-      // XML parsing: Missing message
-      result->success = false;
-      result->error_message = "parseMessage(...): RWS response was empty";
-    }
-
-    if (result->success)
-    {
-      try
-      {
-        Poco::XML::InputSource input_source(ss);
-        result->p_xml_document = Poco::XML::DOMParser().parse(&input_source);
-      }
-      catch (...)
-      {
-        // XML parsing: Failed
-        result->success = false;
-        result->error_message = "parseMessage(...): XML parser failed to parse RWS response";
-      }
-    }
-  }
-}
-
-std::string RWSClient::getLogText(bool verbose) const
-{
-  if (log_.size() == 0)
-  {
-    return "";
-  }
-
   std::stringstream ss;
 
-  for (size_t i = 0; i < log_.size(); ++i)
+  if (!poco_result.content().empty())
   {
-    std::stringstream temp;
-    temp << i + 1 << ". ";
-    ss << temp.str() << log_[i].toString(verbose, temp.str().size()) << std::endl;
+    ss << poco_result.content();
+  }
+  else
+  {
+    // XML parsing: Missing message
+    throw std::logic_error("parseMessage(...): RWS response was empty");
   }
 
-  return ss.str();
+  Poco::XML::InputSource input_source(ss);
+  result = Poco::XML::DOMParser().parse(&input_source);
 }
 
-std::string RWSClient::getLogTextLatestEvent(bool verbose) const
-{
-  return (log_.size() == 0 ? "" : log_[0].toString(verbose, 0));
-}
 
 std::string RWSClient::generateConfigurationPath(const std::string& topic, const std::string& type)
 {

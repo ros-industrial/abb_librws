@@ -37,7 +37,6 @@
 #ifndef RWS_CLIENT_H
 #define RWS_CLIENT_H
 
-#include <deque>
 #include <sstream>
 #include <vector>
 
@@ -56,28 +55,7 @@ namespace rws
 /**
  * \brief A struct for containing an evaluated communication result.
  */
-struct RWSResult
-{
-  /**
-   * \brief For indicating if the communication was successfull or not.
-   */
-  bool success;
-
-  /**
-   * \brief For containing any parsed result in XML format. If no data is parsed, then it will be null.
-   */
-  Poco::AutoPtr<Poco::XML::Document> p_xml_document;
-
-  /**
-   * \brief Container for an error message (if one occurred).
-   */
-  std::string error_message;
-
-  /**
-   * \brief A default constructor.
-   */
-  RWSResult() : success(false) {}
-};
+using RWSResult = Poco::AutoPtr<Poco::XML::Document>;
 
 
 /**
@@ -169,12 +147,9 @@ public:
   {}
 
   /**
-   * \brief A destructor.
+   * \brief Logs out the currently active RWS session.
    */
-  ~RWSClient()
-  {
-    logout();
-  }
+  ~RWSClient();
 
   /**
    * \brief Retrieves a list of controller resources (e.g. controller identity and clock information).
@@ -264,11 +239,9 @@ public:
    * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
-   * \param p_data for containing the retrieved data.
-   *
-   * \return RWSResult containing the result.
+   * \param data for containing the retrieved data.
    */
-  RWSResult getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract* p_data);
+  void getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for retrieving the properties of a RAPID symbol.
@@ -335,65 +308,49 @@ public:
    *
    * \param iosignal for the IO signal's name.
    * \param value for the IO signal's new value.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult setIOSignal(const std::string& iosignal, const std::string& value);
+  void setIOSignal(const std::string& iosignal, const std::string& value);
 
   /**
    * \brief A method for setting the data of a RAPID symbol.
    *
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
    * \param data for the RAPID symbol's new data.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data);
+  void setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data);
 
   /**
    * \brief A method for setting the data of a RAPID symbol (based on the provided struct representing the RAPID data).
    *
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
    * \param data for the RAPID symbol's new data.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data);
+  void setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for starting RAPID execution in the robot controller.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult startRAPIDExecution();
+  void startRAPIDExecution();
 
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult stopRAPIDExecution();
+  void stopRAPIDExecution();
 
   /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult resetRAPIDProgramPointer();
+  void resetRAPIDProgramPointer();
 
   /**
    * \brief A method for turning on the robot controller's motors.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult setMotorsOn();
+  void setMotorsOn();
 
   /**
    * \brief A method for turning off the robot controller's motors.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult setMotorsOff();
+  void setMotorsOff();
 
   /**
    * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
@@ -407,7 +364,7 @@ public:
    * \throw std::out_of_range if argument is out of range.
    * \throw std::runtime_error if failed to create a string from the argument.
    */
-  RWSResult setSpeedRatio(unsigned int ratio);
+  void setSpeedRatio(unsigned int ratio);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -416,37 +373,24 @@ public:
    *
    * \param resource specifying the file's directory and name.
    * \param p_file_content for containing the retrieved file content.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult getFile(const FileResource& resource, std::string* p_file_content);
+  void getFile(const FileResource& resource, std::string* p_file_content);
 
   /**
    * \brief A method for uploading a file to the robot controller.
    *
    * \param resource specifying the file's directory and name.
    * \param file_content for the file's content.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult uploadFile(const FileResource& resource, const std::string& file_content);
+  void uploadFile(const FileResource& resource, const std::string& file_content);
 
   /**
    * \brief A method for deleting a file from the robot controller.
    *
    * \param resource specifying the file's directory and name.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult deleteFile(const FileResource& resource);
+  void deleteFile(const FileResource& resource);
 
-  
-  /**
-   * \brief A method for logging out the currently active RWS session.
-   *
-   * \return RWSResult containing the result.
-   */
-  RWSResult logout();
 
   /**
    * \brief A method for registering a user as local.
@@ -454,10 +398,8 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                               const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                               const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -467,10 +409,8 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   *
-   * \return RWSResult containing the result.
    */
-  RWSResult registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                                const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                                const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -480,25 +420,8 @@ public:
    * \param result containing the result of the parsing.
    * \param poco_result containing the POCO result.
    */
-  static void parseMessage(RWSResult* result, const POCOResult& poco_result);
+  static void parseMessage(RWSResult& result, const POCOResult& poco_result);
 
-  /**
-   * \brief Method for retrieving the internal log as a text string.
-   *
-   * \param verbose indicating if the log text should be verbose or not.
-   *
-   * \return std::string containing the log text. An empty text string is returned if the log is empty.
-   */
-  std::string getLogText(const bool verbose = false) const;
-
-  /**
-   * \brief Method for retrieving only the most recently logged event as a text string.
-   *
-   * \param verbose indicating if the log text should be verbose or not.
-   *
-   * \return std::string containing the log text. An empty text string is returned if the log is empty.
-   */
-  std::string getLogTextLatestEvent(const bool verbose = false) const;
 
 private:
   /**
@@ -531,14 +454,19 @@ private:
     std::vector<Poco::Net::HTTPResponse::HTTPStatus> accepted_outcomes;
   };
 
+
+  /**
+   * \brief A method for logging out the currently active RWS session.
+   */
+  void logout();
+
   /**
    * \brief Method for checking a communication result against the accepted outcomes.
    *
-   * \param result containing the result of the check.
    * \param poco_result containing the POCO result.
    * \param conditions containing the conditions for the evaluation.
    */
-  void checkAcceptedOutcomes(RWSResult* result, const POCOResult& poco_result, const EvaluationConditions& conditions);
+  void checkAcceptedOutcomes(const POCOResult& poco_result, const EvaluationConditions& conditions);
 
   /**
    * \brief Method for evaluating the result from a POCO communication.

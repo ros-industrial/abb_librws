@@ -518,30 +518,24 @@ public:
    *
    * \param mechunit for the mechanical unit's name.
    * \param static_info for storing the retrieved information.
-   *
-   * \return bool indicating if the communication was successful or not (basic verification for non-empty data is made).
    */
-  bool getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
+  void getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
 
   /**
    * \brief A method for retrieving dynamic information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
    * \param dynamic_info for storing the retrieved information.
-   *
-   * \return bool indicating if the communication was successful or not (basic verification for non-empty data is made).
    */
-  bool getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
+  void getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
 
   /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
    * \param p_jointtarget for storing the retrieved jointtarget data.
-   *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
-  bool getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget);
+  void getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget);
 
   /**
    * \brief A method for retrieving the current robtarget values of a mechanical unit.
@@ -551,10 +545,8 @@ public:
    * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    * \param tool for the tool frame relative to which the robtarget will be reported.
    * \param wobj for the work object (wobj) relative to which the robtarget will be reported.
-   *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
-  bool getMechanicalUnitRobTarget(const std::string& mechunit,
+  void getMechanicalUnitRobTarget(const std::string& mechunit,
                                   RobTarget* p_robtarget,
                                   Coordinate coordinate = Coordinate::ACTIVE,
                                   const std::string& tool = "",
@@ -579,27 +571,23 @@ public:
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
-   * \param p_data for storing the retrieved RAPID symbol data.
-   *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   * \param data for storing the retrieved RAPID symbol data.
    */
-  bool getRAPIDSymbolData(const std::string& task,
+  void getRAPIDSymbolData(const std::string& task,
                           const std::string& module,
                           const std::string& name,
-                          RAPIDSymbolDataAbstract* p_data);
+                          RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param symbol indicating the RAPID symbol resource (name and module).
-   * \param p_data for storing the retrieved RAPID symbol data.
-   *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   * \param data for storing the retrieved RAPID symbol data.
    */
-  bool getRAPIDSymbolData(const std::string& task,
+  void getRAPIDSymbolData(const std::string& task,
                           const RAPIDSymbolResource& symbol,
-                          RAPIDSymbolDataAbstract* p_data);
+                          RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for retrieving information about the RAPID modules of a RAPID task defined in the robot controller.
@@ -634,33 +622,31 @@ public:
   /**
    * \brief A method for checking if the robot controller mode is in auto mode.
    *
-   * \return TriBool indicating if the mode is auto or not or unknown.
+   * \return if the mode is auto or not.
    */
-  TriBool isAutoMode();
+  bool isAutoMode();
 
   /**
    * \brief A method for checking if the motors are on.
    *
-   * \return TriBool indicating if the motors are on or not or unknown.
+   * \return if the motors are on or not.
    */
-  TriBool isMotorsOn();
+  bool isMotorsOn();
 
   /**
    * \brief A method for checking if RAPID is running.
    *
-   * \return TriBool indicating if RAPID is running or not or unknown.
+   * \return if RAPID is running or not.
    */
-  TriBool isRAPIDRunning();
+  bool isRAPIDRunning();
 
   /**
    * \brief A method for setting the value of an IO signal.
    *
    * \param iosignal for the name of the IO signal.
    * \param value for the IO signal's new value.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool setIOSignal(const std::string& iosignal, const std::string& value);
+  void setIOSignal(const std::string& iosignal, const std::string& value);
 
   /**
    * \brief A method for setting the data of a RAPID symbol via raw text format.
@@ -684,10 +670,8 @@ public:
    * \param module name of the RAPID module containing the RAPID symbol.
    * \param name the name of the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool setRAPIDSymbolData(const std::string& task,
+  void setRAPIDSymbolData(const std::string& task,
                           const std::string& module,
                           const std::string& name,
                           const std::string& data);
@@ -699,10 +683,8 @@ public:
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool setRAPIDSymbolData(const std::string& task,
+  void setRAPIDSymbolData(const std::string& task,
                           const std::string& module,
                           const std::string& name,
                           const RAPIDSymbolDataAbstract& data);
@@ -713,47 +695,35 @@ public:
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param symbol indicating the RAPID symbol resource (name and module).
    * \param data containing the RAPID symbol's new data.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool setRAPIDSymbolData(const std::string& task,
+  void setRAPIDSymbolData(const std::string& task,
                           const RAPIDSymbolResource& symbol,
                           const RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for starting RAPID execution in the robot controller.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool startRAPIDExecution();
+  void startRAPIDExecution();
 
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool stopRAPIDExecution();
+  void stopRAPIDExecution();
 
   /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool resetRAPIDProgramPointer();
+  void resetRAPIDProgramPointer();
 
   /**
    * \brief A method for turning on the robot controller's motors.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool setMotorsOn();
+  void setMotorsOn();
 
   /**
    * \brief A method for turning off the robot controller's motors.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool setMotorsOff();
+  void setMotorsOff();
 
   /**
    * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
@@ -761,10 +731,8 @@ public:
    * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
    *
    * \param ratio specifying the new ratio.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool setSpeedRatio(unsigned int ratio);
+  void setSpeedRatio(unsigned int ratio);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -773,29 +741,23 @@ public:
    *
    * \param resource specifying the file's directory and name.
    * \param p_file_content for containing the retrieved file content.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool getFile(const FileResource& resource, std::string* p_file_content);
+  void getFile(const FileResource& resource, std::string* p_file_content);
 
   /**
    * \brief A method for uploading a file to the robot controller.
    *
    * \param resource specifying the file's directory and name.
    * \param file_content for the file's content.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool uploadFile(const FileResource& resource, const std::string& file_content);
+  void uploadFile(const FileResource& resource, const std::string& file_content);
 
   /**
    * \brief A method for deleting a file from the robot controller.
    *
    * \param resource specifying the file's directory and name.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool deleteFile(const FileResource& resource);
+  void deleteFile(const FileResource& resource);
 
   /**
    * \brief Creates a subscription group.
@@ -814,10 +776,8 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                          const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                          const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -827,10 +787,8 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   *
-   * \return bool indicating if the communication was successful or not.
    */
-  bool registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                           const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                           const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -870,9 +828,9 @@ protected:
    * \param attribute for specifying the XML node's required attribute.
    * \param compare_string for specifying the comparison string.
    *
-   * \return TriBool containing the result of the comparison.
+   * \return The result of the comparison.
    */
-  TriBool compareSingleContent(const RWSResult& rws_result,
+  static bool compareSingleContent(const RWSResult& rws_result,
                                const XMLAttribute& attribute,
                                const std::string& compare_string);
 
