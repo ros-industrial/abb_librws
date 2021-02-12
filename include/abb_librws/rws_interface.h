@@ -735,6 +735,27 @@ public:
   void setSpeedRatio(unsigned int ratio);
 
   /**
+   * \brief A method for loading a module to the robot controller.
+   *
+   * \param task specifying the RAPID task.
+   * \param resource specifying the file's directory and name.
+   * \param replace indicating if the actual module into the controller must be replaced by the new one or not.
+   *
+   * \throw std::exception if something goes wrong.
+   */
+  void loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
+
+  /**
+   * \brief A method for unloading a module to the robot controller.
+   *
+   * \param task specifying the RAPID task.
+   * \param resource specifying the file's directory and name.
+   *
+   * \throw std::exception if something goes wrong.
+   */
+  void unloadModuleFromTask(const std::string& task, const FileResource& resource);
+
+  /**
    * \brief A method for retrieving a file from the robot controller.
    *
    * Note: Depending on the file, then the content can be in text or binary format.

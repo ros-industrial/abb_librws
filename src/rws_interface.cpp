@@ -939,6 +939,16 @@ void RWSInterface::getRAPIDSymbolData(const std::string& task,
   rws_client_.getRAPIDSymbolData(RAPIDResource(task, symbol), data);
 }
 
+void RWSInterface::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
+{
+  rws_client_.loadModuleIntoTask(task, resource, replace);
+}
+
+void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResource& resource)
+{
+  rws_client_.unloadModuleFromTask(task, resource);
+}
+
 void RWSInterface::getFile(const FileResource& resource, std::string* p_file_content)
 {
   rws_client_.getFile(resource, p_file_content);
