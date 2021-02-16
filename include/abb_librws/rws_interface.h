@@ -39,6 +39,7 @@
 
 #include "rws_cfg.h"
 #include "rws_client.h"
+#include "rws_subscription.h"
 
 namespace abb
 {
@@ -517,30 +518,30 @@ public:
    *
    * \param mechunit for the mechanical unit's name.
    * \param static_info for storing the retrieved information.
-   *
-   * \return bool indicating if the communication was successful or not (basic verification for non-empty data is made).
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
+  void getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
 
   /**
    * \brief A method for retrieving dynamic information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
    * \param dynamic_info for storing the retrieved information.
-   *
-   * \return bool indicating if the communication was successful or not (basic verification for non-empty data is made).
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
+  void getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
 
   /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
    * \param p_jointtarget for storing the retrieved jointtarget data.
-   *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget);
+  void getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget);
 
   /**
    * \brief A method for retrieving the current robtarget values of a mechanical unit.
@@ -550,10 +551,10 @@ public:
    * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    * \param tool for the tool frame relative to which the robtarget will be reported.
    * \param wobj for the work object (wobj) relative to which the robtarget will be reported.
-   *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool getMechanicalUnitRobTarget(const std::string& mechunit,
+  void getMechanicalUnitRobTarget(const std::string& mechunit,
                                   RobTarget* p_robtarget,
                                   Coordinate coordinate = Coordinate::ACTIVE,
                                   const std::string& tool = "",
@@ -569,6 +570,8 @@ public:
    * \param name name of the RAPID symbol.
    *
    * \return std::string containing the data. Empty if not found.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   std::string getRAPIDSymbolData(const std::string& task, const std::string& module, const std::string& name);
 
@@ -578,32 +581,34 @@ public:
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
-   * \param p_data for storing the retrieved RAPID symbol data.
-   *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   * \param data for storing the retrieved RAPID symbol data.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool getRAPIDSymbolData(const std::string& task,
+  void getRAPIDSymbolData(const std::string& task,
                           const std::string& module,
                           const std::string& name,
-                          RAPIDSymbolDataAbstract* p_data);
+                          RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param symbol indicating the RAPID symbol resource (name and module).
-   * \param p_data for storing the retrieved RAPID symbol data.
-   *
-   * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
+   * \param data for storing the retrieved RAPID symbol data.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool getRAPIDSymbolData(const std::string& task,
+  void getRAPIDSymbolData(const std::string& task,
                           const RAPIDSymbolResource& symbol,
-                          RAPIDSymbolDataAbstract* p_data);
+                          RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for retrieving information about the RAPID modules of a RAPID task defined in the robot controller.
    *
    * \return std::vector<RAPIDModuleInfo> containing the RAPID modules information.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   std::vector<RAPIDModuleInfo> getRAPIDModulesInfo(const std::string& task);
 
@@ -611,6 +616,8 @@ public:
    * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
    *
    * \return std::vector<RAPIDTaskInfo> containing the RAPID tasks information.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   std::vector<RAPIDTaskInfo> getRAPIDTasks();
 
@@ -627,39 +634,47 @@ public:
    * \brief A method for retrieving some system information from the robot controller.
    *
    * \return SystemInfo containing the system information (info will be empty if e.g. a timeout occurred).
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   SystemInfo getSystemInfo();
 
   /**
    * \brief A method for checking if the robot controller mode is in auto mode.
    *
-   * \return TriBool indicating if the mode is auto or not or unknown.
+   * \return if the mode is auto or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  TriBool isAutoMode();
+  bool isAutoMode();
 
   /**
    * \brief A method for checking if the motors are on.
    *
-   * \return TriBool indicating if the motors are on or not or unknown.
+   * \return if the motors are on or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  TriBool isMotorsOn();
+  bool isMotorsOn();
 
   /**
    * \brief A method for checking if RAPID is running.
    *
-   * \return TriBool indicating if RAPID is running or not or unknown.
+   * \return if RAPID is running or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  TriBool isRAPIDRunning();
+  bool isRAPIDRunning();
 
   /**
    * \brief A method for setting the value of an IO signal.
    *
    * \param iosignal for the name of the IO signal.
    * \param value for the IO signal's new value.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool setIOSignal(const std::string& iosignal, const std::string& value);
+  void setIOSignal(const std::string& iosignal, const std::string& value);
 
   /**
    * \brief A method for setting the data of a RAPID symbol via raw text format.
@@ -683,10 +698,10 @@ public:
    * \param module name of the RAPID module containing the RAPID symbol.
    * \param name the name of the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool setRAPIDSymbolData(const std::string& task,
+  void setRAPIDSymbolData(const std::string& task,
                           const std::string& module,
                           const std::string& name,
                           const std::string& data);
@@ -698,10 +713,10 @@ public:
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool setRAPIDSymbolData(const std::string& task,
+  void setRAPIDSymbolData(const std::string& task,
                           const std::string& module,
                           const std::string& name,
                           const RAPIDSymbolDataAbstract& data);
@@ -712,47 +727,47 @@ public:
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param symbol indicating the RAPID symbol resource (name and module).
    * \param data containing the RAPID symbol's new data.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool setRAPIDSymbolData(const std::string& task,
+  void setRAPIDSymbolData(const std::string& task,
                           const RAPIDSymbolResource& symbol,
                           const RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for starting RAPID execution in the robot controller.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool startRAPIDExecution();
+  void startRAPIDExecution();
 
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool stopRAPIDExecution();
+  void stopRAPIDExecution();
 
   /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool resetRAPIDProgramPointer();
+  void resetRAPIDProgramPointer();
 
   /**
    * \brief A method for turning on the robot controller's motors.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool setMotorsOn();
+  void setMotorsOn();
 
   /**
    * \brief A method for turning off the robot controller's motors.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool setMotorsOff();
+  void setMotorsOff();
 
   /**
    * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
@@ -760,10 +775,10 @@ public:
    * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
    *
    * \param ratio specifying the new ratio.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
-  bool setSpeedRatio(unsigned int ratio);
+  void setSpeedRatio(unsigned int ratio);
 
   /**
    * \brief A method for loading a module to the robot controller.
@@ -772,9 +787,9 @@ public:
    * \param resource specifying the file's directory and name.
    * \param replace indicating if the actual module into the controller must be replaced by the new one or not.
    *
-   * \return bool indicating if the communication was successful or not.
+   * \throw \a std::exception if something goes wrong.
    */
-  bool loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
+  void loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
 
   /**
    * \brief A method for unloading a module to the robot controller.
@@ -782,9 +797,9 @@ public:
    * \param task specifying the RAPID task.
    * \param resource specifying the file's directory and name.
    *
-   * \return bool indicating if the communication was successful or not.
+   * \throw \a std::exception if something goes wrong.
    */
-  bool unloadModuleFromTask(const std::string& task, const FileResource& resource);
+  void unloadModuleFromTask(const std::string& task, const FileResource& resource);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -793,75 +808,40 @@ public:
    *
    * \param resource specifying the file's directory and name.
    * \param p_file_content for containing the retrieved file content.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  bool getFile(const FileResource& resource, std::string* p_file_content);
+  void getFile(const FileResource& resource, std::string* p_file_content);
 
   /**
    * \brief A method for uploading a file to the robot controller.
    *
    * \param resource specifying the file's directory and name.
    * \param file_content for the file's content.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  bool uploadFile(const FileResource& resource, const std::string& file_content);
+  void uploadFile(const FileResource& resource, const std::string& file_content);
 
   /**
    * \brief A method for deleting a file from the robot controller.
    *
    * \param resource specifying the file's directory and name.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  bool deleteFile(const FileResource& resource);
+  void deleteFile(const FileResource& resource);
 
   /**
-   * \brief A method for starting for a subscription.
+   * \brief Creates a subscription group.
    *
    * \param resources specifying the resources to subscribe to.
    *
-   * \return bool indicating if the communication was successful or not.
+   * \return Newly created \a SubscriptionGroup for specified subscription resources.
+   * 
+   * \throw \a std::exception if something goes wrong
    */
-  bool startSubscription(const SubscriptionResources& resources);
-
-  /**
-   * \brief A method for waiting for a subscription event (use if the event content is irrelevant).
-   *
-   * \return bool indicating if the communication was successful or not.
-   */
-  bool waitForSubscriptionEvent();
-
-  /**
-   * \brief A method for waiting for a subscription event (use if the event content is important).
-   *
-   * \param p_xml_document for storing the data received in the subscription event.
-   *
-   * \return bool indicating if the communication was successful or not.
-   */
-  bool waitForSubscriptionEvent(Poco::AutoPtr<Poco::XML::Document>* p_xml_document);
-
-  /**
-   * \brief A method for ending a active subscription.
-   *
-   * \return bool indicating if the communication was successful or not.
-   */
-  bool endSubscription();
-
-  /**
-   * \brief Force close the active subscription connection.
-   *
-   * This will cause waitForSubscriptionEvent() to return or throw.
-   * It does not delete the subscription from the controller.
-   *
-   * The preferred way to close the subscription is to request the robot controller to end it via
-   * endSubscription(). This function can be used to force the connection to close immediately in
-   * case the robot controller is not responding.
-   *
-   * This function blocks until an active waitForSubscriptionEvent() has finished.
-   */
-  void forceCloseSubscription();
+  SubscriptionGroup openSubscription(const SubscriptionResources& resources);
 
   /**
    * \brief A method for registering a user as local.
@@ -869,10 +849,10 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  bool registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                          const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                          const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -882,10 +862,10 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   *
-   * \return bool indicating if the communication was successful or not.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  bool registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                           const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                           const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -925,9 +905,9 @@ protected:
    * \param attribute for specifying the XML node's required attribute.
    * \param compare_string for specifying the comparison string.
    *
-   * \return TriBool containing the result of the comparison.
+   * \return The result of the comparison.
    */
-  TriBool compareSingleContent(const RWSResult& rws_result,
+  static bool compareSingleContent(const RWSResult& rws_result,
                                const XMLAttribute& attribute,
                                const std::string& compare_string);
 

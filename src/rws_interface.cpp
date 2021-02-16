@@ -94,10 +94,9 @@ std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
   std::vector<cfg::moc::Arm> result;
 
   RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ARM);
-  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
-  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+  instances = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for(size_t i = 0; i < instances.size(); ++i)
   {
@@ -138,10 +137,9 @@ std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
   std::vector<cfg::moc::Joint> result;
 
   RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "JOINT");
-  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
-  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+  instances = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for(size_t i = 0; i < instances.size(); ++i)
   {
@@ -191,12 +189,10 @@ std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
 {
   std::vector<cfg::moc::MechanicalUnit> result;
 
-  RWSResult rws_result;
-  rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::MECHANICAL_UNIT);
-  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
+  RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::MECHANICAL_UNIT);
 
   std::vector<Poco::XML::Node*> instances;
-  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+  instances = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for(size_t i = 0; i < instances.size(); ++i)
   {
@@ -239,12 +235,10 @@ std::vector<cfg::sys::MechanicalUnitGroup> RWSInterface::getCFGMechanicalUnitGro
 {
   std::vector<cfg::sys::MechanicalUnitGroup> result;
 
-  RWSResult rws_result;
-  rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::MECHANICAL_UNIT_GROUP);
-  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
+  RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::MECHANICAL_UNIT_GROUP);
 
   std::vector<Poco::XML::Node*> instances;
-  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+  instances = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for(size_t i = 0; i < instances.size(); ++i)
   {
@@ -287,12 +281,10 @@ std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
 {
   std::vector<cfg::sys::PresentOption> result;
 
-  RWSResult rws_result;
-  rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::PRESENT_OPTIONS);
-  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
+  RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS, Identifiers::PRESENT_OPTIONS);
 
   std::vector<Poco::XML::Node*> instances;
-  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+  instances = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for(size_t i = 0; i < instances.size(); ++i)
   {
@@ -326,10 +318,9 @@ std::vector<cfg::moc::Robot> RWSInterface::getCFGRobots()
   std::vector<cfg::moc::Robot> result;
 
   RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::ROBOT);
-  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
-  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+  instances = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for(size_t i = 0; i < instances.size(); ++i)
   {
@@ -424,10 +415,9 @@ std::vector<cfg::moc::Single> RWSInterface::getCFGSingles()
   std::vector<cfg::moc::Single> result;
 
   RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::MOC, Identifiers::SINGLE);
-  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
-  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+  instances = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for(size_t i = 0; i < instances.size(); ++i)
   {
@@ -517,10 +507,9 @@ std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
   std::vector<cfg::moc::Transmission> result;
 
   RWSResult rws_result = rws_client_.getConfigurationInstances("MOC", "TRANSMISSION");
-  if(!rws_result.success) throw std::runtime_error(EXCEPTION_GET_CFG);
 
   std::vector<Poco::XML::Node*> instances;
-  instances = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
+  instances = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_DT_INSTANCE_LI);
 
   for(size_t i = 0; i < instances.size(); ++i)
   {
@@ -555,7 +544,7 @@ std::vector<RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
   RWSResult rws_result = rws_client_.getConfigurationInstances(Identifiers::SYS,
                                                                           Identifiers::PRESENT_OPTIONS);
 
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_CFG_IA_T_LI);
+  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_CFG_IA_T_LI);
 
   for (size_t i = 0; i < node_list.size(); i+=2)
   {
@@ -569,266 +558,231 @@ std::vector<RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
   return result;
 }
 
+
 std::string RWSInterface::getIOSignal(const std::string& iosignal)
 {
-  std::string result;
-
   RWSResult rws_result = rws_client_.getIOSignal(iosignal);
-
-  if (rws_result.success)
-  {
-    result = xmlFindTextContent(rws_result.p_xml_document, XMLAttributes::CLASS_LVALUE);
-  }
-
-  return result;
+  return xmlFindTextContent(rws_result, XMLAttributes::CLASS_LVALUE);
 }
 
-bool RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info)
-{
-  bool result = false;
 
+void RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info)
+{
   RWSResult rws_result = rws_client_.getMechanicalUnitStaticInfo(mechunit);
 
-  if(rws_result.success)
+  static_info.task_name = xmlFindTextContent(rws_result, XMLAttribute("class", "task-name"));
+  static_info.is_integrated_unit = xmlFindTextContent(rws_result,
+                                                      XMLAttribute("class", "is-integrated-unit"));
+  static_info.has_integrated_unit = xmlFindTextContent(rws_result,
+                                                        XMLAttribute("class", "has-integrated-unit"));
+  std::string type = xmlFindTextContent(rws_result, XMLAttribute("class", "type"));
+
+  // Assume mechanical unit type is undefined, update based on contents of 'type'.
+  static_info.type = MechanicalUnitType::UNDEFINED;
+
+  if(type == "None")
   {
-    static_info.task_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "task-name"));
-    static_info.is_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
-                                                        XMLAttribute("class", "is-integrated-unit"));
-    static_info.has_integrated_unit = xmlFindTextContent(rws_result.p_xml_document,
-                                                         XMLAttribute("class", "has-integrated-unit"));
-    std::string type = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "type"));
-
-    // Assume mechanical unit type is undefined, update based on contents of 'type'.
-    static_info.type = MechanicalUnitType::UNDEFINED;
-
-    if(type == "None")
-    {
-      static_info.type = MechanicalUnitType::NONE;
-    }
-    else if(type == "TCPRobot")
-    {
-      static_info.type = MechanicalUnitType::TCP_ROBOT;
-    }
-    else if(type == "Robot")
-    {
-      static_info.type = MechanicalUnitType::ROBOT;
-    }
-    else if(type == "Single")
-    {
-      static_info.type = MechanicalUnitType::SINGLE;
-    }
-
-    std::stringstream axes(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes")));
-    axes >> static_info.axes;
-
-    std::stringstream axes_total(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "axes-total")));
-    axes_total >> static_info.axes_total;
-
-    // Basic verification.
-    if(!static_info.task_name.empty() &&
-       !static_info.is_integrated_unit.empty() &&
-       !static_info.has_integrated_unit.empty() &&
-       static_info.type != MechanicalUnitType::UNDEFINED &&
-       !axes.fail() && !axes_total.fail())
-    {
-      result = true;
-    }
+    static_info.type = MechanicalUnitType::NONE;
+  }
+  else if(type == "TCPRobot")
+  {
+    static_info.type = MechanicalUnitType::TCP_ROBOT;
+  }
+  else if(type == "Robot")
+  {
+    static_info.type = MechanicalUnitType::ROBOT;
+  }
+  else if(type == "Single")
+  {
+    static_info.type = MechanicalUnitType::SINGLE;
   }
 
-  return result;
+  std::stringstream axes(xmlFindTextContent(rws_result, XMLAttribute("class", "axes")));
+  axes >> static_info.axes;
+
+  std::stringstream axes_total(xmlFindTextContent(rws_result, XMLAttribute("class", "axes-total")));
+  axes_total >> static_info.axes_total;
+
+  // Basic verification.
+  if(static_info.task_name.empty() ||
+      static_info.is_integrated_unit.empty() ||
+      static_info.has_integrated_unit.empty() ||
+      static_info.type == MechanicalUnitType::UNDEFINED ||
+      axes.fail() || axes_total.fail())
+  {
+    throw std::logic_error("RWSInterface::getMechanicalUnitStaticInfo(): inconsistent data");
+  }
 }
 
-bool RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info)
+void RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info)
 {
   bool result = false;
 
   RWSResult rws_result = rws_client_.getMechanicalUnitDynamicInfo(mechunit);
 
-  if(rws_result.success)
+  dynamic_info.tool_name = xmlFindTextContent(rws_result, XMLAttribute("class", "tool-name"));
+  dynamic_info.wobj_name = xmlFindTextContent(rws_result, XMLAttribute("class", "wobj-name"));
+  dynamic_info.payload_name = xmlFindTextContent(rws_result,
+                                                  XMLAttribute("class", "payload-name"));
+  dynamic_info.total_payload_name = xmlFindTextContent(rws_result,
+                                                        XMLAttribute("class", "total-payload-name"));
+  dynamic_info.status = xmlFindTextContent(rws_result, XMLAttribute("class", "status"));
+  dynamic_info.jog_mode = xmlFindTextContent(rws_result, XMLAttribute("class", "jog-mode"));
+  std::string mode = xmlFindTextContent(rws_result, XMLAttribute("class", "mode"));
+  std::string coord_system = xmlFindTextContent(rws_result, XMLAttribute("class", "coord-system"));
+
+  // Assume mechanical unit mode is unknown, update based on contents of 'mode'.
+  dynamic_info.mode = MechanicalUnitMode::UNKNOWN_MODE;
+
+  if(mode == "Activated")
   {
-    dynamic_info.tool_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "tool-name"));
-    dynamic_info.wobj_name = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "wobj-name"));
-    dynamic_info.payload_name = xmlFindTextContent(rws_result.p_xml_document,
-                                                   XMLAttribute("class", "payload-name"));
-    dynamic_info.total_payload_name = xmlFindTextContent(rws_result.p_xml_document,
-                                                         XMLAttribute("class", "total-payload-name"));
-    dynamic_info.status = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "status"));
-    dynamic_info.jog_mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "jog-mode"));
-    std::string mode = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "mode"));
-    std::string coord_system = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "coord-system"));
-
-    // Assume mechanical unit mode is unknown, update based on contents of 'mode'.
-    dynamic_info.mode = MechanicalUnitMode::UNKNOWN_MODE;
-
-    if(mode == "Activated")
-    {
-      dynamic_info.mode = MechanicalUnitMode::ACTIVATED;
-    }
-    else if(mode == "Deactivated")
-    {
-      dynamic_info.mode = MechanicalUnitMode::DEACTIVATED;
-    }
-
-    // Assume mechanical unit coordinate system is world, update based on contents of 'coord_system'.
-    dynamic_info.coord_system = Coordinate::WORLD;
-
-    if(coord_system == "Base")
-    {
-      dynamic_info.coord_system = Coordinate::BASE;
-    }
-    else if(coord_system == "Tool")
-    {
-      dynamic_info.coord_system = Coordinate::TOOL;
-    }
-    else if(coord_system == "Wobj")
-    {
-      dynamic_info.coord_system = Coordinate::WOBJ;
-    }
-
-    // Basic verification.
-    if(!dynamic_info.tool_name.empty() &&
-       !dynamic_info.wobj_name.empty() &&
-       !dynamic_info.payload_name.empty() &&
-       !dynamic_info.total_payload_name.empty() &&
-       !dynamic_info.status.empty() &&
-       !dynamic_info.jog_mode.empty() &&
-       dynamic_info.mode != MechanicalUnitMode::UNKNOWN_MODE)
-    {
-      result = true;
-    }
+    dynamic_info.mode = MechanicalUnitMode::ACTIVATED;
+  }
+  else if(mode == "Deactivated")
+  {
+    dynamic_info.mode = MechanicalUnitMode::DEACTIVATED;
   }
 
-  return result;
+  // Assume mechanical unit coordinate system is world, update based on contents of 'coord_system'.
+  dynamic_info.coord_system = Coordinate::WORLD;
+
+  if(coord_system == "Base")
+  {
+    dynamic_info.coord_system = Coordinate::BASE;
+  }
+  else if(coord_system == "Tool")
+  {
+    dynamic_info.coord_system = Coordinate::TOOL;
+  }
+  else if(coord_system == "Wobj")
+  {
+    dynamic_info.coord_system = Coordinate::WOBJ;
+  }
+
+  // Basic verification.
+  if(dynamic_info.tool_name.empty() ||
+      dynamic_info.wobj_name.empty() ||
+      dynamic_info.payload_name.empty() ||
+      dynamic_info.total_payload_name.empty() ||
+      dynamic_info.status.empty() ||
+      dynamic_info.jog_mode.empty() ||
+      dynamic_info.mode == MechanicalUnitMode::UNKNOWN_MODE)
+  {
+    throw std::logic_error("RWSInterface::getMechanicalUnitDynamicInfo: inconsistent data");
+  }
 }
 
-bool RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget)
+void RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget)
 {
-  bool result = false;
-
   if (p_jointtarget)
   {
     RWSResult rws_result = rws_client_.getMechanicalUnitJointTarget(mechunit);
-    result = rws_result.success;
+    std::stringstream ss;
 
-    if (result)
-    {
-      std::stringstream ss;
+    ss << "[["
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_1")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_2")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_3")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_4")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_5")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_6")) << "], ["
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_a")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_b")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_c")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_d")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_e")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_f")) << "]]";
 
-      ss << "[["
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_1")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_2")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_3")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_4")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_5")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_6")) << "], ["
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_a")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_b")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_c")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_d")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_e")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_f")) << "]]";
-
-      p_jointtarget->parseString(ss.str());
-    }
+    p_jointtarget->parseString(ss.str());
   }
-
-  return result;
 }
 
-bool RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
+void RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
                                               RobTarget* p_robtarget,
                                               Coordinate coordinate,
                                               const std::string& tool,
                                               const std::string& wobj)
 {
-  bool result = false;
-
   if (p_robtarget)
   {
     RWSResult rws_result = rws_client_.getMechanicalUnitRobTarget(mechunit, coordinate, tool, wobj);
-    result = rws_result.success;
 
-    if (result)
-    {
-      std::stringstream ss;
+    std::stringstream ss;
 
-      ss << "[["
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "x")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "y")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "z")) << "], ["
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "q1")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "q2")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "q3")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "q4")) << "], ["
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "cf1")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "cf4")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "cf6")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "cfx")) << "], ["
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_a")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_b")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_c")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_d")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_e")) << ","
-         << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "eax_f")) << "]]";
+    ss << "[["
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "x")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "y")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "z")) << "], ["
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "q1")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "q2")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "q3")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "q4")) << "], ["
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "cf1")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "cf4")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "cf6")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "cfx")) << "], ["
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_a")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_b")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_c")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_d")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_e")) << ","
+        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_f")) << "]]";
 
-      p_robtarget->parseString(ss.str());
-    }
+    p_robtarget->parseString(ss.str());
   }
-
-  return result;
 }
 
-bool RWSInterface::setRAPIDSymbolData(const std::string& task,
+void RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const std::string& module,
                                       const std::string& name,
                                       const std::string& data)
 {
-  return rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data).success;
+  rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data);
 }
 
-bool RWSInterface::setRAPIDSymbolData(const std::string& task,
+void RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const std::string& module,
                                       const std::string& name,
                                       const RAPIDSymbolDataAbstract& data)
 {
-  return rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data).success;
+  rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data);
 }
 
-bool RWSInterface::setRAPIDSymbolData(const std::string& task,
+void RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const RAPIDSymbolResource& symbol,
                                       const RAPIDSymbolDataAbstract& data)
 {
-  return rws_client_.setRAPIDSymbolData(RAPIDResource(task, symbol), data).success;
+  rws_client_.setRAPIDSymbolData(RAPIDResource(task, symbol), data);
 }
 
-bool RWSInterface::startRAPIDExecution()
+void RWSInterface::startRAPIDExecution()
 {
-  return rws_client_.startRAPIDExecution().success;
+  rws_client_.startRAPIDExecution();
 }
 
-bool RWSInterface::stopRAPIDExecution()
+void RWSInterface::stopRAPIDExecution()
 {
-  return rws_client_.stopRAPIDExecution().success;
+  rws_client_.stopRAPIDExecution();
 }
 
-bool RWSInterface::resetRAPIDProgramPointer()
+void RWSInterface::resetRAPIDProgramPointer()
 {
-  return rws_client_.resetRAPIDProgramPointer().success;
+  rws_client_.resetRAPIDProgramPointer();
 }
 
-bool RWSInterface::setMotorsOn()
+void RWSInterface::setMotorsOn()
 {
-  return rws_client_.setMotorsOn().success;
+  rws_client_.setMotorsOn();
 }
 
-bool RWSInterface::setMotorsOff()
+void RWSInterface::setMotorsOff()
 {
-  return rws_client_.setMotorsOff().success;
+  rws_client_.setMotorsOff();
 }
 
-bool RWSInterface::setSpeedRatio(unsigned int ratio)
+void RWSInterface::setSpeedRatio(unsigned int ratio)
 {
-  return rws_client_.setSpeedRatio(ratio).success;
+  rws_client_.setSpeedRatio(ratio);
 }
 
 std::vector<RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
@@ -836,7 +790,7 @@ std::vector<RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string
   std::vector<RAPIDModuleInfo> result;
 
   RWSResult rws_result = rws_client_.getRAPIDModulesInfo(task);
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document,
+  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result,
                                                          XMLAttributes::CLASS_RAP_MODULE_INFO_LI);
 
   for (size_t i = 0; i < node_list.size(); ++i)
@@ -855,7 +809,7 @@ std::vector<RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
   std::vector<RAPIDTaskInfo> result;
 
   RWSResult rws_result = rws_client_.getRAPIDTasks();
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_RAP_TASK_LI);
+  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_RAP_TASK_LI);
 
   for (size_t i = 0; i < node_list.size(); ++i)
   {
@@ -895,9 +849,8 @@ unsigned int RWSInterface::getSpeedRatio()
   unsigned int speed_ratio = 0;
 
   RWSResult rws_result = rws_client_.getSpeedRatio();
-  if(!rws_result.success) throw std::runtime_error("Failed to get the speed ratio");
-
-  std::stringstream ss(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute(Identifiers::CLASS, "speedratio")));
+  
+  std::stringstream ss(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "speedratio")));
   ss >> speed_ratio;
   if(ss.fail()) throw std::runtime_error("Failed to parse the speed ratio");
 
@@ -910,151 +863,116 @@ SystemInfo RWSInterface::getSystemInfo()
 
   RWSResult rws_result = rws_client_.getRobotWareSystem();
 
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_SYS_SYSTEM_LI);
+  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_SYS_SYSTEM_LI);
   for (size_t i = 0; i < node_list.size(); ++i)
   {
     result.system_name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
     result.robot_ware_version = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_RW_VERSION_NAME);
   }
 
-  node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_SYS_OPTION_LI);
+  node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_SYS_OPTION_LI);
   for (size_t i = 0; i < node_list.size(); ++i)
   {
     result.system_options.push_back(xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_OPTION));
   }
 
-  result.system_type = xmlFindTextContent(rws_client_.getContollerService().p_xml_document,
+  result.system_type = xmlFindTextContent(rws_client_.getContollerService(),
                                           XMLAttributes::CLASS_CTRL_TYPE);
 
   return result;
 }
 
-TriBool RWSInterface::isAutoMode()
+bool RWSInterface::isAutoMode()
 {
   return compareSingleContent(rws_client_.getPanelOperationMode(),
                               XMLAttributes::CLASS_OPMODE,
                               ContollerStates::PANEL_OPERATION_MODE_AUTO);
 }
 
-TriBool RWSInterface::isMotorsOn()
+bool RWSInterface::isMotorsOn()
 {
   return compareSingleContent(rws_client_.getPanelControllerState(),
                               XMLAttributes::CLASS_CTRLSTATE,
                               ContollerStates::CONTROLLER_MOTOR_ON);
 }
 
-TriBool RWSInterface::isRAPIDRunning()
+bool RWSInterface::isRAPIDRunning()
 {
   return compareSingleContent(rws_client_.getRAPIDExecution(),
                               XMLAttributes::CLASS_CTRLEXECSTATE,
                               ContollerStates::RAPID_EXECUTION_RUNNING);
 }
 
-bool RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
+void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
 {
-  return rws_client_.setIOSignal(iosignal, value).success;
+  rws_client_.setIOSignal(iosignal, value);
 }
 
 std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
                                              const std::string& module,
                                              const std::string& name)
 {
-  return xmlFindTextContent(rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name)).p_xml_document,
+  return xmlFindTextContent(rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name)),
                             XMLAttributes::CLASS_VALUE);
 }
 
-bool RWSInterface::getRAPIDSymbolData(const std::string& task,
+void RWSInterface::getRAPIDSymbolData(const std::string& task,
                                       const std::string& module,
                                       const std::string& name,
-                                      RAPIDSymbolDataAbstract* p_data)
+                                      RAPIDSymbolDataAbstract& data)
 {
-  return rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name), p_data).success;
+  rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name), data);
 }
 
-bool RWSInterface::getRAPIDSymbolData(const std::string& task,
+void RWSInterface::getRAPIDSymbolData(const std::string& task,
                                       const RAPIDSymbolResource& symbol,
-                                      RAPIDSymbolDataAbstract* p_data)
+                                      RAPIDSymbolDataAbstract& data)
 {
-  return rws_client_.getRAPIDSymbolData(RAPIDResource(task, symbol), p_data).success;
+  rws_client_.getRAPIDSymbolData(RAPIDResource(task, symbol), data);
 }
 
-bool RWSInterface::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
+void RWSInterface::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
 {
-  return rws_client_.loadModuleIntoTask(task, resource, replace).success;
+  rws_client_.loadModuleIntoTask(task, resource, replace);
 }
 
-bool RWSInterface::unloadModuleFromTask(const std::string& task, const FileResource& resource)
+void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResource& resource)
 {
-  return rws_client_.unloadModuleFromTask(task, resource).success;
+  rws_client_.unloadModuleFromTask(task, resource);
 }
 
-bool RWSInterface::getFile(const FileResource& resource, std::string* p_file_content)
+void RWSInterface::getFile(const FileResource& resource, std::string* p_file_content)
 {
-  return rws_client_.getFile(resource, p_file_content).success;
+  rws_client_.getFile(resource, p_file_content);
 }
 
-bool RWSInterface::uploadFile(const FileResource& resource, const std::string& file_content)
+void RWSInterface::uploadFile(const FileResource& resource, const std::string& file_content)
 {
-  return rws_client_.uploadFile(resource, file_content).success;
+  rws_client_.uploadFile(resource, file_content);
 }
 
-bool RWSInterface::deleteFile(const FileResource& resource)
+void RWSInterface::deleteFile(const FileResource& resource)
 {
-  return rws_client_.deleteFile(resource).success;
+  rws_client_.deleteFile(resource);
 }
 
-bool RWSInterface::startSubscription (const SubscriptionResources& resources)
+SubscriptionGroup RWSInterface::openSubscription (const SubscriptionResources& resources)
 {
-  return rws_client_.startSubscription(resources).success;
+  return {rws_client_, resources};
 }
 
-bool RWSInterface::waitForSubscriptionEvent()
-{
-  RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
-
-  return (rws_result.success && !rws_result.p_xml_document.isNull());
-}
-
-bool RWSInterface::waitForSubscriptionEvent(Poco::AutoPtr<Poco::XML::Document>* p_xml_document)
-{
-  bool result = false;
-
-  if (p_xml_document)
-  {
-    RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
-
-    if (rws_result.success && !rws_result.p_xml_document.isNull())
-    {
-      *p_xml_document = rws_result.p_xml_document;
-      result = true;
-    }
-  }
-
-  return result;
-}
-
-bool RWSInterface::endSubscription()
-{
-  return rws_client_.endSubscription().success;
-}
-
-void RWSInterface::forceCloseSubscription()
-{
-  rws_client_.webSocketShutdown();
-}
-
-bool RWSInterface::registerLocalUser(const std::string& username,
+void RWSInterface::registerLocalUser(const std::string& username,
                                      const std::string& application,
                                      const std::string& location)
 {
-  return rws_client_.registerLocalUser(username, application, location).success;
+  rws_client_.registerLocalUser(username, application, location);
 }
 
-bool RWSInterface::registerRemoteUser(const std::string& username,
+void RWSInterface::registerRemoteUser(const std::string& username,
                                       const std::string& application,
                                       const std::string& location)
 {
-  return rws_client_.registerRemoteUser(username, application, location).success;
+  rws_client_.registerRemoteUser(username, application, location);
 }
 
 std::string RWSInterface::getLogText(const bool verbose)
@@ -1071,19 +989,11 @@ std::string RWSInterface::getLogTextLatestEvent(const bool verbose)
  * Auxiliary methods
  */
 
-TriBool RWSInterface::compareSingleContent(const RWSResult& rws_result,
+bool RWSInterface::compareSingleContent(const RWSResult& rws_result,
                                            const XMLAttribute& attribute,
                                            const std::string& compare_string)
 {
-  TriBool result;
-
-  if (rws_result.success)
-  {
-    std::string temp = xmlFindTextContent(rws_result.p_xml_document, attribute);
-    result = (temp == compare_string);
-  }
-
-  return result;
+  return xmlFindTextContent(rws_result, attribute) == compare_string;
 }
 
 } // end namespace rws

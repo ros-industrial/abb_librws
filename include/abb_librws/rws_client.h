@@ -37,7 +37,6 @@
 #ifndef RWS_CLIENT_H
 #define RWS_CLIENT_H
 
-#include <deque>
 #include <sstream>
 #include <vector>
 
@@ -46,6 +45,7 @@
 #include "rws_common.h"
 #include "rws_rapid.h"
 #include "rws_poco_client.h"
+#include "rws_resource.h"
 
 
 namespace abb
@@ -55,221 +55,7 @@ namespace rws
 /**
  * \brief A struct for containing an evaluated communication result.
  */
-struct RWSResult
-{
-  /**
-   * \brief For indicating if the communication was successfull or not.
-   */
-  bool success;
-
-  /**
-   * \brief For containing any parsed result in XML format. If no data is parsed, then it will be null.
-   */
-  Poco::AutoPtr<Poco::XML::Document> p_xml_document;
-
-  /**
-   * \brief Container for an error message (if one occurred).
-   */
-  std::string error_message;
-
-  /**
-   * \brief A default constructor.
-   */
-  RWSResult() : success(false) {}
-};
-
-
-/**
- * \brief A class for representing a RAPID symbol resource.
- */
-struct RAPIDSymbolResource
-{
-  /**
-   * \brief A constructor.
-   *
-   * \param module specifying the name of the RAPID module containing the symbol.
-   * \param name specifying the name of the RAPID symbol.
-   */
-  RAPIDSymbolResource(const std::string& module, const std::string& name)
-  :
-  module(module),
-  name(name)
-  {}
-
-  /**
-   * \brief The RAPID module name.
-   */
-  std::string module;
-
-  /**
-   * \brief The RAPID symbol name.
-   */
-  std::string name;
-};
-
-
-/**
- * \brief A class for representing a RAPID resource.
- */
-struct RAPIDResource
-{
-  /**
-   * \brief A constructor.
-   *
-   * \param task specifying the name of the RAPID task containing the symbol.
-   * \param module specifying the name of the RAPID module containing the symbol.
-   * \param name specifying the name of the RAPID symbol.
-   */
-  RAPIDResource(const std::string& task, const std::string& module, const std::string& name)
-  :
-  task(task),
-  module(module),
-  name(name)
-  {}
-
-  /**
-   * \brief A constructor.
-   *
-   * \param task specifying the name of the RAPID task containing the symbol.
-   * \param symbol specifying the names of the RAPID module and the the symbol.
-   */
-  RAPIDResource(const std::string& task, const RAPIDSymbolResource& symbol)
-  :
-  task(task),
-  module(symbol.module),
-  name(symbol.name)
-  {}
-
-  /**
-   * \brief The RAPID task name.
-   */
-  std::string task;
-
-  /**
-   * \brief The RAPID module name.
-   */
-  std::string module;
-
-  /**
-   * \brief The RAPID symbol name.
-   */
-  std::string name;
-};
-
-
-/**
- * \brief A class for representing a file resource.
- */
-struct FileResource
-{
-  /**
-   * \brief A constructor.
-   *
-   * \param filename specifying the name of the file.
-   * \param directory specifying the directory of the file on the robot controller (set to $home by default).
-   */
-  FileResource(const std::string& filename,
-                const std::string& directory = SystemConstants::RWS::Identifiers::HOME_DIRECTORY)
-  :
-  filename(filename),
-  directory(directory)
-  {}
-
-  /**
-   * \brief The file's name.
-   */
-  std::string filename;
-
-  /**
-   * \brief The file's directory on the robot controller.
-   */
-  std::string directory;
-};
-
-
-/**
- * \brief An enum for specifying subscription priority.
- */
-enum SubscriptionPriority
-{
-  LOW,    ///< Low priority.
-  MEDIUM, ///< Medium priority.
-  HIGH    ///< High priority. Only RobotWare 6.05 (or newer) and for IO signals and persistant RAPID variables.
-};
-
-
-/**
- * \brief A struct for containing information about a subscription resource.
- */
-struct SubscriptionResource
-{
-  /**
-   * \brief URI of the resource.
-   */
-  std::string resource_uri;
-
-  /**
-   * \brief Priority of the subscription.
-   */
-  SubscriptionPriority priority;
-
-  /**
-   * \brief A constructor.
-   *
-   * \param resource_uri for the URI of the resource.
-   * \param priority for the priority of the subscription.
-   */
-  SubscriptionResource(const std::string& resource_uri, const SubscriptionPriority priority)
-  :
-  resource_uri(resource_uri),
-  priority(priority)
-  {}
-};
-
-
-/**
- * \brief A class for representing subscription resources.
- */
-class SubscriptionResources
-{
-public:
-  /**
-   * \brief A method to add information about a subscription resource.
-   *
-   * \param resource_uri for the URI of the resource.
-   * \param priority for the priority of the subscription.
-   */
-  void add(const std::string& resource_uri, const SubscriptionPriority priority);
-
-  /**
-   * \brief A method to add information about a IO signal subscription resource.
-   *
-   * \param iosignal for the IO signal's name.
-   * \param priority for the priority of the subscription.
-   */
-  void addIOSignal(const std::string& iosignal, const SubscriptionPriority priority);
-
-  /**
-   * \brief A method to add information about a RAPID persistant symbol subscription resource.
-   *
-   * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
-   * \param priority for the priority of the subscription.
-   */
-  void addRAPIDPersistantVariable(const RAPIDResource& resource, const SubscriptionPriority priority);
-
-  /**
-   * \brief A method for retrieving the contained subscription resources information.
-   *
-   * \return std::vector<SubscriptionResource> containing information of the subscription resources.
-   */
-  const std::vector<SubscriptionResource>& getResources() const { return resources_; }
-
-private:
-  /**
-   * \brief A vector of subscription resources.
-   */
-  std::vector<SubscriptionResource> resources_;
-};
+using RWSResult = Poco::AutoPtr<Poco::XML::Document>;
 
 
 /**
@@ -303,6 +89,8 @@ public:
    * \brief A constructor.
    *
    * \param ip_address specifying the robot controller's IP address.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSClient(const std::string& ip_address)
   :
@@ -318,6 +106,8 @@ public:
    * \param ip_address specifying the robot controller's IP address.
    * \param username for the username to the RWS authentication process.
    * \param password for the password to the RWS authentication process.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSClient(const std::string& ip_address, const std::string& username, const std::string& password)
   :
@@ -332,6 +122,8 @@ public:
    *
    * \param ip_address specifying the robot controller's IP address.
    * \param port for the port used by the RWS server.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSClient(const std::string& ip_address, const unsigned short port)
   :
@@ -348,6 +140,8 @@ public:
    * \param port for the port used by the RWS server.
    * \param username for the username to the RWS authentication process.
    * \param password for the password to the RWS authentication process.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSClient(const std::string& ip_address,
             const unsigned short port,
@@ -361,17 +155,16 @@ public:
   {}
 
   /**
-   * \brief A destructor.
+   * \brief Logs out the currently active RWS session.
    */
-  ~RWSClient()
-  {
-    logout();
-  }
+  ~RWSClient();
 
   /**
    * \brief Retrieves a list of controller resources (e.g. controller identity and clock information).
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getContollerService();
 
@@ -382,6 +175,8 @@ public:
    * \param type specifying the type in the configuration topic.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getConfigurationInstances(const std::string& topic, const std::string& type);
 
@@ -389,6 +184,8 @@ public:
    * \brief A method for retrieving all available IO signals on the controller.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getIOSignals();
 
@@ -398,6 +195,8 @@ public:
    * \param iosignal for the IO signal's name.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getIOSignal(const std::string& iosignal);
 
@@ -407,6 +206,8 @@ public:
    * \param mechunit for the mechanical unit's name.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getMechanicalUnitStaticInfo(const std::string& mechunit);
 
@@ -416,6 +217,8 @@ public:
    * \param mechunit for the mechanical unit's name.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getMechanicalUnitDynamicInfo(const std::string& mechunit);
 
@@ -425,6 +228,8 @@ public:
    * \param mechunit for the mechanical unit's name.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getMechanicalUnitJointTarget(const std::string& mechunit);
 
@@ -437,6 +242,8 @@ public:
    * \param wobj for the work object (wobj) relative to which the robtarget will be reported.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getMechanicalUnitRobTarget(const std::string& mechunit,
                                        const Coordinate& coordinate = Coordinate::ACTIVE,
@@ -449,6 +256,8 @@ public:
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getRAPIDSymbolData(const RAPIDResource& resource);
 
@@ -456,11 +265,11 @@ public:
    * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
-   * \param p_data for containing the retrieved data.
-   *
-   * \return RWSResult containing the result.
+   * \param data for containing the retrieved data.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract* p_data);
+  void getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for retrieving the properties of a RAPID symbol.
@@ -468,6 +277,8 @@ public:
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getRAPIDSymbolProperties(const RAPIDResource& resource);
 
@@ -475,6 +286,8 @@ public:
    * \brief A method for retrieving the execution state of RAPID.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getRAPIDExecution();
 
@@ -484,6 +297,8 @@ public:
    * \param task specifying the RAPID task.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getRAPIDModulesInfo(const std::string& task);
 
@@ -491,6 +306,8 @@ public:
    * \brief A method for retrieving the RAPID tasks that are defined in the robot controller system.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getRAPIDTasks();
 
@@ -498,6 +315,8 @@ public:
    * \brief A method for retrieving info about the current robot controller system.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getRobotWareSystem();
 
@@ -505,6 +324,8 @@ public:
    * \brief A method for retrieving the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getSpeedRatio();
 
@@ -512,6 +333,8 @@ public:
    * \brief A method for retrieving the controller state.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getPanelControllerState();
 
@@ -519,6 +342,8 @@ public:
    * \brief A method for retrieving the operation mode of the controller.
    *
    * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   RWSResult getPanelOperationMode();
 
@@ -527,65 +352,65 @@ public:
    *
    * \param iosignal for the IO signal's name.
    * \param value for the IO signal's new value.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult setIOSignal(const std::string& iosignal, const std::string& value);
+  void setIOSignal(const std::string& iosignal, const std::string& value);
 
   /**
    * \brief A method for setting the data of a RAPID symbol.
    *
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
    * \param data for the RAPID symbol's new data.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data);
+  void setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data);
 
   /**
    * \brief A method for setting the data of a RAPID symbol (based on the provided struct representing the RAPID data).
    *
    * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
    * \param data for the RAPID symbol's new data.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data);
+  void setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for starting RAPID execution in the robot controller.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult startRAPIDExecution();
+  void startRAPIDExecution();
 
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult stopRAPIDExecution();
+  void stopRAPIDExecution();
 
   /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult resetRAPIDProgramPointer();
+  void resetRAPIDProgramPointer();
 
   /**
    * \brief A method for turning on the robot controller's motors.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult setMotorsOn();
+  void setMotorsOn();
 
   /**
    * \brief A method for turning off the robot controller's motors.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult setMotorsOff();
+  void setMotorsOff();
 
   /**
    * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
@@ -598,8 +423,10 @@ public:
    *
    * \throw std::out_of_range if argument is out of range.
    * \throw std::runtime_error if failed to create a string from the argument.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult setSpeedRatio(unsigned int ratio);
+  void setSpeedRatio(unsigned int ratio);
 
   /**
    * \brief A method for loading a module to the robot controller.
@@ -608,9 +435,9 @@ public:
    * \param resource specifying the file's directory and name.
    * \param replace indicating if the actual module into the controller must be replaced by the new one or not.
    *
-   * \return RWSResult containing the result.
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
+  void loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
 
   /**
    * \brief A method for unloading a module to the robot controller.
@@ -618,9 +445,9 @@ public:
    * \param task specifying the RAPID task.
    * \param resource specifying the file's directory and name.
    *
-   * \return RWSResult containing the result.
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult unloadModuleFromTask(const std::string& task, const FileResource& resource);
+  void unloadModuleFromTask(const std::string& task, const FileResource& resource);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -629,74 +456,30 @@ public:
    *
    * \param resource specifying the file's directory and name.
    * \param p_file_content for containing the retrieved file content.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult getFile(const FileResource& resource, std::string* p_file_content);
+  void getFile(const FileResource& resource, std::string* p_file_content);
 
   /**
    * \brief A method for uploading a file to the robot controller.
    *
    * \param resource specifying the file's directory and name.
    * \param file_content for the file's content.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult uploadFile(const FileResource& resource, const std::string& file_content);
+  void uploadFile(const FileResource& resource, const std::string& file_content);
 
   /**
    * \brief A method for deleting a file from the robot controller.
    *
    * \param resource specifying the file's directory and name.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult deleteFile(const FileResource& resource);
+  void deleteFile(const FileResource& resource);
 
-  /**
-   * \brief A method for starting for a subscription.
-   *
-   * \param resources specifying the resources to subscribe to.
-   *
-   * \return RWSResult containing the result.
-   */
-  RWSResult startSubscription(const SubscriptionResources& resources);
-
-  /**
-   * \brief A method for waiting for a subscription event.
-   *
-   * \return RWSResult containing the result.
-   */
-  RWSResult waitForSubscriptionEvent();
-
-  /**
-   * \brief A method for ending a active subscription.
-   *
-   * \return RWSResult containing the result.
-   */
-  RWSResult endSubscription();
-
-  /**
-   * \brief Force close the active subscription connection.
-   *
-   * This will cause waitForSubscriptionEvent() to return or throw.
-   * It does not delete the subscription from the controller.
-   *
-   * The preferred way to close the subscription is to request the robot controller to end it via
-   * endSubscription(). This function can be used to force the connection to close immediately in
-   * case the robot controller is not responding.
-   *
-   * This function blocks until an active waitForSubscriptionEvent() has finished.
-   *
-   */
-  void forceCloseSubscription();
-
-  /**
-   * \brief A method for logging out the currently active RWS session.
-   *
-   * \return RWSResult containing the result.
-   */
-  RWSResult logout();
 
   /**
    * \brief A method for registering a user as local.
@@ -704,10 +487,10 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                               const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                               const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -717,10 +500,10 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   *
-   * \return RWSResult containing the result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  RWSResult registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                                const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                                const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -729,26 +512,11 @@ public:
    *
    * \param result containing the result of the parsing.
    * \param poco_result containing the POCO result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  static void parseMessage(RWSResult* result, const POCOResult& poco_result);
+  static void parseMessage(RWSResult& result, const POCOResult& poco_result);
 
-  /**
-   * \brief Method for retrieving the internal log as a text string.
-   *
-   * \param verbose indicating if the log text should be verbose or not.
-   *
-   * \return std::string containing the log text. An empty text string is returned if the log is empty.
-   */
-  std::string getLogText(const bool verbose = false) const;
-
-  /**
-   * \brief Method for retrieving only the most recently logged event as a text string.
-   *
-   * \param verbose indicating if the log text should be verbose or not.
-   *
-   * \return std::string containing the log text. An empty text string is returned if the log is empty.
-   */
-  std::string getLogTextLatestEvent(const bool verbose = false) const;
 
 private:
   /**
@@ -781,14 +549,19 @@ private:
     std::vector<Poco::Net::HTTPResponse::HTTPStatus> accepted_outcomes;
   };
 
+
+  /**
+   * \brief A method for logging out the currently active RWS session.
+   */
+  void logout();
+
   /**
    * \brief Method for checking a communication result against the accepted outcomes.
    *
-   * \param result containing the result of the check.
    * \param poco_result containing the POCO result.
    * \param conditions containing the conditions for the evaluation.
    */
-  void checkAcceptedOutcomes(RWSResult* result, const POCOResult& poco_result, const EvaluationConditions& conditions);
+  void checkAcceptedOutcomes(const POCOResult& poco_result, const EvaluationConditions& conditions);
 
   /**
    * \brief Method for evaluating the result from a POCO communication.
@@ -870,19 +643,9 @@ private:
   static const size_t LOG_SIZE = 20;
 
   /**
-   * \brief Static constant for the default RWS subscription timeout [microseconds].
-   */
-  static const Poco::Int64 DEFAULT_SUBSCRIPTION_TIMEOUT = 40e6;
-
-  /**
    * \brief Container for logging communication results.
    */
   std::deque<POCOResult> log_;
-
-  /**
-   * \brief A subscription group id.
-   */
-  std::string subscription_group_id_;
 };
 
 } // end namespace rws
