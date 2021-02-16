@@ -588,20 +588,7 @@ void RWSClient::checkAcceptedOutcomes(const POCOResult& poco_result,
 
 void RWSClient::parseMessage(RWSResult& result, const POCOResult& poco_result)
 {
-  std::stringstream ss;
-
-  if (!poco_result.content().empty())
-  {
-    ss << poco_result.content();
-  }
-  else
-  {
-    // XML parsing: Missing message
-    throw std::logic_error("parseMessage(...): RWS response was empty");
-  }
-
-  Poco::XML::InputSource input_source(ss);
-  result = Poco::XML::DOMParser().parse(&input_source);
+  result = Poco::XML::DOMParser().parseString(poco_result.content());
 }
 
 

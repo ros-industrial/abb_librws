@@ -1340,8 +1340,6 @@ private:
 
       /**
        * \brief Signal the StateMachine to run SmartGripper routine(s).
-       *
-       * \return void indicating if the signaling was successful or not.
        */
       void signalRunSGRoutine() const;
 

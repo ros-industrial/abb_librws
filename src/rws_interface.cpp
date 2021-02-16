@@ -604,15 +604,11 @@ void RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
   axes_total >> static_info.axes_total;
 
   // Basic verification.
-  if(!static_info.task_name.empty() &&
-      !static_info.is_integrated_unit.empty() &&
-      !static_info.has_integrated_unit.empty() &&
-      static_info.type != MechanicalUnitType::UNDEFINED &&
-      !axes.fail() && !axes_total.fail())
-  {
-    ;
-  }
-  else
+  if(static_info.task_name.empty() ||
+      static_info.is_integrated_unit.empty() ||
+      static_info.has_integrated_unit.empty() ||
+      static_info.type == MechanicalUnitType::UNDEFINED ||
+      axes.fail() || axes_total.fail())
   {
     throw std::logic_error("RWSInterface::getMechanicalUnitStaticInfo(): inconsistent data");
   }
@@ -664,17 +660,13 @@ void RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
   }
 
   // Basic verification.
-  if(!dynamic_info.tool_name.empty() &&
-      !dynamic_info.wobj_name.empty() &&
-      !dynamic_info.payload_name.empty() &&
-      !dynamic_info.total_payload_name.empty() &&
-      !dynamic_info.status.empty() &&
-      !dynamic_info.jog_mode.empty() &&
-      dynamic_info.mode != MechanicalUnitMode::UNKNOWN_MODE)
-  {
-    ;
-  }
-  else
+  if(dynamic_info.tool_name.empty() ||
+      dynamic_info.wobj_name.empty() ||
+      dynamic_info.payload_name.empty() ||
+      dynamic_info.total_payload_name.empty() ||
+      dynamic_info.status.empty() ||
+      dynamic_info.jog_mode.empty() ||
+      dynamic_info.mode == MechanicalUnitMode::UNKNOWN_MODE)
   {
     throw std::logic_error("RWSInterface::getMechanicalUnitDynamicInfo: inconsistent data");
   }

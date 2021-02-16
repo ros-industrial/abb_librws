@@ -518,6 +518,8 @@ public:
    *
    * \param mechunit for the mechanical unit's name.
    * \param static_info for storing the retrieved information.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
 
@@ -526,6 +528,8 @@ public:
    *
    * \param mechunit for the mechanical unit's name.
    * \param dynamic_info for storing the retrieved information.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
 
@@ -534,6 +538,8 @@ public:
    *
    * \param mechunit for the mechanical unit's name.
    * \param p_jointtarget for storing the retrieved jointtarget data.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget);
 
@@ -545,6 +551,8 @@ public:
    * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    * \param tool for the tool frame relative to which the robtarget will be reported.
    * \param wobj for the work object (wobj) relative to which the robtarget will be reported.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void getMechanicalUnitRobTarget(const std::string& mechunit,
                                   RobTarget* p_robtarget,
@@ -562,6 +570,8 @@ public:
    * \param name name of the RAPID symbol.
    *
    * \return std::string containing the data. Empty if not found.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   std::string getRAPIDSymbolData(const std::string& task, const std::string& module, const std::string& name);
 
@@ -572,6 +582,8 @@ public:
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
    * \param data for storing the retrieved RAPID symbol data.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void getRAPIDSymbolData(const std::string& task,
                           const std::string& module,
@@ -584,6 +596,8 @@ public:
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param symbol indicating the RAPID symbol resource (name and module).
    * \param data for storing the retrieved RAPID symbol data.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void getRAPIDSymbolData(const std::string& task,
                           const RAPIDSymbolResource& symbol,
@@ -593,6 +607,8 @@ public:
    * \brief A method for retrieving information about the RAPID modules of a RAPID task defined in the robot controller.
    *
    * \return std::vector<RAPIDModuleInfo> containing the RAPID modules information.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   std::vector<RAPIDModuleInfo> getRAPIDModulesInfo(const std::string& task);
 
@@ -600,6 +616,8 @@ public:
    * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
    *
    * \return std::vector<RAPIDTaskInfo> containing the RAPID tasks information.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   std::vector<RAPIDTaskInfo> getRAPIDTasks();
 
@@ -616,6 +634,8 @@ public:
    * \brief A method for retrieving some system information from the robot controller.
    *
    * \return SystemInfo containing the system information (info will be empty if e.g. a timeout occurred).
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   SystemInfo getSystemInfo();
 
@@ -623,6 +643,8 @@ public:
    * \brief A method for checking if the robot controller mode is in auto mode.
    *
    * \return if the mode is auto or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   bool isAutoMode();
 
@@ -630,6 +652,8 @@ public:
    * \brief A method for checking if the motors are on.
    *
    * \return if the motors are on or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   bool isMotorsOn();
 
@@ -637,6 +661,8 @@ public:
    * \brief A method for checking if RAPID is running.
    *
    * \return if RAPID is running or not.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   bool isRAPIDRunning();
 
@@ -645,6 +671,8 @@ public:
    *
    * \param iosignal for the name of the IO signal.
    * \param value for the IO signal's new value.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void setIOSignal(const std::string& iosignal, const std::string& value);
 
@@ -670,6 +698,8 @@ public:
    * \param module name of the RAPID module containing the RAPID symbol.
    * \param name the name of the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void setRAPIDSymbolData(const std::string& task,
                           const std::string& module,
@@ -683,6 +713,8 @@ public:
    * \param module for the name of the RAPID module containing the RAPID symbol.
    * \param name for the name of the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void setRAPIDSymbolData(const std::string& task,
                           const std::string& module,
@@ -695,6 +727,8 @@ public:
    * \param task for the name of the RAPID task containing the RAPID symbol.
    * \param symbol indicating the RAPID symbol resource (name and module).
    * \param data containing the RAPID symbol's new data.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void setRAPIDSymbolData(const std::string& task,
                           const RAPIDSymbolResource& symbol,
@@ -702,26 +736,36 @@ public:
 
   /**
    * \brief A method for starting RAPID execution in the robot controller.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void startRAPIDExecution();
 
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void stopRAPIDExecution();
 
   /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void resetRAPIDProgramPointer();
 
   /**
    * \brief A method for turning on the robot controller's motors.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void setMotorsOn();
 
   /**
    * \brief A method for turning off the robot controller's motors.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void setMotorsOff();
 
@@ -731,6 +775,8 @@ public:
    * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
    *
    * \param ratio specifying the new ratio.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
    */
   void setSpeedRatio(unsigned int ratio);
 
@@ -741,7 +787,7 @@ public:
    * \param resource specifying the file's directory and name.
    * \param replace indicating if the actual module into the controller must be replaced by the new one or not.
    *
-   * \throw std::exception if something goes wrong.
+   * \throw \a std::exception if something goes wrong.
    */
   void loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
 
@@ -751,7 +797,7 @@ public:
    * \param task specifying the RAPID task.
    * \param resource specifying the file's directory and name.
    *
-   * \throw std::exception if something goes wrong.
+   * \throw \a std::exception if something goes wrong.
    */
   void unloadModuleFromTask(const std::string& task, const FileResource& resource);
 
@@ -762,6 +808,8 @@ public:
    *
    * \param resource specifying the file's directory and name.
    * \param p_file_content for containing the retrieved file content.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   void getFile(const FileResource& resource, std::string* p_file_content);
 
@@ -770,6 +818,8 @@ public:
    *
    * \param resource specifying the file's directory and name.
    * \param file_content for the file's content.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   void uploadFile(const FileResource& resource, const std::string& file_content);
 
@@ -777,6 +827,8 @@ public:
    * \brief A method for deleting a file from the robot controller.
    *
    * \param resource specifying the file's directory and name.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   void deleteFile(const FileResource& resource);
 
@@ -787,7 +839,7 @@ public:
    *
    * \return Newly created \a SubscriptionGroup for specified subscription resources.
    * 
-   * \throw \a std::runtime_error if something goes wrong
+   * \throw \a std::exception if something goes wrong
    */
   SubscriptionGroup openSubscription(const SubscriptionResources& resources);
 
@@ -797,6 +849,8 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   void registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                          const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
@@ -808,6 +862,8 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
   void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                           const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,

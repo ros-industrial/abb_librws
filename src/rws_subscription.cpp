@@ -129,7 +129,6 @@ namespace abb :: rws
     WebSocketFrame frame;
     if (webSocketReceiveFrame(frame))
     {
-      // std::clog << "WebSocket frame received: flags=" << frame.flags << ", frame_content=" << frame.frame_content << std::endl;
       Poco::AutoPtr<Poco::XML::Document> doc = parser_.parseString(frame.frame_content);
 
       event.value = xmlFindTextContent(doc, XMLAttribute {"class", "lvalue"});
