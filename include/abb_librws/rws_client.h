@@ -455,11 +455,12 @@ public:
    * Note: Depending on the file, then the content can be in text or binary format.
    *
    * \param resource specifying the file's directory and name.
-   * \param p_file_content for containing the retrieved file content.
+   * 
+   * \return retrieved file content.
    * 
    * \throw \a std::exception if something goes wrong.
    */
-  void getFile(const FileResource& resource, std::string* p_file_content);
+  std::string getFile(const FileResource& resource);
 
   /**
    * \brief A method for uploading a file to the robot controller.

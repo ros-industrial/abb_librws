@@ -566,10 +566,11 @@ std::string RWSInterface::getIOSignal(const std::string& iosignal)
 }
 
 
-void RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info)
+MechanicalUnitStaticInfo RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit)
 {
   RWSResult rws_result = rws_client_.getMechanicalUnitStaticInfo(mechunit);
 
+  MechanicalUnitStaticInfo static_info;
   static_info.task_name = xmlFindTextContent(rws_result, XMLAttribute("class", "task-name"));
   static_info.is_integrated_unit = xmlFindTextContent(rws_result,
                                                       XMLAttribute("class", "is-integrated-unit"));
@@ -612,14 +613,17 @@ void RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit, Mech
   {
     throw std::logic_error("RWSInterface::getMechanicalUnitStaticInfo(): inconsistent data");
   }
+
+  return static_info;
 }
 
-void RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info)
+MechanicalUnitDynamicInfo RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit)
 {
   bool result = false;
 
   RWSResult rws_result = rws_client_.getMechanicalUnitDynamicInfo(mechunit);
 
+  MechanicalUnitDynamicInfo dynamic_info;
   dynamic_info.tool_name = xmlFindTextContent(rws_result, XMLAttribute("class", "tool-name"));
   dynamic_info.wobj_name = xmlFindTextContent(rws_result, XMLAttribute("class", "wobj-name"));
   dynamic_info.payload_name = xmlFindTextContent(rws_result,
@@ -670,66 +674,67 @@ void RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit, Mec
   {
     throw std::logic_error("RWSInterface::getMechanicalUnitDynamicInfo: inconsistent data");
   }
+
+  return dynamic_info;
 }
 
-void RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget)
+JointTarget RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit)
 {
-  if (p_jointtarget)
-  {
-    RWSResult rws_result = rws_client_.getMechanicalUnitJointTarget(mechunit);
-    std::stringstream ss;
+  RWSResult rws_result = rws_client_.getMechanicalUnitJointTarget(mechunit);
+  std::stringstream ss;
 
-    ss << "[["
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_1")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_2")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_3")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_4")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_5")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_6")) << "], ["
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_a")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_b")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_c")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_d")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_e")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_f")) << "]]";
+  ss << "[["
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_1")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_2")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_3")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_4")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_5")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "rax_6")) << "], ["
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_a")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_b")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_c")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_d")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_e")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_f")) << "]]";
 
-    p_jointtarget->parseString(ss.str());
-  }
+  JointTarget jointtarget;
+  jointtarget.parseString(ss.str());
+  
+  return jointtarget;
 }
 
-void RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
-                                              RobTarget* p_robtarget,
+RobTarget RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
                                               Coordinate coordinate,
                                               const std::string& tool,
                                               const std::string& wobj)
 {
-  if (p_robtarget)
-  {
-    RWSResult rws_result = rws_client_.getMechanicalUnitRobTarget(mechunit, coordinate, tool, wobj);
+  RWSResult rws_result = rws_client_.getMechanicalUnitRobTarget(mechunit, coordinate, tool, wobj);
 
-    std::stringstream ss;
+  std::stringstream ss;
 
-    ss << "[["
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "x")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "y")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "z")) << "], ["
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "q1")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "q2")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "q3")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "q4")) << "], ["
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "cf1")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "cf4")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "cf6")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "cfx")) << "], ["
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_a")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_b")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_c")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_d")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_e")) << ","
-        << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_f")) << "]]";
+  ss << "[["
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "x")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "y")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "z")) << "], ["
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "q1")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "q2")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "q3")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "q4")) << "], ["
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "cf1")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "cf4")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "cf6")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "cfx")) << "], ["
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_a")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_b")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_c")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_d")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_e")) << ","
+      << xmlFindTextContent(rws_result, XMLAttribute("class", "eax_f")) << "]]";
 
-    p_robtarget->parseString(ss.str());
-  }
+  RobTarget robtarget;
+  robtarget.parseString(ss.str());
+
+  return robtarget;
 }
 
 void RWSInterface::setRAPIDSymbolData(const std::string& task,
@@ -740,20 +745,12 @@ void RWSInterface::setRAPIDSymbolData(const std::string& task,
   rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data);
 }
 
-void RWSInterface::setRAPIDSymbolData(const std::string& task,
-                                      const std::string& module,
-                                      const std::string& name,
-                                      const RAPIDSymbolDataAbstract& data)
+
+void RWSInterface::setRAPIDSymbolData(RAPIDResource const& resource, const RAPIDSymbolDataAbstract& data)
 {
-  rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data);
+  rws_client_.setRAPIDSymbolData(resource, data);
 }
 
-void RWSInterface::setRAPIDSymbolData(const std::string& task,
-                                      const RAPIDSymbolResource& symbol,
-                                      const RAPIDSymbolDataAbstract& data)
-{
-  rws_client_.setRAPIDSymbolData(RAPIDResource(task, symbol), data);
-}
 
 void RWSInterface::startRAPIDExecution()
 {
@@ -916,20 +913,12 @@ std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
                             XMLAttributes::CLASS_VALUE);
 }
 
-void RWSInterface::getRAPIDSymbolData(const std::string& task,
-                                      const std::string& module,
-                                      const std::string& name,
-                                      RAPIDSymbolDataAbstract& data)
+
+void RWSInterface::getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data)
 {
-  rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name), data);
+  rws_client_.getRAPIDSymbolData(resource, data);
 }
 
-void RWSInterface::getRAPIDSymbolData(const std::string& task,
-                                      const RAPIDSymbolResource& symbol,
-                                      RAPIDSymbolDataAbstract& data)
-{
-  rws_client_.getRAPIDSymbolData(RAPIDResource(task, symbol), data);
-}
 
 void RWSInterface::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
 {
@@ -941,9 +930,9 @@ void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResou
   rws_client_.unloadModuleFromTask(task, resource);
 }
 
-void RWSInterface::getFile(const FileResource& resource, std::string* p_file_content)
+std::string RWSInterface::getFile(const FileResource& resource)
 {
-  rws_client_.getFile(resource, p_file_content);
+  return rws_client_.getFile(resource);
 }
 
 void RWSInterface::uploadFile(const FileResource& resource, const std::string& file_content)
@@ -983,6 +972,35 @@ std::string RWSInterface::getLogText(const bool verbose)
 std::string RWSInterface::getLogTextLatestEvent(const bool verbose)
 {
   return rws_client_.getLogTextLatestEvent(verbose);
+}
+
+
+void RWSInterface::setDigitalSignal(std::string const& signal_name, bool value)
+{
+  setIOSignal(signal_name, std::string(value ? SystemConstants::IOSignals::HIGH : SystemConstants::IOSignals::LOW));
+}
+
+
+void RWSInterface::setAnalogSignal(std::string const& signal_name, float value)
+{
+  setIOSignal(signal_name, std::to_string(value));
+}
+
+
+bool RWSInterface::getDigitalSignal(std::string const& signal_name)
+{
+  auto const value = getIOSignal(signal_name);
+
+  if (value != SystemConstants::IOSignals::HIGH && value != SystemConstants::IOSignals::LOW)
+    throw std::logic_error("Unexpected value \"" + value + "\" of a digital signal");
+    
+  return value == SystemConstants::IOSignals::HIGH;
+}
+
+
+float RWSInterface::getAnalogSignal(std::string const& signal_name)
+{
+  return std::stof(getIOSignal(signal_name));
 }
 
 /************************************************************

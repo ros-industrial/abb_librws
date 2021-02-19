@@ -504,58 +504,69 @@ public:
    */
   ABB_LIBRWS_DEPRECATED std::vector<RobotWareOptionInfo> getPresentRobotWareOptions();
 
-  /**
-   * \brief A method for retrieving the value if an IO signal.
-   *
-   * \param iosignal for the name of the IO signal.
-   *
-   * \return std::string containing the IO signal's value (empty if not found).
-   */
-  std::string getIOSignal(const std::string& iosignal);
+
+  /// @brief Get value of a digital signal
+  ///
+  /// @param signal_name Name of the signal
+  /// @return Value of the requested digital signal
+  ///
+  bool getDigitalSignal(std::string const& signal_name);
+
+
+  /// @brief Get value of an analog signal
+  ///
+  /// @param signal_name Name of the signal
+  /// @return Value of the requested analog signal
+  ///
+  float getAnalogSignal(std::string const& signal_name);
+  
 
   /**
    * \brief A method for retrieving static information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * \param static_info for storing the retrieved information.
+   * 
+   * \return static information about a mechanical unit.
    * 
    * \throw \a std::runtime_error if something goes wrong.
    */
-  void getMechanicalUnitStaticInfo(const std::string& mechunit, MechanicalUnitStaticInfo& static_info);
+  MechanicalUnitStaticInfo getMechanicalUnitStaticInfo(const std::string& mechunit);
 
   /**
    * \brief A method for retrieving dynamic information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * \param dynamic_info for storing the retrieved information.
+   * 
+   * \return dynamic information about a mechanical unit.
    * 
    * \throw \a std::runtime_error if something goes wrong.
    */
-  void getMechanicalUnitDynamicInfo(const std::string& mechunit, MechanicalUnitDynamicInfo& dynamic_info);
+  MechanicalUnitDynamicInfo getMechanicalUnitDynamicInfo(const std::string& mechunit);
 
   /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * \param p_jointtarget for storing the retrieved jointtarget data.
    * 
+   * \return jointtarget data.
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
-  void getMechanicalUnitJointTarget(const std::string& mechunit, JointTarget* p_jointtarget);
+  JointTarget getMechanicalUnitJointTarget(const std::string& mechunit);
 
   /**
    * \brief A method for retrieving the current robtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * \param p_robtarget for storing the retrieved robtarget data.
    * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    * \param tool for the tool frame relative to which the robtarget will be reported.
    * \param wobj for the work object (wobj) relative to which the robtarget will be reported.
    * 
    * \throw \a std::runtime_error if something goes wrong.
+   * 
+   * \return robtarget data.
    */
-  void getMechanicalUnitRobTarget(const std::string& mechunit,
-                                  RobTarget* p_robtarget,
+  RobTarget getMechanicalUnitRobTarget(const std::string& mechunit,
                                   Coordinate coordinate = Coordinate::ACTIVE,
                                   const std::string& tool = "",
                                   const std::string& wobj = "");
@@ -575,38 +586,22 @@ public:
    */
   std::string getRAPIDSymbolData(const std::string& task, const std::string& module, const std::string& name);
 
-  /**
-   * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
-   *
-   * \param task for the name of the RAPID task containing the RAPID symbol.
-   * \param module for the name of the RAPID module containing the RAPID symbol.
-   * \param name for the name of the RAPID symbol.
-   * \param data for storing the retrieved RAPID symbol data.
-   * 
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void getRAPIDSymbolData(const std::string& task,
-                          const std::string& module,
-                          const std::string& name,
-                          RAPIDSymbolDataAbstract& data);
 
   /**
-   * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
-   *
-   * \param task for the name of the RAPID task containing the RAPID symbol.
-   * \param symbol indicating the RAPID symbol resource (name and module).
+   * \brief Retrieves the data of a RAPID symbol (parsed into a struct representing the RAPID data).
+   * 
+   * \param resource specifies the RAPID task, module and symbol name.
    * \param data for storing the retrieved RAPID symbol data.
    * 
    * \throw \a std::runtime_error if something goes wrong.
    */
-  void getRAPIDSymbolData(const std::string& task,
-                          const RAPIDSymbolResource& symbol,
-                          RAPIDSymbolDataAbstract& data);
+  void getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data);
+
 
   /**
    * \brief A method for retrieving information about the RAPID modules of a RAPID task defined in the robot controller.
    *
-   * \return std::vector<RAPIDModuleInfo> containing the RAPID modules information.
+   * \return \a std::vector<RAPIDModuleInfo> containing the RAPID modules information.
    * 
    * \throw \a std::runtime_error if something goes wrong.
    */
@@ -615,7 +610,7 @@ public:
   /**
    * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
    *
-   * \return std::vector<RAPIDTaskInfo> containing the RAPID tasks information.
+   * \return \a std::vector<RAPIDTaskInfo> containing the RAPID tasks information.
    * 
    * \throw \a std::runtime_error if something goes wrong.
    */
@@ -626,7 +621,7 @@ public:
    *
    * \return unsigned int with the speed ratio in the range [0, 100] (ie: inclusive).
    *
-   * \throw std::runtime_error if failed to get or parse the speed ratio.
+   * \throw \a std::runtime_error if failed to get or parse the speed ratio.
    */
   unsigned int getSpeedRatio();
 
@@ -666,15 +661,22 @@ public:
    */
   bool isRAPIDRunning();
 
-  /**
-   * \brief A method for setting the value of an IO signal.
-   *
-   * \param iosignal for the name of the IO signal.
-   * \param value for the IO signal's new value.
-   * 
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void setIOSignal(const std::string& iosignal, const std::string& value);
+
+  /// @brief Set value of a digital signal
+  ///
+  /// @param signal_name Name of the signal
+  /// @param value New value of the signal
+  ///
+  void setDigitalSignal(std::string const& signal_name, bool value);
+
+
+  /// @brief Set value of an analog signal
+  ///
+  /// @param signal_name Name of the signal
+  /// @param value New value of the signal
+  ///
+  void setAnalogSignal(std::string const& signal_name, float value);
+
 
   /**
    * \brief A method for setting the data of a RAPID symbol via raw text format.
@@ -706,33 +708,18 @@ public:
                           const std::string& name,
                           const std::string& data);
 
-  /**
-   * \brief A method for setting the data of a RAPID symbol.
-   *
-   * \param task for the name of the RAPID task containing the RAPID symbol.
-   * \param module for the name of the RAPID module containing the RAPID symbol.
-   * \param name for the name of the RAPID symbol.
-   * \param data containing the RAPID symbol's new data.
-   * 
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void setRAPIDSymbolData(const std::string& task,
-                          const std::string& module,
-                          const std::string& name,
-                          const RAPIDSymbolDataAbstract& data);
 
   /**
    * \brief A method for setting the data of a RAPID symbol.
    *
-   * \param task for the name of the RAPID task containing the RAPID symbol.
-   * \param symbol indicating the RAPID symbol resource (name and module).
+   * \param resource identifying the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
    * 
    * \throw \a std::runtime_error if something goes wrong.
    */
-  void setRAPIDSymbolData(const std::string& task,
-                          const RAPIDSymbolResource& symbol,
+  void setRAPIDSymbolData(RAPIDResource const& resource,
                           const RAPIDSymbolDataAbstract& data);
+
 
   /**
    * \brief A method for starting RAPID execution in the robot controller.
@@ -807,11 +794,12 @@ public:
    * Note: Depending on the file, then the content can be in text or binary format.
    *
    * \param resource specifying the file's directory and name.
-   * \param p_file_content for containing the retrieved file content.
+   * 
+   * \return file content.
    * 
    * \throw \a std::exception if something goes wrong.
    */
-  void getFile(const FileResource& resource, std::string* p_file_content);
+  std::string getFile(const FileResource& resource);
 
   /**
    * \brief A method for uploading a file to the robot controller.
@@ -915,6 +903,28 @@ protected:
    * \brief The RWS client used to communicate with the robot controller.
    */
   RWSClient rws_client_;
+
+
+private:
+  /**
+   * \brief A method for retrieving the value if an IO signal.
+   *
+   * \param iosignal for the name of the IO signal.
+   *
+   * \return std::string containing the IO signal's value (empty if not found).
+   */
+  std::string getIOSignal(const std::string& iosignal);
+
+
+  /**
+   * \brief A method for setting the value of an IO signal.
+   *
+   * \param iosignal for the name of the IO signal.
+   * \param value for the IO signal's new value.
+   * 
+   * \throw \a std::runtime_error if something goes wrong.
+   */
+  void setIOSignal(const std::string& iosignal, const std::string& value);
 };
 
 } // end namespace rws

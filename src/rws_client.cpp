@@ -468,20 +468,17 @@ void RWSClient::unloadModuleFromTask(const std::string& task, const FileResource
   evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
-void RWSClient::getFile(const FileResource& resource, std::string* p_file_content)
+std::string RWSClient::getFile(const FileResource& resource)
 {
-  if (p_file_content)
-  {
-    std::string uri = generateFilePath(resource);
-    POCOResult const poco_result = httpGet(uri);
+  std::string uri = generateFilePath(resource);
+  POCOResult const poco_result = httpGet(uri);
 
-    EvaluationConditions evaluation_conditions;
-    evaluation_conditions.parse_message_into_xml = false;
-    evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = false;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
 
-    evaluatePOCOResult(poco_result, evaluation_conditions);
-    *p_file_content = poco_result.content();
-  }
+  evaluatePOCOResult(poco_result, evaluation_conditions);
+  return poco_result.content();
 }
 
 void RWSClient::uploadFile(const FileResource& resource, const std::string& file_content)
