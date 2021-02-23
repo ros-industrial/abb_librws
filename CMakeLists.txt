@@ -26,6 +26,9 @@ endif()
 # We need at least 1.4.3 because of WebSocket support.
 find_package(Poco 1.4.3 REQUIRED COMPONENTS Foundation Net Util XML)
 
+## Find boost exception library
+find_package(Boost REQUIRED COMPONENTS exception)
+
 ###########
 ## Build ##
 ###########
@@ -56,10 +59,11 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}>"
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
   ${Poco_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
-  ${Poco_LIBRARIES}
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC ${Poco_LIBRARIES}
 )
 
 if(NOT BUILD_SHARED_LIBS)

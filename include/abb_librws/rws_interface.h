@@ -41,6 +41,10 @@
 #include "rws_client.h"
 #include "rws_subscription.h"
 
+#include <map>
+#include <variant>
+
+
 namespace abb
 {
 namespace rws
@@ -340,6 +344,14 @@ struct RuntimeInfo
    */
   bool rws_connected;
 };
+
+
+/**
+ * \brief Mapping from IO signal name to a value. 
+ * 
+ * The value of a digital signal is a \a bool, the value of an analog signal is a \a float.
+ */
+using IOSignalInfo = std::map<std::string, std::variant<bool, float>>;
   
   
 /**
@@ -519,6 +531,14 @@ public:
   /// @return Value of the requested analog signal
   ///
   float getAnalogSignal(std::string const& signal_name);
+
+
+  /**
+   * \brief Get values of all IO signals.
+   * 
+   * \return Mapping from IO signal names to values. 
+   */
+  IOSignalInfo getIOSignals();
   
 
   /**

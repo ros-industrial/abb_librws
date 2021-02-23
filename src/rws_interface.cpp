@@ -57,6 +57,16 @@ typedef SystemConstants::RAPID RAPID;
 typedef SystemConstants::RWS::Identifiers Identifiers;
 typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
 
+
+static bool digitalSignalToBool(std::string const& value)
+{
+  if (value != SystemConstants::IOSignals::HIGH && value != SystemConstants::IOSignals::LOW)
+    throw std::logic_error("Unexpected value \"" + value + "\" of a digital signal");
+    
+  return value == SystemConstants::IOSignals::HIGH;
+}
+
+
 /***********************************************************************************************************************
  * Class definitions: RWSInterface
  */
@@ -989,12 +999,7 @@ void RWSInterface::setAnalogSignal(std::string const& signal_name, float value)
 
 bool RWSInterface::getDigitalSignal(std::string const& signal_name)
 {
-  auto const value = getIOSignal(signal_name);
-
-  if (value != SystemConstants::IOSignals::HIGH && value != SystemConstants::IOSignals::LOW)
-    throw std::logic_error("Unexpected value \"" + value + "\" of a digital signal");
-    
-  return value == SystemConstants::IOSignals::HIGH;
+  return digitalSignalToBool(getIOSignal(signal_name));
 }
 
 
@@ -1002,6 +1007,31 @@ float RWSInterface::getAnalogSignal(std::string const& signal_name)
 {
   return std::stof(getIOSignal(signal_name));
 }
+
+
+IOSignalInfo RWSInterface::getIOSignals()
+{
+  auto const doc = rws_client_.getIOSignals();
+  IOSignalInfo signals;
+  
+  for (auto&& node : xmlFindNodes(doc, {"class", "ios-signal-li"}))
+  {
+    std::string const name = xmlFindTextContent(node, {"class", "name"});
+    std::string const value = xmlFindTextContent(node, {"class", "lvalue"});
+    std::string const type = xmlFindTextContent(node, {"class", "type"});
+    
+    if (!name.empty() && !value.empty())
+    {
+      if (type == "DI" || type == "DO")
+        signals[name] = digitalSignalToBool(value);
+      else if (type == "AI" || type == "AO")
+        signals[name] = std::stof(value);
+    }
+  }
+
+  return signals;
+}
+
 
 /************************************************************
  * Auxiliary methods

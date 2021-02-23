@@ -47,11 +47,56 @@
 #include "rws_poco_client.h"
 #include "rws_resource.h"
 
+#include <boost/exception/info.hpp>
+
 
 namespace abb
 {
 namespace rws
 {
+
+/**
+ * \brief Indicates an RWS error
+ */
+class RWSError
+: public std::runtime_error
+, public boost::exception
+{
+public:
+  RWSError();
+};
+
+
+/**
+ * \brief Error info containing IO signal name.
+ */
+using IoSignalErrorInfo = boost::error_info<struct IoSignalErrorInfoTag, std::string>;
+
+
+/**
+ * \brief Error info containing HTTPStatus.
+ */
+using HttpStatusErrorInfo = boost::error_info<struct HttpStatusErrorInfoTag, Poco::Net::HTTPResponse::HTTPStatus>;
+
+
+/**
+ * \brief Error info containing an HTTP method.
+ */
+using HttpMethodErrorInfo = boost::error_info<struct HttpMethodErrorInfoTag, std::string>;
+
+
+/**
+ * \brief Error info containing an HTTP response.
+ */
+using HttpResponseErrorInfo = boost::error_info<struct HttpResponseErrorInfoTag, POCOResult>;
+
+
+/**
+ * \brief Error info containing an URI.
+ */
+using UriErrorInfo = boost::error_info<struct UriErrorInfoTag, std::string>;
+
+
 /**
  * \brief A struct for containing an evaluated communication result.
  */
@@ -92,13 +137,7 @@ public:
    * 
    * \throw \a std::exception if something goes wrong.
    */
-  RWSClient(const std::string& ip_address)
-  :
-  POCOClient(ip_address,
-             SystemConstants::General::DEFAULT_PORT_NUMBER,
-             SystemConstants::General::DEFAULT_USERNAME,
-             SystemConstants::General::DEFAULT_PASSWORD)
-  {}
+  RWSClient(const std::string& ip_address);
 
   /**
    * \brief A constructor.
@@ -109,13 +148,7 @@ public:
    * 
    * \throw \a std::exception if something goes wrong.
    */
-  RWSClient(const std::string& ip_address, const std::string& username, const std::string& password)
-  :
-  POCOClient(ip_address,
-             SystemConstants::General::DEFAULT_PORT_NUMBER,
-             username,
-             password)
-  {}
+  RWSClient(const std::string& ip_address, const std::string& username, const std::string& password);
 
   /**
    * \brief A constructor.
@@ -125,13 +158,7 @@ public:
    * 
    * \throw \a std::exception if something goes wrong.
    */
-  RWSClient(const std::string& ip_address, const unsigned short port)
-  :
-  POCOClient(ip_address,
-             port,
-             SystemConstants::General::DEFAULT_USERNAME,
-             SystemConstants::General::DEFAULT_PASSWORD)
-  {}
+  RWSClient(const std::string& ip_address, const unsigned short port);
 
   /**
    * \brief A constructor.
@@ -146,13 +173,7 @@ public:
   RWSClient(const std::string& ip_address,
             const unsigned short port,
             const std::string& username,
-            const std::string& password)
-  :
-  POCOClient(ip_address,
-             port,
-             username,
-             password)
-  {}
+            const std::string& password);
 
   /**
    * \brief Logs out the currently active RWS session.
@@ -508,71 +529,63 @@ public:
                                const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                                const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
-  /**
-   * \brief Method for parsing a communication result into a XML document.
-   *
-   * \param result containing the result of the parsing.
-   * \param poco_result containing the POCO result.
-   * 
-   * \throw \a std::exception if something goes wrong.
-   */
-  static void parseMessage(RWSResult& result, const POCOResult& poco_result);
-
 
 private:
   /**
-   * \brief A struct for representing conditions, for the evaluation of an attempted RWS communication.
+   * \brief Method for parsing a communication result into an XML document.
+   *
+   * \param result containing the result of the parsing.
+   * 
+   * \return parsed content of \a poco_result.
+   * 
+   * \throw \a std::exception if something goes wrong.
    */
-  struct EvaluationConditions
-  {
-    /**
-     * \brief A default constructor.
-     */
-    EvaluationConditions() : parse_message_into_xml(false) {};
-
-    /**
-     * \brief A method for reseting the conditions.
-     */
-    void reset()
-    {
-      parse_message_into_xml = false;
-      accepted_outcomes.clear();
-    }
-
-    /**
-     * \brief Indication for if the received message should be parsed into a xml document.
-     */
-    bool parse_message_into_xml;
-
-    /**
-     * \brief Vector containing the accepted HTTP outcomes.
-     */
-    std::vector<Poco::Net::HTTPResponse::HTTPStatus> accepted_outcomes;
-  };
+  static RWSResult parseContent(const POCOResult& poco_result);
 
 
+  /**
+   * \brief A method for sending a HTTP GET request and checking response status.
+   *
+   * \param uri for the URI (path and query).
+   *
+   * \return POCOResult containing the result.
+   */
+  POCOResult httpGet(const std::string& uri);
+
+  /**
+   * \brief A method for sending a HTTP POST request and checking response status.
+   *
+   * \param uri for the URI (path and query).
+   * \param content for the request's content.
+   *
+   * \return POCOResult containing the result.
+   */
+  POCOResult httpPost(const std::string& uri, const std::string& content = "");
+
+  /**
+   * \brief A method for sending a HTTP PUT request and checking response status.
+   *
+   * \param uri for the URI (path and query).
+   * \param content for the request's content.
+   *
+   * \return POCOResult containing the result.
+   */
+  POCOResult httpPut(const std::string& uri, const std::string& content = "");
+
+  /**
+   * \brief A method for sending a HTTP DELETE request and checking response status.
+   *
+   * \param uri for the URI (path and query).
+   *
+   * \return POCOResult containing the result.
+   */
+  POCOResult httpDelete(const std::string& uri);
+
+  
   /**
    * \brief A method for logging out the currently active RWS session.
    */
   void logout();
-
-  /**
-   * \brief Method for checking a communication result against the accepted outcomes.
-   *
-   * \param poco_result containing the POCO result.
-   * \param conditions containing the conditions for the evaluation.
-   */
-  void checkAcceptedOutcomes(const POCOResult& poco_result, const EvaluationConditions& conditions);
-
-  /**
-   * \brief Method for evaluating the result from a POCO communication.
-   *
-   * \param poco_result for the POCO result to evaluate.
-   * \param conditions specifying the conditions for the evaluation.
-   *
-   * \return RWSResult containing the evaluated result.
-   */
-  RWSResult evaluatePOCOResult(const POCOResult& poco_result, const EvaluationConditions& conditions);
 
   /**
    * \brief Method for generating a configuration URI path.
