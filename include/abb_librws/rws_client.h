@@ -47,56 +47,11 @@
 #include "rws_poco_client.h"
 #include "rws_resource.h"
 
-#include <boost/exception/info.hpp>
-
 
 namespace abb
 {
 namespace rws
 {
-
-/**
- * \brief Indicates an RWS error
- */
-class RWSError
-: public std::runtime_error
-, public boost::exception
-{
-public:
-  RWSError();
-};
-
-
-/**
- * \brief Error info containing IO signal name.
- */
-using IoSignalErrorInfo = boost::error_info<struct IoSignalErrorInfoTag, std::string>;
-
-
-/**
- * \brief Error info containing HTTPStatus.
- */
-using HttpStatusErrorInfo = boost::error_info<struct HttpStatusErrorInfoTag, Poco::Net::HTTPResponse::HTTPStatus>;
-
-
-/**
- * \brief Error info containing an HTTP method.
- */
-using HttpMethodErrorInfo = boost::error_info<struct HttpMethodErrorInfoTag, std::string>;
-
-
-/**
- * \brief Error info containing an HTTP response.
- */
-using HttpResponseErrorInfo = boost::error_info<struct HttpResponseErrorInfoTag, POCOResult>;
-
-
-/**
- * \brief Error info containing an URI.
- */
-using UriErrorInfo = boost::error_info<struct UriErrorInfoTag, std::string>;
-
-
 /**
  * \brief A struct for containing an evaluated communication result.
  */

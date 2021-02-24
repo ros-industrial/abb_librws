@@ -34,12 +34,11 @@
  ***********************************************************************************************************************
  */
 
+#include <abb_librws/rws_client.h>
+#include <abb_librws/rws_error.h>
+
 #include <sstream>
 #include <stdexcept>
-
-#include <Poco/SAX/InputSource.h>
-
-#include <abb_librws/rws_client.h>
 
 #include <iostream>
 
@@ -60,12 +59,6 @@ typedef SystemConstants::RWS::Queries       Queries;
 typedef SystemConstants::RWS::Resources     Resources;
 typedef SystemConstants::RWS::Services      Services;
 typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
-
-
-RWSError::RWSError()
-: std::runtime_error {"RWS error"}
-{
-}
 
 
 /***********************************************************************************************************************
@@ -511,8 +504,9 @@ std::string RWSClient::generateRAPIDTasksPath(const std::string& task)
 POCOResult RWSClient::httpGet(const std::string& uri)
 {
   POCOResult const result = POCOClient::httpGet(uri);
+  
   if (result.httpStatus() != HTTPResponse::HTTP_OK)
-    BOOST_THROW_EXCEPTION(RWSError {} 
+    BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"} 
       << HttpMethodErrorInfo {"GET"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
@@ -525,11 +519,13 @@ POCOResult RWSClient::httpGet(const std::string& uri)
 POCOResult RWSClient::httpPost(const std::string& uri, const std::string& content)
 {
   POCOResult const result = POCOClient::httpPost(uri, content);
+  
   if (result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT)
-    BOOST_THROW_EXCEPTION(RWSError {} 
+    BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"} 
       << HttpMethodErrorInfo {"POST"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
+      << HttpRequestContentErrorInfo {content}
     );
 
   return result;
@@ -540,10 +536,11 @@ POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content
 {
   POCOResult const result = POCOClient::httpPut(uri, content);
   if (result.httpStatus() != HTTPResponse::HTTP_OK &&result.httpStatus() != HTTPResponse::HTTP_CREATED)
-    BOOST_THROW_EXCEPTION(RWSError {} 
+    BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"} 
       << HttpMethodErrorInfo {"PUT"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
+      << HttpRequestContentErrorInfo {content}
     );
 
   return result;
@@ -553,8 +550,8 @@ POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content
 POCOResult RWSClient::httpDelete(const std::string& uri)
 {
   POCOResult const result = POCOClient::httpDelete(uri);
-  if (result.httpStatus() != HTTPResponse::HTTP_OK &&result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT)
-    BOOST_THROW_EXCEPTION(RWSError {}
+  if (result.httpStatus() != HTTPResponse::HTTP_OK && result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT)
+    BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"DELETE"}
       << HttpStatusErrorInfo {result.httpStatus()}
       << UriErrorInfo {uri}

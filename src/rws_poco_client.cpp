@@ -36,11 +36,13 @@
 
 #include <sstream>
 
-#include "Poco/Net/HTTPRequest.h"
-#include "Poco/Net/NetException.h"
-#include "Poco/StreamCopier.h"
+#include <Poco/Net/HTTPRequest.h>
+#include <Poco/Net/NetException.h>
+#include <Poco/StreamCopier.h>
 
-#include "abb_librws/rws_poco_client.h"
+#include <abb_librws/rws_poco_client.h>
+#include <abb_librws/rws_error.h>
+
 
 using namespace Poco;
 using namespace Poco::Net;
@@ -134,7 +136,7 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
 
     return POCOResult {response.getStatus(), response, response_content};
   }
-  catch (Poco::Exception const&)
+  catch (CommunicationError const&)
   {
     cookies_.clear();
     http_client_session_.reset();
@@ -159,16 +161,29 @@ Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const 
   try
   {
     Poco::Net::WebSocket websocket {http_client_session_, request, response};
+    
     if (response.getStatus() != HTTPResponse::HTTP_SWITCHING_PROTOCOLS)
-      throw std::runtime_error("webSocketConnect() failed: HTTP response " + std::to_string(response.getStatus()));
+      BOOST_THROW_EXCEPTION(
+        ProtocolError {"webSocketConnect() failed"}
+          << HttpStatusErrorInfo {response.getStatus()}
+          << HttpMethodErrorInfo {request.getMethod()}
+          << UriErrorInfo {uri}
+      );
 
     return websocket;
   }
-  catch (std::exception const& e)
+  catch (Poco::Exception const& e)
   {
     // Should we really reset the session if creating the WebSocket failed?
     http_client_session_.reset();
-    throw;
+    
+    BOOST_THROW_EXCEPTION(
+      CommunicationError {"webSocketConnect() failed"}
+        << HttpStatusErrorInfo {response.getStatus()}
+        << HttpMethodErrorInfo {request.getMethod()}
+        << UriErrorInfo {uri}
+        << boost::errinfo_nested_exception {boost::current_exception()}
+    );
   }
 }
 
@@ -187,11 +202,27 @@ void POCOClient::sendAndReceive(HTTPRequest& request,
   // Add request info to the log entry.
   log_entry.addHTTPRequestInfo(request, request_content);
 
-  // Contact the server.
-  http_client_session_.sendRequest(request) << request_content;
-  
-  response_content.clear();
-  StreamCopier::copyToString(http_client_session_.receiveResponse(response), response_content);
+  try
+  {
+    // Contact the server.
+    std::ostream& request_content_stream = http_client_session_.sendRequest(request);
+    request_content_stream << request_content;
+
+    std::istream& response_content_stream = http_client_session_.receiveResponse(response);
+
+    response_content.clear();
+    StreamCopier::copyToString(response_content_stream, response_content);
+  }
+  catch (Poco::Exception const& e)
+  {
+    BOOST_THROW_EXCEPTION(
+      CommunicationError {e.displayText()}
+        << HttpMethodErrorInfo {request.getMethod()}
+        << UriErrorInfo {request.getURI()}
+        << HttpRequestContentErrorInfo {request_content}
+        << boost::errinfo_nested_exception {boost::current_exception()}
+    );
+  }
 
   // Add response info to the log entry.
   log_entry.addHTTPResponseInfo(response, response_content);
