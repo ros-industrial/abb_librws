@@ -58,6 +58,19 @@ enum RAPIDAtomicTypes
   RAPID_STRING ///< \brief RAPID string (i.e. std::string).
 };
 
+
+/**
+ * \brief Precision digits for converting \a float values to strings.
+ */
+static int constexpr SINGLE_PRECISION_DIGITS = 7;
+
+
+/**
+ * \brief Precision digits for converting \a double values to strings.
+ */
+static int constexpr DOUBLE_PRECISION_DIGITS = 15;
+
+
 /**
  * \brief An abstract struct, for structs representing the data of RAPID symbols.
  */

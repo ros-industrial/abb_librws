@@ -36,6 +36,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <iomanip>
 #include <stdexcept>
 
 #include "abb_librws/rws_interface.h"
@@ -993,7 +994,9 @@ void RWSInterface::setDigitalSignal(std::string const& signal_name, bool value)
 
 void RWSInterface::setAnalogSignal(std::string const& signal_name, float value)
 {
-  setIOSignal(signal_name, std::to_string(value));
+  std::stringstream str;
+  str << std::setprecision(SINGLE_PRECISION_DIGITS) << value;
+  setIOSignal(signal_name, str.str());
 }
 
 

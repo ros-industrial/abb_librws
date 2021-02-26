@@ -35,7 +35,7 @@
  */
 
 #include <sstream>
-#include <string>
+#include <iomanip>
 
 #include "abb_librws/rws_common.h"
 #include "abb_librws/rws_rapid.h"
@@ -81,30 +81,30 @@ std::string RAPIDAtomic<RAPID_BOOL>::constructString() const
 
 std::string RAPIDAtomic<RAPID_NUM>::constructString() const
 {
-  std::string result("9000000000");
+  std::stringstream ss;
+  
+  // Use fixed format for floating point values with absolute value greater than 1,
+  // otherwise RWS can complain about exponential notation with a positive exponent.
+  if (std::abs(value) > 1.f)
+    ss << std::fixed;
 
-  if (value != (float) 9E9)
-  {
-    std::stringstream ss;
-    ss << value;
-    result = ss.str();
-  }
+  ss << std::setprecision(SINGLE_PRECISION_DIGITS) << value;
 
-  return result;
+  return ss.str();
 }
 
 std::string RAPIDAtomic<RAPID_DNUM>::constructString() const
 {
-  std::string result("9000000000");
+  std::stringstream ss;
+  
+  // Use fixed format for floating point values with absolute value greater than 1,
+  // otherwise RWS can complain about exponential notation with a positive exponent.
+  if (std::abs(value) > 1.)
+    ss << std::fixed;
 
-  if (value != (float) 9E9)
-  {
-    std::stringstream ss;
-    ss << value;
-    result = ss.str();
-  }
+  ss << std::setprecision(DOUBLE_PRECISION_DIGITS) << value;
 
-  return result;
+  return ss.str();
 }
 
 std::string RAPIDAtomic<RAPID_STRING>::constructString() const
