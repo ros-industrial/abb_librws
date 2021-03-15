@@ -1036,6 +1036,18 @@ IOSignalInfo RWSInterface::getIOSignals()
 }
 
 
+void RWSInterface::setHTTPTimeout(std::chrono::microseconds timeout)
+{
+  rws_client_.setHTTPTimeout(Poco::Timespan {timeout.count()});
+}
+
+
+std::chrono::microseconds RWSInterface::getHTTPTimeout() const noexcept
+{
+  return std::chrono::microseconds {rws_client_.getHTTPTimeout().totalMicroseconds()};
+}
+
+
 /************************************************************
  * Auxiliary methods
  */

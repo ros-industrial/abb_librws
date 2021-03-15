@@ -65,6 +65,11 @@ namespace abb :: rws
    */
   using HttpStatusErrorInfo = boost::error_info<struct HttpStatusErrorInfoTag, Poco::Net::HTTPResponse::HTTPStatus>;
 
+  /**
+   * \brief Error info containing HTTP reason phrase.
+   */
+  using HttpReasonErrorInfo = boost::error_info<struct HttpReasonErrorInfoTag, std::string>;
+
 
   /**
    * \brief Error info containing an HTTP method.
@@ -76,6 +81,12 @@ namespace abb :: rws
    * \brief Error info containing HTTP request content.
    */
   using HttpRequestContentErrorInfo = boost::error_info<struct HttpRequestContentErrorInfoTag, std::string>;
+
+
+  /**
+   * \brief Error info containing HTTP response content.
+   */
+  using HttpResponseContentErrorInfo = boost::error_info<struct HttpResponseContentErrorInfoTag, std::string>;
 
 
   /**

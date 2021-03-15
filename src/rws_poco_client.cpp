@@ -134,7 +134,7 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
     }
 
 
-    return POCOResult {response.getStatus(), response, response_content};
+    return POCOResult {response.getStatus(), response.getReason(), response, response_content};
   }
   catch (CommunicationError const&)
   {
@@ -346,6 +346,19 @@ std::string POCOClient::HTTPInfo::toString(bool verbose, size_t indent) const
   }
 
   return ss.str();
+}
+
+
+void POCOClient::setHTTPTimeout(Poco::Timespan timeout)
+{
+  http_client_session_.setTimeout(timeout);
+  http_client_session_.reset();
+}
+
+
+Poco::Timespan POCOClient::getHTTPTimeout() const noexcept
+{
+  return http_client_session_.getTimeout();
 }
 
 

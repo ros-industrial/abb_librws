@@ -510,6 +510,8 @@ POCOResult RWSClient::httpGet(const std::string& uri)
       << HttpMethodErrorInfo {"GET"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
+      << HttpResponseContentErrorInfo {result.content()}
+      << HttpReasonErrorInfo {result.reason()}
     );
 
   return result;
@@ -525,7 +527,9 @@ POCOResult RWSClient::httpPost(const std::string& uri, const std::string& conten
       << HttpMethodErrorInfo {"POST"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
+      << HttpResponseContentErrorInfo {result.content()}
       << HttpRequestContentErrorInfo {content}
+      << HttpReasonErrorInfo {result.reason()}
     );
 
   return result;
@@ -535,12 +539,14 @@ POCOResult RWSClient::httpPost(const std::string& uri, const std::string& conten
 POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content)
 {
   POCOResult const result = POCOClient::httpPut(uri, content);
-  if (result.httpStatus() != HTTPResponse::HTTP_OK &&result.httpStatus() != HTTPResponse::HTTP_CREATED)
+  if (result.httpStatus() != HTTPResponse::HTTP_OK && result.httpStatus() != HTTPResponse::HTTP_CREATED)
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"} 
       << HttpMethodErrorInfo {"PUT"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
+      << HttpResponseContentErrorInfo {result.content()}
       << HttpRequestContentErrorInfo {content}
+      << HttpReasonErrorInfo {result.reason()}
     );
 
   return result;
@@ -554,7 +560,9 @@ POCOResult RWSClient::httpDelete(const std::string& uri)
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"DELETE"}
       << HttpStatusErrorInfo {result.httpStatus()}
+      << HttpResponseContentErrorInfo {result.content()}
       << UriErrorInfo {uri}
+      << HttpReasonErrorInfo {result.reason()}
     );
 
   return result;

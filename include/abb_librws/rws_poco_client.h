@@ -129,14 +129,16 @@ namespace rws
      *       RWS server (robot controller) to send a new cookie. The RWS
      *       session id is not changed.
      *
-     * \param timeout for the HTTP communication timeout [microseconds].
+     * \param timeout for the HTTP communication timeout.
      */
-    void setHTTPTimeout(const Poco::Int64 timeout)
-    {
-      http_client_session_.setTimeout(Poco::Timespan(timeout));
-      http_client_session_.reset();
-    }
+    void setHTTPTimeout(Poco::Timespan timeout);
 
+    /**
+     * \brief Get HTTP receive timeout.
+     * 
+     * \return HTTP receive timeout.
+     */
+    Poco::Timespan getHTTPTimeout() const noexcept;
 
     /**
      * \brief A method for connecting a WebSocket.

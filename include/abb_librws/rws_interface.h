@@ -43,6 +43,7 @@
 
 #include <map>
 #include <variant>
+#include <chrono>
 
 
 namespace abb
@@ -898,12 +899,16 @@ public:
   /**
    * \brief A method for setting the HTTP communication timeout.
    *
-   * \param timeout for the HTTP communication timeout [microseconds].
+   * \param timeout HTTP communication timeout.
    */
-  void setHTTPTimeout(const Poco::Int64 timeout)
-  {
-    rws_client_.setHTTPTimeout(timeout);
-  }
+  void setHTTPTimeout(std::chrono::microseconds timeout);
+
+  /**
+   * \brief Get HTTP communication timeout.
+   * 
+   * \return HTTP communication timeout.
+   */
+  std::chrono::microseconds getHTTPTimeout() const noexcept;
 
 protected:
   /**
