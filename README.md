@@ -1,7 +1,10 @@
 # abb_librws
 
-[![Travis CI Status](https://travis-ci.com/ros-industrial/abb_librws.svg?branch=master)](https://travis-ci.com/ros-industrial/abb_librws)
+[![Build Status: Ubuntu Bionic (Actions)](https://github.com/ros-industrial/abb_librws/workflows/CI%20-%20Ubuntu%20Bionic/badge.svg?branch=master)](https://github.com/ros-industrial/abb_librws/actions?query=workflow%3A%22CI+-+Ubuntu+Bionic%22)
+[![Build Status: Ubuntu Focal (Actions)](https://github.com/ros-industrial/abb_librws/workflows/CI%20-%20Ubuntu%20Focal/badge.svg?branch=master)](https://github.com/ros-industrial/abb_librws/actions?query=workflow%3A%22CI+-+Ubuntu+Focal%22)
+
 [![license - bsd 3 clause](https://img.shields.io/:license-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
 [![support level: vendor](https://img.shields.io/badge/support%20level-vendor-brightgreen.svg)](http://rosindustrial.org/news/2016/10/7/better-supporting-a-growing-ros-industrial-software-platform)
 
 ## Important Notes
