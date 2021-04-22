@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        ros_distro: [ noetic, focal ]
+        ros_distro: [ noetic, foxy ]
         ros_repo: [ main, testing ]
 
     env:
