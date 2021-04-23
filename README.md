@@ -2,6 +2,7 @@
 
 [![Build Status: Ubuntu Bionic (Actions)](https://github.com/ros-industrial/abb_librws/workflows/CI%20-%20Ubuntu%20Bionic/badge.svg?branch=master)](https://github.com/ros-industrial/abb_librws/actions?query=workflow%3A%22CI+-+Ubuntu+Bionic%22)
 [![Build Status: Ubuntu Focal (Actions)](https://github.com/ros-industrial/abb_librws/workflows/CI%20-%20Ubuntu%20Focal/badge.svg?branch=master)](https://github.com/ros-industrial/abb_librws/actions?query=workflow%3A%22CI+-+Ubuntu+Focal%22)
+[![Github Issues](https://img.shields.io/github/issues/ros-industrial/abb_librws.svg)](http://github.com/ros-industrial/abb_librws/issues)
 
 [![license - bsd 3 clause](https://img.shields.io/:license-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
