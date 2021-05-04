@@ -42,6 +42,9 @@
 
 #include "abb_librws/rws_poco_client.h"
 
+#include<unistd.h>
+#include<iostream>
+
 using namespace Poco;
 using namespace Poco::Net;
 
@@ -249,8 +252,9 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string& method,
   request.setCookies(cookies_);
   request.setContentLength(content.length());
   if (method == HTTPRequest::HTTP_POST || !content.empty())
-  {
-    request.setContentType("application/x-www-form-urlencoded");
+  { 
+    request.set("Accept", "application/json");
+    request.setContentType("application/x-www-form-urlencoded;v=2.0");
   }
 
   // Attempt the communication.
@@ -491,7 +495,6 @@ void POCOClient::sendAndReceive(POCOResult& result,
 {
   // Add request info to the result.
   result.addHTTPRequestInfo(request, request_content);
-
   // Contact the server.
   std::string response_content;
   http_client_session_.sendRequest(request) << request_content;

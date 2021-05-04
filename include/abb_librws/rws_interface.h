@@ -368,6 +368,44 @@ public:
     bool rws_connected;
   };
 
+   struct RMMPState
+  {
+    /**
+     * \brief A default constructor.
+     */
+    RMMPState()  {}
+
+    /**
+     * \brief User id
+     */
+    int userid;
+
+    /**
+     * \brief Alias for the user. For users on a Windows PC it is the Windows user name.
+     */
+    std::string alias;
+
+    /**
+     * \brief User location. For users on a PC it is the PC's network name.
+     */
+    std::string location;
+
+    /**
+     * \brief Name of the application the user is using. E.g., "RobotStudio-Online", "PickMaster"
+     */
+    std::string application;
+
+    /**
+     * \brief {none|pending modify|modify|exec}
+     */
+    std::string privilege;
+
+    /**
+     * \brief {true | false} whether the rmmp request and the current request are mady by same user.
+     */
+    bool rmmpheldbyme;
+  };
+
   /**
    * \brief A constructor.
    *
@@ -888,6 +926,23 @@ public:
   bool registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                           const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                           const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
+  /**
+   * \brief A method for registering a user as remote.
+   *
+   * \param username specifying the user name.
+   * \param application specifying the external application.
+   * \param location specifying the location.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */
+  bool requestRMMP();
+
+  /**
+   * \brief A method for fetching RMMP State.
+   *
+   * \return RMMPState indicating if the communication was successful or not.
+   */
+  bool getRMMPState(RMMPState &rmmp_state);
 
   /**
    * \brief A method for retrieving the internal log as a text string.

@@ -15,6 +15,9 @@ class TRecord(abb.PyRAPIDRecord):
 
 
 rws = abb.RWSInterface(sys.argv[1])
+r = rws.loginAsLocalUser()
+r = rws.requestRMMP()
+print(r)
 start = time.time()
 ri = rws.collectRuntimeInfo()
 print("Runtime info")
@@ -192,3 +195,8 @@ record.parseString(testRecord)
 print("Value of record is: {}".format(record))
 
 print("Total time is {}".format(time.time() - start))
+
+print(record.Value.value + 1)
+
+
+rws.setRAPIDSymbolData("T_ROB1", "ABB_LIBRWS", "testNum", "157")
