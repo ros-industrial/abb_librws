@@ -694,6 +694,30 @@ public:
                                const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                                const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
+
+  /**
+   * \brief A method for registering a user as remote.
+   *
+   * \param username specifying the user name.
+   * \param application specifying the external application.
+   * \param location specifying the location.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSClient::RWSResult requestRMMP();
+
+
+  /**
+   * \brief A method for registering a user as remote.
+   *
+   * \param username specifying the user name.
+   * \param application specifying the external application.
+   * \param location specifying the location.
+   *
+   * \return RWSResult containing the result.
+   */
+  RWSClient::RWSResult getRMMPState();
+
   /**
    * \brief Method for parsing a communication result into a XML document.
    *
@@ -719,6 +743,8 @@ public:
    * \return std::string containing the log text. An empty text string is returned if the log is empty.
    */
   std::string getLogTextLatestEvent(const bool verbose = false);
+
+  
 
 private:
   /**

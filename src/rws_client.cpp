@@ -660,6 +660,33 @@ RWSClient::RWSResult RWSClient::registerRemoteUser(const std::string& username,
   return result;
 }
 
+RWSClient::RWSResult RWSClient::requestRMMP()
+{
+  std::string uri = Services::RMMP;
+  std::string content = "privilege=modify";
+  
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = false;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_ACCEPTED);
+  
+  RWSResult result = evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+
+  return result;
+}
+
+RWSClient::RWSResult RWSClient::getRMMPState()
+{
+  std::string uri = Services::RMMP;
+    
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = true;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+
+  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
+}
+
+
 /************************************************************
  * Auxiliary methods
  */

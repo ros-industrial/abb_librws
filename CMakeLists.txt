@@ -125,3 +125,5 @@ install(
   FILE ${PROJECT_NAME}Targets.cmake
   NAMESPACE ${PROJECT_NAME}::
 )
+
+add_subdirectory(python)
