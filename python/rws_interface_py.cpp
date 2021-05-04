@@ -52,6 +52,19 @@
 using namespace abb::rws;
 
 
+class releaseGIL{
+public:
+    inline releaseGIL(){
+        save_state = PyEval_SaveThread();
+    }
+
+    inline ~releaseGIL(){
+        PyEval_RestoreThread(save_state);
+    }
+private:
+    PyThreadState *save_state;
+};
+
 class PyRAPIDRecord : public RAPIDRecord
 {
 public:
@@ -70,6 +83,7 @@ class RWSInterfacePy : public RWSInterface
     public:
     std::string waitForSubscriptionEventAsString()
     {
+        releaseGIL unlock = releaseGIL();
         RWSClient::RWSResult rws_result = rws_client_.waitForSubscriptionEvent();
         if (rws_result.success && !rws_result.p_xml_document.isNull())
         {
@@ -91,6 +105,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(getLogTextLatestEvent_overloads, RWSInter
 BOOST_PYTHON_MODULE(abb_librws)
 {
 
+    PyEval_InitThreads();
     using namespace boost::python;
 
     class_<std::vector<std::string> >("string_vector")
@@ -266,24 +281,28 @@ BOOST_PYTHON_MODULE(abb_librws)
 
     class_<RAPIDBool, bases<RAPIDSymbolDataAbstract> >("RAPIDBool", init<>())
         .def(init<const bool>())
+        .def_readwrite("value", &RAPIDBool::value)
     ;
 
     implicitly_convertible<bool, RAPIDBool>();
 
     class_<RAPIDNum, bases<RAPIDSymbolDataAbstract> >("RAPIDNum", init<>())
         .def(init<const float>())
+        .def_readwrite("value", &RAPIDNum::value)
     ;
 
     implicitly_convertible<float,RAPIDNum>();
 
     class_<RAPIDDnum, bases<RAPIDSymbolDataAbstract> >("RAPIDDnum", init<>())
         .def(init<const double>())
+        .def_readwrite("value", &RAPIDDnum::value)
     ;
 
     implicitly_convertible<float,RAPIDDnum>();
 
     class_<RAPIDString, bases<RAPIDSymbolDataAbstract> >("RAPIDString", init<>())
         .def(init<const std::string&>())
+        .def_readwrite("value", &RAPIDString::value)
     ;
 
     implicitly_convertible<std::string,RAPIDString>();
@@ -468,6 +487,15 @@ BOOST_PYTHON_MODULE(abb_librws)
         .def_readwrite("rws_connected", &RWSInterface::RuntimeInfo::rws_connected)
     ;
 
+    class_<RWSInterface::RMMPState>("RMMPState")
+        .def_readwrite("userid", &RWSInterface::RMMPState::userid)
+        .def_readwrite("alias", &RWSInterface::RMMPState::alias)
+        .def_readwrite("location", &RWSInterface::RMMPState::location)
+        .def_readwrite("application", &RWSInterface::RMMPState::application)
+        .def_readwrite("privilege", &RWSInterface::RMMPState::privilege)
+        .def_readwrite("rmmpheldbyme", &RWSInterface::RMMPState::rmmpheldbyme)        
+    ;
+
     class_<RWSInterfacePy, boost::noncopyable>("RWSInterface", init<const std::string&>())
         .def(init<std::string&, std::string&, std::string&>())
         .def(init<std::string&, unsigned short>())
@@ -537,6 +565,9 @@ BOOST_PYTHON_MODULE(abb_librws)
                                       registerRemoteUser_overloads((arg("username") = SystemConstants::General::DEFAULT_USERNAME,
                                                                     arg("application") = SystemConstants::General::EXTERNAL_APPLICATION,
                                                                     arg("location") = SystemConstants::General::EXTERNAL_LOCATION)))
+        .def("requestRMMP", &RWSInterfacePy::requestRMMP)
+        .def("getRMMPState", &RWSInterfacePy::getRMMPState)
+        
         .def<std::string (RWSInterfacePy::*)(const bool)>("getLogText", &RWSInterfacePy::getLogText, getLogText_overloads((arg("verbose") = false)))
         .def<std::string (RWSInterfacePy::*)(const bool)>("getLogTextLatestEvent", &RWSInterfacePy::getLogTextLatestEvent, getLogTextLatestEvent_overloads((arg("verbose") = false)))
         .def("setHTTPTimeout", &RWSInterfacePy::setHTTPTimeout)
