@@ -624,6 +624,11 @@ struct SystemConstants
       static const std::string PRESENT_OPTIONS;
 
       /**
+       * \brief Program path.
+       */
+      static const std::string PROGRAM_PATH;
+
+      /**
        * \brief RAPID module info list item.
        */
       static const std::string RAP_MODULE_INFO_LI;
@@ -695,6 +700,11 @@ struct SystemConstants
     struct ABB_LIBRWS_EXPORT Queries
     {
       /**
+       * \brief Load program action query.
+       */
+      static const std::string ACTION_LOAD_PROGRAM;
+
+      /**
        * \brief Release action query.
        */
       static const std::string ACTION_RELEASE;
@@ -735,6 +745,11 @@ struct SystemConstants
       static const std::string ACTION_STOP;
 
       /**
+       * \brief Unload program action query.
+       */
+      static const std::string ACTION_UNLOAD_PROGRAM;
+
+      /**
        * \brief Task query.
        */
       static const std::string TASK;
@@ -759,6 +774,11 @@ struct SystemConstants
        * \brief Logout.
        */
       static const std::string LOGOUT;
+
+      /**
+       * \brief RAPID tasks program.
+       */
+      static const std::string PROGRAM;  
 
       /**
        * \brief Robtarget.
