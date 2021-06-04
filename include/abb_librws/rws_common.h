@@ -599,6 +599,16 @@ struct SystemConstants
       static const std::string MOC;
 
       /**
+       * \brief Module name.
+       */
+      static const std::string MODULE;
+
+      /**
+       * \brief Module path.
+       */
+      static const std::string MODULEPATH;
+
+      /**
        * \brief Motion task.
        */
       static const std::string MOTIONTASK;
@@ -695,6 +705,11 @@ struct SystemConstants
     struct ABB_LIBRWS_EXPORT Queries
     {
       /**
+       * \brief Load module action query.
+       */
+      static const std::string ACTION_LOAD_MODULE;
+
+      /**
        * \brief Release action query.
        */
       static const std::string ACTION_RELEASE;
@@ -733,6 +748,11 @@ struct SystemConstants
        * \brief Stop action query.
        */
       static const std::string ACTION_STOP;
+
+      /**
+       * \brief Unload module action query.
+       */
+      static const std::string ACTION_UNLOAD_MODULE;
 
       /**
        * \brief Task query.
