@@ -763,6 +763,33 @@ public:
   bool setSpeedRatio(unsigned int ratio);
 
   /**
+   * \brief A method for turning on the lead-through modes.
+   *
+   * \param mechunit for the mechanical unit's name.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */  
+  bool setLeadThroughOn(const std::string& mechunit);
+  
+  /**
+   * \brief A method for turning off the lead-through modes.
+   *
+   * \param mechunit for the mechanical unit's name.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */  
+  bool setLeadThroughOff(const std::string& mechunit);
+  
+  /**
+   * \brief A method for checking if the lead-through are on.
+   *
+   * \param mechunit for the mechanical unit's name.
+   *   
+   * \return TriBool indicating if the lead-through are on or not or unknown.
+   */ 
+  TriBool isLeadThroughOn(const std::string& mechunit);
+
+  /**
    * \brief A method for retrieving a file from the robot controller.
    *
    * Note: Depending on the file, then the content can be in text or binary format.
