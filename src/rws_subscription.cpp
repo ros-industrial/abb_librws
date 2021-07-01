@@ -12,7 +12,7 @@ namespace abb :: rws
   typedef SystemConstants::RWS::Identifiers   Identifiers;
   typedef SystemConstants::RWS::Services      Services;
 
-  
+
   /***********************************************************************************************************************
    * Class definitions: SubscriptionResources
    */
@@ -78,7 +78,7 @@ namespace abb :: rws
 
     // Find "Location" header attribute
     auto const h = std::find_if(
-      poco_result.headerInfo().begin(), poco_result.headerInfo().end(), 
+      poco_result.headerInfo().begin(), poco_result.headerInfo().end(),
       [] (auto const& p) { return p.first == "Location"; });
 
     if (h != poco_result.headerInfo().end())
@@ -103,17 +103,17 @@ namespace abb :: rws
   }
 
 
-  Poco::Net::WebSocket SubscriptionGroup::connect() const
+  SubscriptionReceiver SubscriptionGroup::receive() const
   {
-    return client_.webSocketConnect("/poll/" + subscription_group_id_, "robapi2_subscription");
+    return SubscriptionReceiver {client_.webSocketConnect("/poll/" + subscription_group_id_, "robapi2_subscription")};
   }
 
 
   const Poco::Timespan SubscriptionReceiver::DEFAULT_SUBSCRIPTION_TIMEOUT {40000000000};
 
 
-  SubscriptionReceiver::SubscriptionReceiver(SubscriptionGroup const& group)
-  : webSocket_ {group.connect()}
+  SubscriptionReceiver::SubscriptionReceiver(Poco::Net::WebSocket&& websocket)
+  : webSocket_ {websocket}
   {
     webSocket_.setReceiveTimeout(DEFAULT_SUBSCRIPTION_TIMEOUT);
   }
@@ -122,8 +122,8 @@ namespace abb :: rws
   SubscriptionReceiver::~SubscriptionReceiver()
   {
   }
-  
-  
+
+
   bool SubscriptionReceiver::waitForEvent(SubscriptionEvent& event)
   {
     WebSocketFrame frame;
@@ -139,7 +139,7 @@ namespace abb :: rws
 
       return true;
     }
-    
+
     return false;
   }
 

@@ -99,7 +99,7 @@ namespace abb :: rws
 
   /**
    * \brief Contains info about a subscribed event.
-   */ 
+   */
   struct SubscriptionEvent
   {
     /**
@@ -121,74 +121,27 @@ namespace abb :: rws
 
 
   /**
-   * \brief Manages an RWS subscription group.
-   */
-  class SubscriptionGroup
-  {
-  public:
-    /**
-     * \brief Registers a subscription at the server.
-     *
-     * \param client a client to subscribe. The lifetime of the client must exceed the lifetime of the subscription group.
-     * \param resources list of resources to subscribe
-     */
-    SubscriptionGroup(POCOClient& client, SubscriptionResources const& resources);
-
-
-    /**
-     * \a SubscriptionGroup objects are moveable, but not copyable.
-     */
-    SubscriptionGroup(SubscriptionGroup&&) = default;
-
-
-    /**
-     * \brief Ends an active subscription.
-     */
-    ~SubscriptionGroup();
-
-    /**
-     * \brief Get ID of the subscription group.
-     * 
-     * \return ID of the subscription group.
-     */
-    std::string const& id() const noexcept
-    {
-      return subscription_group_id_;
-    }
-
-
-    /**
-     * \brief Establish WebSocket connection to receive subscription events.
-     * 
-     * \return A WebSocket that will receive the subscription events.
-     */
-    Poco::Net::WebSocket connect() const;
-    
-
-  private:
-    POCOClient& client_;
-
-    /**
-     * \brief A subscription group id.
-     */
-    std::string subscription_group_id_;
-  };
-
-
-  /**
    * \brief Receives RWS subscription events.
    */
   class SubscriptionReceiver
   {
   public:
     /**
-     * \brief Establishes WebSocket connection with the server and prepares to receive events
-     * for a specified subscription group.
-     * 
-     * \param group Subscription group to receive events for.
+     * \brief Prepares to receive events from a specified subscription WebSocket.
+     *
+     * Normally you don't want to construct \a SubscriptionReceiver manually.
+     * Use \a SubscriptionGroup::receive() for this.
+     *
+     * \param websocket A connected WebSocket that should be used to receive events.
      */
-    SubscriptionReceiver(SubscriptionGroup const& group);
-    
+    explicit SubscriptionReceiver(Poco::Net::WebSocket&& websocket);
+
+
+    /**
+     * \brief \a SubscriptionReceiver objects are moveable, but not copyable.
+     */
+    SubscriptionReceiver(SubscriptionReceiver&&) = default;
+
 
     /**
      * \brief Closes the WebSocket connection but does not delete the subscription.
@@ -198,7 +151,7 @@ namespace abb :: rws
 
     /**
      * \brief Waits for a subscription event.
-     * 
+     *
      * \param event event data
      *
      * \return true if the connection is still alive, false if the connection has been closed.
@@ -251,11 +204,66 @@ namespace abb :: rws
 
     /**
      * \brief A method for receiving a WebSocket frame.
-     * 
+     *
      * \brief frame the received frame
      *
      * \return true if the connection is still active, false otherwise.
      */
     bool webSocketReceiveFrame(WebSocketFrame& frame);
+  };
+
+
+  /**
+   * \brief Manages an RWS subscription group.
+   */
+  class SubscriptionGroup
+  {
+  public:
+    /**
+     * \brief Registers a subscription at the server.
+     *
+     * \param client a client to subscribe. The lifetime of the client must exceed the lifetime of the subscription group.
+     * \param resources list of resources to subscribe
+     */
+    SubscriptionGroup(POCOClient& client, SubscriptionResources const& resources);
+
+
+    /**
+     * \a SubscriptionGroup objects are moveable, but not copyable.
+     */
+    SubscriptionGroup(SubscriptionGroup&&) = default;
+
+
+    /**
+     * \brief Ends an active subscription.
+     */
+    ~SubscriptionGroup();
+
+    /**
+     * \brief Get ID of the subscription group.
+     *
+     * \return ID of the subscription group.
+     */
+    std::string const& id() const noexcept
+    {
+      return subscription_group_id_;
+    }
+
+
+    /**
+     * \brief Establish WebSocket connection ans start receiving subscription events.
+     *
+     * \return \a SubscriptionReceiver object that can be used to receive events.
+     */
+    SubscriptionReceiver receive() const;
+
+
+  private:
+    POCOClient& client_;
+
+    /**
+     * \brief A subscription group id.
+     */
+    std::string subscription_group_id_;
   };
 }
