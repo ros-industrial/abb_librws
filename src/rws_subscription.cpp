@@ -1,4 +1,7 @@
 #include <abb_librws/rws_subscription.h>
+#include <abb_librws/rws_error.h>
+
+#include <Poco/Net/HTTPRequest.h>
 
 #include <sstream>
 
@@ -74,7 +77,16 @@ namespace abb :: rws
     POCOResult const poco_result = client_.httpPost(Services::SUBSCRIPTION, subscription_content.str());
 
     if (poco_result.httpStatus() != HTTPResponse::HTTP_CREATED)
-      throw std::runtime_error("Unable to create Subscription: " + poco_result.content());
+      BOOST_THROW_EXCEPTION(
+        ProtocolError {"Unable to create Subscription"}
+        << HttpStatusErrorInfo {poco_result.httpStatus()}
+        << HttpReasonErrorInfo {poco_result.reason()}
+        << HttpMethodErrorInfo {HTTPRequest::HTTP_POST}
+        << HttpRequestContentErrorInfo {subscription_content.str()}
+        << HttpResponseContentErrorInfo {poco_result.content()}
+        << HttpResponseErrorInfo {poco_result}
+        << UriErrorInfo {Services::SUBSCRIPTION}
+      );
 
     // Find "Location" header attribute
     auto const h = std::find_if(
@@ -91,7 +103,7 @@ namespace abb :: rws
     }
 
     if (subscription_group_id_.empty())
-      throw std::runtime_error("Cannot get subscription group from HTTP response");
+      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot get subscription group from HTTP response"});
   }
 
 
