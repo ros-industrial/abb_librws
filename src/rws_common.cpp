@@ -201,6 +201,37 @@ bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const std::string& name,
 }
 
 
+std::string findSubstringContent(const std::string& whole_string,
+                                             const std::string& substring_start,
+                                             const std::string& substring_end)
+{
+  std::string result;
+  size_t start_postion = whole_string.find(substring_start);
+
+  if (start_postion != std::string::npos)
+  {
+    start_postion += substring_start.size();
+    size_t end_postion = whole_string.find_first_of(substring_end, start_postion);
+
+    if (end_postion != std::string::npos)
+    {
+      result = whole_string.substr(start_postion, end_postion - start_postion);
+    }
+  }
+
+  std::string quot = "&quot;";
+  size_t quot_position = 0;
+  do
+  {
+    quot_position = result.find(quot);
+    if (quot_position != std::string::npos)
+    {
+      result.replace(quot_position, quot.size(), "");
+    }
+  } while (quot_position != std::string::npos);
+
+  return result;
+}
 
 
 /***********************************************************************************************************************
@@ -273,6 +304,8 @@ const std::string Identifiers::LVALUE                         = "lvalue";
 const std::string Identifiers::MECHANICAL_UNIT                = "mechanical_unit";
 const std::string Identifiers::MECHANICAL_UNIT_GROUP          = "mechanical_unit_group";
 const std::string Identifiers::MOC                            = "moc";
+const std::string Identifiers::MODULE                         = "module";
+const std::string Identifiers::MODULEPATH                     = "modulepath";
 const std::string Identifiers::MOTIONTASK                     = "motiontask";
 const std::string Identifiers::NAME                           = "name";
 const std::string Identifiers::OPMODE                         = "opmode";
@@ -291,6 +324,7 @@ const std::string Identifiers::TYPE                           = "type";
 const std::string Identifiers::VALUE                          = "value";
 const std::string Identifiers::CLASS                          = "class";
 const std::string Identifiers::OPTION                         = "option";
+const std::string Queries::ACTION_LOAD_MODULE                 = "action=loadmod";
 const std::string Queries::ACTION_RELEASE                     = "action=release";
 const std::string Queries::ACTION_REQUEST                     = "action=request";
 const std::string Queries::ACTION_RESETPP                     = "action=resetpp";
@@ -299,6 +333,7 @@ const std::string Queries::ACTION_SETCTRLSTATE                = "action=setctrls
 const std::string Queries::ACTION_SET_LOCALE                  = "action=set-locale";
 const std::string Queries::ACTION_START                       = "action=start";
 const std::string Queries::ACTION_STOP                        = "action=stop";
+const std::string Queries::ACTION_UNLOAD_MODULE               = "action=unloadmod";
 const std::string Queries::TASK                               = "task=";
 const std::string Services::CTRL                              = "/ctrl";
 const std::string Services::FILESERVICE                       = "/fileservice";

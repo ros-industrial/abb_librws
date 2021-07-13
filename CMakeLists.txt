@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+set(CMAKE_CXX_STANDARD 17)
 
 # Read version from the package.xml file.
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/package.xml package_xml_str)
@@ -38,8 +39,11 @@ set(
     src/rws_common.cpp
     src/rws_interface.cpp
     src/rws_poco_client.cpp
+    src/rws_poco_result.cpp
     src/rws_rapid.cpp
     src/rws_state_machine_interface.cpp
+    src/rws_subscription.cpp
+    src/rws_websocket.cpp
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES})

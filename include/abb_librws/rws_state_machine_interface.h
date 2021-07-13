@@ -282,96 +282,96 @@ public:
          *
          * Note: Requires that the EGM option exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource EGM_CURRENT_ACTION;
+        static const RAPIDSymbolResource EGM_CURRENT_ACTION;
 
         /**
          * \brief RAPID symbol containing settings to different EGM RAPID instructions.
          *
          * Note: Requires that the EGM option exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource EGM_SETTINGS;
+        static const RAPIDSymbolResource EGM_SETTINGS;
 
         /**
          * \brief RAPID symbol indicating the current state of a RAPID motion task.
          */
-        static const RWSClient::RAPIDSymbolResource MAIN_CURRENT_STATE;
+        static const RAPIDSymbolResource MAIN_CURRENT_STATE;
 
         /**
          * \brief RAPID symbol containing name input to the predefined routine "runCallByVar".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_CALL_BY_VAR_NAME_INPUT;
+        static const RAPIDSymbolResource RAPID_CALL_BY_VAR_NAME_INPUT;
 
         /**
          * \brief RAPID symbol containing number input to the predefined routine "runCallByVar".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_CALL_BY_VAR_NUM_INPUT;
+        static const RAPIDSymbolResource RAPID_CALL_BY_VAR_NUM_INPUT;
 
         /**
          * \brief RAPID symbol containing module file path input to the predefined routines
          *        "runModuleLoad" and "runModuleUnload".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_MODULE_FILE_PATH_INPUT;
+        static const RAPIDSymbolResource RAPID_MODULE_FILE_PATH_INPUT;
 
         /**
          * \brief RAPID symbol containing jointtarget input to the predefined routine "runMoveAbsJ".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_MOVE_JOINT_TARGET_INPUT;
+        static const RAPIDSymbolResource RAPID_MOVE_JOINT_TARGET_INPUT;
 
         /**
          * \brief RAPID symbol containing robtarget input to the predefined routine "runMoveJ".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_MOVE_ROB_TARGET_INPUT;
+        static const RAPIDSymbolResource RAPID_MOVE_ROB_TARGET_INPUT;
 
         /**
          * \brief RAPID symbol containing speed input to the predefined routines "runMoveAbsJ" and "runMoveJ".
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_MOVE_SPEED_INPUT;
+        static const RAPIDSymbolResource RAPID_MOVE_SPEED_INPUT;
 
         /**
          * \brief RAPID symbol containing routine name input specifying a RAPID routine to run.
          */
-        static const RWSClient::RAPIDSymbolResource RAPID_ROUTINE_NAME_INPUT;
+        static const RAPIDSymbolResource RAPID_ROUTINE_NAME_INPUT;
 
         /**
          * \brief RAPID symbol containing command input for specifying the desired gripper command.
          *
          * Note: Requires that the SmartGripper product exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource SG_COMMAND_INPUT;
+        static const RAPIDSymbolResource SG_COMMAND_INPUT;
 
         /**
          * \brief RAPID symbol containing settings to different SmartGripper RAPID instructions.
          *
          * Note: Requires that the SmartGripper product exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource SG_SETTINGS;
+        static const RAPIDSymbolResource SG_SETTINGS;
 
         /**
          * \brief RAPID symbol containing position input for specifying the position a SmartGripper should move to.
          *
          * Note: Requires that the SmartGripper product exists in the controller system.
          */
-        static const RWSClient::RAPIDSymbolResource SG_TARGET_POSTION_INPUT;
+        static const RAPIDSymbolResource SG_TARGET_POSTION_INPUT;
 
         /**
          * \brief RAPID symbol containing base frame extracted during initialization, for a RAPID motion task.
          */
-        static const RWSClient::RAPIDSymbolResource UTILITY_BASE_FRAME;
+        static const RAPIDSymbolResource UTILITY_BASE_FRAME;
 
         /**
          * \brief RAPID symbol containing calibration target extracted during initialization, for a RAPID motion task.
          */
-        static const RWSClient::RAPIDSymbolResource UTILITY_CALIBRATION_TARGET;
+        static const RAPIDSymbolResource UTILITY_CALIBRATION_TARGET;
 
         /**
          * \brief RAPID symbol indicating if a watchdog is active or not.
          */
-        static const RWSClient::RAPIDSymbolResource WATCHDOG_ACTIVE;
+        static const RAPIDSymbolResource WATCHDOG_ACTIVE;
 
         /**
          * \brief RAPID symbol indicating if a watchdog should check an external status signal or not.
          */
-        static const RWSClient::RAPIDSymbolResource WATCHDOG_CHECK_EXTERNAL_STATUS;
+        static const RAPIDSymbolResource WATCHDOG_CHECK_EXTERNAL_STATUS;
       };
     };
   };
@@ -894,55 +894,41 @@ private:
        *
        * \param task specifying the RAPID task.
        * \param p_settings for storing the retrieved data.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool getSettings(const std::string& task, EGMSettings* p_settings) const;
+      void getSettings(const std::string& task, EGMSettings* p_settings) const;
 
       /**
        * \brief Set the settings for the EGM RAPID instructions.
        *
        * \param task specifying the RAPID task.
        * \param settings containing the new data.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool setSettings(const std::string& task, const EGMSettings& settings) const;
+      void setSettings(const std::string& task, const EGMSettings& settings) const;
 
       /**
        * \brief Signal the StateMachine AddIn to start EGM joint motions.
-       *
-       * \return bool indicating if the signaling was successful or not.
        */
-      bool signalEGMStartJoint() const;
+      void signalEGMStartJoint() const;
 
       /**
        * \brief Signal the StateMachine AddIn to start EGM pose motions.
-       *
-       * \return bool indicating if the signaling was successful or not.
        */
-      bool signalEGMStartPose() const;
+      void signalEGMStartPose() const;
 
       /**
        * \brief Signal the StateMachine AddIn to start EGM position streaming.
-       *
-       * \return bool indicating if the signaling was successful or not.
        */
-      bool signalEGMStartStream() const;
+      void signalEGMStartStream() const;
 
       /**
        * \brief Signal the StateMachine AddIn to stop any current EGM motions.
-       *
-       * \return bool indicating if the signaling was successful or not.
        */
-      bool signalEGMStop() const;
+      void signalEGMStop() const;
 
       /**
        * \brief Signal the StateMachine AddIn to stop any current position streaming.
-       *
-       * \return bool indicating if the signaling was successful or not.
        */
-      bool signalEGMStopStream() const;
+      void signalEGMStopStream() const;
 
     private:
       /**
@@ -978,18 +964,18 @@ private:
        *
        * \param task specifying the RAPID task.
        *
-       * \return TriBool indicating if the state is idle or not.
+       * \return if the state is idle or not.
        */
-      TriBool isStateIdle(const std::string& task) const;
+      bool isStateIdle(const std::string& task) const;
 
       /**
        * \brief Checks if a mechanical unit is stationary or not.
        *
        * \param mechanical_unit specifying the mechanical unit to check.
        *
-       * \return TriBool indicating if the mechanical unit is stationary or not.
+       * \return if the mechanical unit is stationary or not.
        */
-      TriBool isStationary(const std::string& mechanical_unit) const;
+      bool isStationary(const std::string& mechanical_unit) const;
 
     private:
       /**
@@ -1017,10 +1003,8 @@ private:
        * \param task specifying the RAPID task.
        * \param routine_name specifying routine name.
        * \param routine_number specifying routine number.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool runCallByVar(const std::string& task,
+      void runCallByVar(const std::string& task,
                         const std::string& routine_name,
                         const unsigned int routine_number) const;
 
@@ -1029,76 +1013,62 @@ private:
        *
        * \param task specifying the RAPID task.
        * \param file_path specifying file path to the module.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool runModuleLoad(const std::string& task, const std::string& file_path) const;
+      void runModuleLoad(const std::string& task, const std::string& file_path) const;
 
       /**
        * \brief Request the execution of the predefined RAPID procedure "runModuleUnload".
        *
        * \param task specifying the RAPID task.
        * \param file_path specifying file path to the module.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool runModuleUnload(const std::string& task, const std::string& file_path) const;
+      void runModuleUnload(const std::string& task, const std::string& file_path) const;
 
       /**
        * \brief Request the execution of the predefined RAPID procedure "runMoveAbsJ".
        *
        * \param task specifying the RAPID task.
        * \param joint_target specifying jointtarget goal.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool runMoveAbsJ(const std::string& task, const JointTarget& joint_target) const;
+      void runMoveAbsJ(const std::string& task, const JointTarget& joint_target) const;
 
       /**
        * \brief Request the execution of the predefined RAPID procedure "runMoveJ".
        *
        * \param task specifying the RAPID task.
        * \param rob_target specifying the robtarget goal.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool runMoveJ(const std::string& task, const RobTarget& rob_target) const;
+      void runMoveJ(const std::string& task, const RobTarget& rob_target) const;
 
       /**
        * \brief Request the execution of the predefined RAPID procedure "runMoveToCalibrationPosition".
        *
        * \param task specifying the RAPID task.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool runMoveToCalibrationPosition(const std::string& task) const;
+      void runMoveToCalibrationPosition(const std::string& task) const;
 
       /**
        * \brief Set the move speed for the predefined RAPID procedures "runMoveAbsJ" and "runMoveJ".
        *
        * \param task specifying the RAPID task.
        * \param speed_data containing the new data.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool setMoveSpeed(const std::string& task, const SpeedData& speed_data) const;
+      void setMoveSpeed(const std::string& task, const SpeedData& speed_data) const;
 
       /**
        * \brief Set the routine name specifying which routine to run.
        *
        * \param task specifying the RAPID task.
        * \param routine_name containing the new data.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool setRoutineName(const std::string& task, const std::string& routine_name) const;
+      void setRoutineName(const std::string& task, const std::string& routine_name) const;
 
       /**
        * \brief Signal the StateMachine AddIn to run RAPID routine(s).
        *
-       * \return bool indicating if the signaling was successful or not.
+       * \return void indicating if the signaling was successful or not.
        */
-      bool signalRunRAPIDRoutine() const;
+      void signalRunRAPIDRoutine() const;
 
     private:
       /**
@@ -1124,346 +1094,254 @@ private:
 
       /**
        * \brief Request turning off both SmartGrippers' first blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualBlow1Off() const;
+      void dualBlow1Off() const;
 
       /**
        * \brief Request turning on both SmartGrippers' first blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualBlow1On() const;
+      void dualBlow1On() const;
 
       /**
        * \brief Request turning off both SmartGrippers' second blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualBlow2Off() const;
+      void dualBlow2Off() const;
 
       /**
        * \brief Request turning on both SmartGrippers' second blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualBlow2On() const;
+      void dualBlow2On() const;
 
       /**
        * \brief Request calibration of both SmartGrippers.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualCalibrate() const;
+      void dualCalibrate() const;
 
       /**
        * \brief Get the settings for both SmartGrippers' RAPID instructions.
        *
        * \param p_left_settings for storing the retrieved data for the left gripper.
        * \param p_right_settings for storing the retrieved data for the right gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualGetSettings(SGSettings* p_left_settings, SGSettings* p_right_settings) const;
+      void dualGetSettings(SGSettings* p_left_settings, SGSettings* p_right_settings) const;
 
       /**
        * \brief Request inwards grip of both SmartGrippers.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualGripIn() const;
+      void dualGripIn() const;
 
       /**
        * \brief Request outwards grip of both SmartGrippers.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualGripOut() const;
+      void dualGripOut() const;
 
       /**
        * \brief Request initialization of both SmartGrippers.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualInitialize() const;
+      void dualInitialize() const;
 
       /**
        * \brief Request move of both SmartGrippers.
        *
        * \param left_position specifying targeted position [mm] for the left gripper.
        * \param right_position specifying targeted position [mm] for the right gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualMoveTo(const float left_position, const float right_position) const;
+      void dualMoveTo(const float left_position, const float right_position) const;
 
       /**
        * \brief Set the settings for both SmartGrippers' instructions.
        *
        * \param left_settings containing the new data for the left gripper.
        * \param right_settings containing the new data for the right gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualSetSettings(const SGSettings& left_settings, const SGSettings& right_settings) const;
+      void dualSetSettings(const SGSettings& left_settings, const SGSettings& right_settings) const;
 
       /**
        * \brief Request turning off both SmartGrippers' first vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualVacuum1Off() const;
+      void dualVacuum1Off() const;
 
       /**
        * \brief Request turning on both SmartGrippers' first vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualVacuum1On() const;
+      void dualVacuum1On() const;
 
       /**
        * \brief Request turning off both SmartGrippers' second vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualVacuum2Off() const;
+      void dualVacuum2Off() const;
 
       /**
        * \brief Request turning on both SmartGrippers' second vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool dualVacuum2On() const;
+      void dualVacuum2On() const;
 
       /**
        * \brief Request turning off the left SmartGripper's first blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftBlow1Off() const;
+      void leftBlow1Off() const;
 
       /**
        * \brief Request turning on the left SmartGripper's first blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftBlow1On() const;
+      void leftBlow1On() const;
 
       /**
        * \brief Request turning off the left SmartGripper's second blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftBlow2Off() const;
+      void leftBlow2Off() const;
 
       /**
        * \brief Request turning on the left SmartGripper's second blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftBlow2On() const;
+      void leftBlow2On() const;
 
       /**
        * \brief Request calibration of the left SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftCalibrate() const;
+      void leftCalibrate() const;
 
       /**
        * \brief Get the settings for the left SmartGripper's RAPID instructions.
        *
        * \param p_settings for storing the retrieved data for the left gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftGetSettings(SGSettings* p_settings) const;
+      void leftGetSettings(SGSettings* p_settings) const;
 
       /**
        * \brief Request inwards grip of the left SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftGripIn() const;
+      void leftGripIn() const;
 
       /**
        * \brief Request outwards grip of the left SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftGripOut() const;
+      void leftGripOut() const;
 
       /**
        * \brief Request initialization of the left SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftInitialize() const;
+      void leftInitialize() const;
 
       /**
        * \brief Request move of the left SmartGripper.
        *
        * \param position specifying targeted position [mm] for the left gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftMoveTo(const float position) const;
+      void leftMoveTo(const float position) const;
 
       /**
        * \brief Set the settings for the left SmartGripper's instructions.
        *
        * \param settings containing the new data for the left gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftSetSettings(const SGSettings& settings) const;
+      void leftSetSettings(const SGSettings& settings) const;
 
       /**
        * \brief Request turning off the left SmartGripper's first vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftVacuum1Off() const;
+      void leftVacuum1Off() const;
 
       /**
        * \brief Request turning on the left SmartGripper's first vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftVacuum1On() const;
+      void leftVacuum1On() const;
 
       /**
        * \brief Request turning off the left SmartGripper's second vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftVacuum2Off() const;
+      void leftVacuum2Off() const;
 
       /**
        * \brief Request turning on the left SmartGripper's second vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool leftVacuum2On() const;
+      void leftVacuum2On() const;
 
       /**
        * \brief Request turning off the right SmartGripper's first blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightBlow1Off() const;
+      void rightBlow1Off() const;
 
       /**
        * \brief Request turning on the right SmartGripper's first blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightBlow1On() const;
+      void rightBlow1On() const;
 
       /**
        * \brief Request turning off the right SmartGripper's second blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightBlow2Off() const;
+      void rightBlow2Off() const;
 
       /**
        * \brief Request turning on the right SmartGripper's second blow.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightBlow2On() const;
+      void rightBlow2On() const;
 
       /**
        * \brief Request calibration of the right SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightCalibrate() const;
+      void rightCalibrate() const;
 
       /**
        * \brief Get the settings for the right SmartGripper's RAPID instructions.
        *
        * \param p_settings for storing the retrieved data for the right gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightGetSettings(SGSettings* p_settings) const;
+      void rightGetSettings(SGSettings* p_settings) const;
 
       /**
        * \brief Request inwards grip of the right SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightGripIn() const;
+      void rightGripIn() const;
 
       /**
        * \brief Request outwards grip of the right SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightGripOut() const;
+      void rightGripOut() const;
 
       /**
        * \brief Request initialization of the right SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightInitialize() const;
+      void rightInitialize() const;
 
       /**
        * \brief Request move of the right SmartGripper.
        *
        * \param position specifying targeted position [mm] for the right gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightMoveTo(const float position) const;
+      void rightMoveTo(const float position) const;
 
       /**
        * \brief Set the settings for the right SmartGripper's instructions.
        *
        * \param settings containing the new data for the right gripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightSetSettings(const SGSettings& settings) const;
+      void rightSetSettings(const SGSettings& settings) const;
 
       /**
        * \brief Request turning off the right SmartGripper's first vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightVacuum1Off() const;
+      void rightVacuum1Off() const;
 
       /**
        * \brief Request turning on the right SmartGripper's first vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightVacuum1On() const;
+      void rightVacuum1On() const;
 
       /**
        * \brief Request turning off the right SmartGripper's second vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightVacuum2Off() const;
+      void rightVacuum2Off() const;
 
       /**
        * \brief Request turning on the right SmartGripper's second vacuum.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool rightVacuum2On() const;
+      void rightVacuum2On() const;
 
       /**
        * \brief Signal the StateMachine to run SmartGripper routine(s).
-       *
-       * \return bool indicating if the signaling was successful or not.
        */
-      bool signalRunSGRoutine() const;
+      void signalRunSGRoutine() const;
 
     private:
       /**
@@ -1471,40 +1349,32 @@ private:
        *
        * \param task specifying the RAPID task.
        * \param p_settings for storing the retrieved data.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool getSettings(const std::string& task, SGSettings* p_settings) const;
+      void getSettings(const std::string& task, SGSettings* p_settings) const;
 
       /**
        * \brief Set command input for specifying a SmartGripper's desired command.
        *
        * \param task specifying the RAPID task.
        * \param command specifying the desired command.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool setCommandInput(const std::string& task, const SGCommands& command) const;
+      void setCommandInput(const std::string& task, const SGCommands& command) const;
 
       /**
        * \brief Set the settings for a SmartGripper's RAPID instructions.
        *
        * \param task specifying the RAPID task.
        * \param settings specifying the settings.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool setSettings(const std::string& task, const SGSettings& settings) const;
+      void setSettings(const std::string& task, const SGSettings& settings) const;
 
       /**
        * \brief Set target position input for specifying where to move a SmartGripper.
        *
        * \param task specifying the RAPID task.
        * \param position specifying targeted position [mm] for a SmartGripper.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool setTargetPositionInput(const std::string& task, const float position) const;
+      void setTargetPositionInput(const std::string& task, const float position) const;
 
       /**
        * \brief The RWS interface instance.
@@ -1530,20 +1400,16 @@ private:
        *
        * \param task specifying the RAPID task.
        * \param p_base_frame for storing the retrieved data.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool getBaseFrame(const std::string& task, Pose* p_base_frame) const;
+      void getBaseFrame(const std::string& task, Pose* p_base_frame) const;
 
       /**
        * \brief Get a motion task's calibration target, extracted during initialization of the task.
        *
        * \param task specifying the RAPID task.
        * \param p_calibration_joint_target for storing the retrieved data.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool getCalibrationTarget(const std::string& task, JointTarget* p_calibration_joint_target) const;
+      void getCalibrationTarget(const std::string& task, JointTarget* p_calibration_joint_target) const;
 
     private:
       /**
@@ -1570,32 +1436,28 @@ private:
        *
        * \param task specifying the RAPID task.
        *
-       * \return TriBool indicating if the watchdog is active or not.
+       * \return indicating if the watchdog is active or not.
        */
-      TriBool isActive(const std::string& task) const;
+      bool isActive(const std::string& task) const;
 
       /**
        * \brief Checks if the watchdog is set to watch an external status signal or not.
        *
        * \param task specifying the RAPID task.
        *
-       * \return TriBool indicating if the watchdog is set to watch an external status signal or not.
+       * \return indicating if the watchdog is set to watch an external status signal or not.
        */
-      TriBool isCheckingExternalStatus(const std::string& task) const;
+      bool isCheckingExternalStatus(const std::string& task) const;
 
       /**
        * \brief Set the external status signal, which the watchdog can watch.
-       *
-       * \return bool indicating if the communication was successful or not.
        */
-      bool setExternalStatusSignal() const;
+      void setExternalStatusSignal() const;
 
       /**
        * \brief Signal the watchdog to stop the StateMachine.
-       *
-       * \return bool indicating if the signaling was successful or not.
        */
-      bool signalStopRequest() const;
+      void signalStopRequest() const;
 
     private:
       /**
@@ -1639,10 +1501,8 @@ private:
    * \brief Toggles an IO signal.
    *
    * \param iosignal specifying the IO signal to toggle.
-   *
-   * \return bool indicating if the toggling was successful or not.
    */
-  bool toggleIOSignal(const std::string& iosignal);
+  void toggleIOSignal(const std::string& iosignal);
 
   /**
    * \brief Services provided by the StateMachine AddIn.
