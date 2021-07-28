@@ -34,7 +34,7 @@
  ***********************************************************************************************************************
  */
 
-#include <abb_librws/rws_common.h>
+#include <abb_librws/system_constants.h>
 
 
 namespace abb

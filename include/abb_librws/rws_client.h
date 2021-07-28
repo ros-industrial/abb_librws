@@ -40,7 +40,7 @@
 #include <Poco/DOM/DOMParser.h>
 #include <Poco/Net/HTTPClientSession.h>
 
-#include "rws_common.h"
+#include "system_constants.h"
 #include "rws_rapid.h"
 #include "rws_poco_client.h"
 #include "rws_resource.h"

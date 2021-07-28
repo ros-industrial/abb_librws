@@ -34,12 +34,9 @@
  ***********************************************************************************************************************
  */
 
-#ifndef RWS_COMMON_H
-#define RWS_COMMON_H
+#ifndef RWS_SYSTEM_CONSTANTS_H
+#define RWS_SYSTEM_CONSTANTS_H
 
-#include "xml_attribute.h"
-
-#include <ostream>
 #include <string>
 
 #include "abb_librws_export.h"

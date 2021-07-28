@@ -37,8 +37,8 @@
 #include <sstream>
 #include <iomanip>
 
-#include "abb_librws/rws_common.h"
-#include "abb_librws/rws_rapid.h"
+#include <abb_librws/system_constants.h>
+#include <abb_librws/rws_rapid.h>
 
 namespace abb
 {
@@ -82,7 +82,7 @@ std::string RAPIDAtomic<RAPID_BOOL>::constructString() const
 std::string RAPIDAtomic<RAPID_NUM>::constructString() const
 {
   std::stringstream ss;
-  
+
   // Use fixed format for floating point values with absolute value greater than 1,
   // otherwise RWS can complain about exponential notation with a positive exponent.
   if (std::abs(value) > 1.f)
@@ -96,7 +96,7 @@ std::string RAPIDAtomic<RAPID_NUM>::constructString() const
 std::string RAPIDAtomic<RAPID_DNUM>::constructString() const
 {
   std::stringstream ss;
-  
+
   // Use fixed format for floating point values with absolute value greater than 1,
   // otherwise RWS can complain about exponential notation with a positive exponent.
   if (std::abs(value) > 1.)

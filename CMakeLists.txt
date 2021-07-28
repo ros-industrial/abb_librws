@@ -39,7 +39,7 @@ endif()
 set(
   SRC_FILES
     src/rws_client.cpp
-    src/rws_common.cpp
+    src/system_constants.cpp
     src/rws_interface.cpp
     src/rws_poco_client.cpp
     src/rws_poco_result.cpp
