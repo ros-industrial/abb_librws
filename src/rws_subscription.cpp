@@ -1,9 +1,12 @@
 #include <abb_librws/rws_subscription.h>
 #include <abb_librws/rws_error.h>
+#include <abb_librws/rws_client.h>
 
 #include <Poco/Net/HTTPRequest.h>
 
-#include <sstream>
+#include <boost/exception/diagnostic_information.hpp>
+
+#include <iostream>
 
 
 namespace abb :: rws
@@ -11,113 +14,43 @@ namespace abb :: rws
   using namespace Poco::Net;
 
 
-  typedef SystemConstants::RWS::Resources     Resources;
-  typedef SystemConstants::RWS::Identifiers   Identifiers;
-  typedef SystemConstants::RWS::Services      Services;
-
-
-  /***********************************************************************************************************************
-   * Class definitions: SubscriptionResources
-   */
-
-  /************************************************************
-   * Primary methods
-   */
-
-  void SubscriptionResources::addIOSignal(const std::string& iosignal, const SubscriptionPriority priority)
-  {
-    std::string resource_uri = Resources::RW_IOSYSTEM_SIGNALS;
-    resource_uri += "/";
-    resource_uri += iosignal;
-    resource_uri += ";";
-    resource_uri += Identifiers::STATE;
-
-    add(resource_uri, priority);
-  }
-
-  void SubscriptionResources::addRAPIDPersistantVariable(const RAPIDResource& resource, const SubscriptionPriority priority)
-  {
-    std::string resource_uri = Resources::RW_RAPID_SYMBOL_DATA_RAPID;
-    resource_uri += "/";
-    resource_uri += resource.task;
-    resource_uri += "/";
-    resource_uri += resource.module;
-    resource_uri += "/";
-    resource_uri += resource.name;
-    resource_uri += ";";
-    resource_uri += Identifiers::VALUE;
-
-    add(resource_uri, priority);
-  }
-
-  void SubscriptionResources::add(const std::string& resource_uri, const SubscriptionPriority priority)
-  {
-    resources_.push_back(SubscriptionResource(resource_uri, priority));
-  }
-
-
-  SubscriptionGroup::SubscriptionGroup(POCOClient& client, SubscriptionResources const& resources)
+  SubscriptionGroup::SubscriptionGroup(RWSClient& client, SubscriptionResources const& resources)
   : client_ {client}
+  , subscription_group_id_ {client.openSubscription(resources)}
   {
-    std::vector<SubscriptionResource> temp = resources.getResources();
+  }
 
-    // Generate content for a subscription HTTP post request.
-    std::stringstream subscription_content;
-    for (std::size_t i = 0; i < temp.size(); ++i)
-    {
-      subscription_content << "resources=" << i
-                            << "&"
-                            << i << "=" << temp.at(i).resource_uri
-                            << "&"
-                            << i << "-p=" << static_cast<int>(temp.at(i).priority)
-                            << (i < temp.size() - 1 ? "&" : "");
-    }
 
-    // Make a subscription request.
-    POCOResult const poco_result = client_.httpPost(Services::SUBSCRIPTION, subscription_content.str());
-
-    if (poco_result.httpStatus() != HTTPResponse::HTTP_CREATED)
-      BOOST_THROW_EXCEPTION(
-        ProtocolError {"Unable to create Subscription"}
-        << HttpStatusErrorInfo {poco_result.httpStatus()}
-        << HttpReasonErrorInfo {poco_result.reason()}
-        << HttpMethodErrorInfo {HTTPRequest::HTTP_POST}
-        << HttpRequestContentErrorInfo {subscription_content.str()}
-        << HttpResponseContentErrorInfo {poco_result.content()}
-        << HttpResponseErrorInfo {poco_result}
-        << UriErrorInfo {Services::SUBSCRIPTION}
-      );
-
-    // Find "Location" header attribute
-    auto const h = std::find_if(
-      poco_result.headerInfo().begin(), poco_result.headerInfo().end(),
-      [] (auto const& p) { return p.first == "Location"; });
-
-    if (h != poco_result.headerInfo().end())
-    {
-      std::string const poll = "/poll/";
-      auto const start_postion = h->second.find(poll);
-
-      if (start_postion != std::string::npos)
-        subscription_group_id_ = h->second.substr(start_postion + poll.size());
-    }
-
-    if (subscription_group_id_.empty())
-      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot get subscription group from HTTP response"});
+  SubscriptionGroup::SubscriptionGroup(SubscriptionGroup&& rhs)
+  : client_ {rhs.client_}
+  , subscription_group_id_ {rhs.subscription_group_id_}
+  {
+    // Clear subscription_group_id_ of the SubscriptionGroup that has been moved from,
+    // s.t. its destructor does not close the subscription.
+    rhs.subscription_group_id_.clear();
   }
 
 
   SubscriptionGroup::~SubscriptionGroup()
   {
-    // Unsubscribe from events
-    std::string const uri = Services::SUBSCRIPTION + "/" + subscription_group_id_;
-    client_.httpDelete(uri);
+    try
+    {
+      // The subscription_group_id_ will be empty if the SubscriptionGroup has been moved from.
+      // In this case, we don't have to close the subscription.
+      if (!subscription_group_id_.empty())
+        client_.closeSubscription(subscription_group_id_);
+    }
+    catch (...)
+    {
+      // Catch potential exceptions, s.t. the destructor does not throw.
+      std::cerr << "Exception in ~SubscriptionGroup(): " << boost::current_exception_diagnostic_information() << std::endl;
+    }
   }
 
 
   SubscriptionReceiver SubscriptionGroup::receive() const
   {
-    return SubscriptionReceiver {client_.webSocketConnect("/poll/" + subscription_group_id_, "robapi2_subscription")};
+    return SubscriptionReceiver {client_.receiveSubscription(subscription_group_id_)};
   }
 
 

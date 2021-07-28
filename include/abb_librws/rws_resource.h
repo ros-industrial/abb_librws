@@ -8,6 +8,28 @@
 namespace abb :: rws
 {
   /**
+   * \brief IO signal as a resource.
+   */
+  struct IOSignalResource
+  {
+    /**
+     * \brief A constructor.
+     *
+     * \param name name of the IO signal.
+     */
+    explicit IOSignalResource(std::string const& name)
+    : name(name)
+    {
+    }
+
+    /**
+     * \brief IO signal name.
+     */
+    std::string name;
+  };
+
+
+  /**
    * \brief A class for representing a RAPID symbol resource.
    */
   struct RAPIDSymbolResource

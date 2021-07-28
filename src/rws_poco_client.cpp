@@ -55,6 +55,21 @@ namespace rws
  * Class definitions: POCOClient
  */
 
+POCOClient::POCOClient(
+  Poco::Net::HTTPClientSession& session,
+  const std::string& username,
+  const std::string& password)
+: http_client_session_ {session}
+, http_credentials_ {username, password}
+{
+  http_client_session_.setKeepAlive(true);
+  http_client_session_.setTimeout(Poco::Timespan(DEFAULT_HTTP_TIMEOUT));
+}
+
+POCOClient::~POCOClient()
+{
+}
+
 /************************************************************
  * Primary methods
  */
@@ -161,7 +176,7 @@ Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const 
   try
   {
     Poco::Net::WebSocket websocket {http_client_session_, request, response};
-    
+
     if (response.getStatus() != HTTPResponse::HTTP_SWITCHING_PROTOCOLS)
       BOOST_THROW_EXCEPTION(
         ProtocolError {"webSocketConnect() failed"}
@@ -176,7 +191,7 @@ Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const 
   {
     // Should we really reset the session if creating the WebSocket failed?
     http_client_session_.reset();
-    
+
     BOOST_THROW_EXCEPTION(
       CommunicationError {"webSocketConnect() failed"}
         << HttpStatusErrorInfo {response.getStatus()}
@@ -232,7 +247,7 @@ void POCOClient::sendAndReceive(HTTPRequest& request,
   {
     log_.pop_back();
   }
-  
+
   log_.push_front(log_entry);
 }
 
@@ -347,20 +362,6 @@ std::string POCOClient::HTTPInfo::toString(bool verbose, size_t indent) const
 
   return ss.str();
 }
-
-
-void POCOClient::setHTTPTimeout(Poco::Timespan timeout)
-{
-  http_client_session_.setTimeout(timeout);
-  http_client_session_.reset();
-}
-
-
-Poco::Timespan POCOClient::getHTTPTimeout() const noexcept
-{
-  return http_client_session_.getTimeout();
-}
-
 
 } // end namespace rws
 } // end namespace abb

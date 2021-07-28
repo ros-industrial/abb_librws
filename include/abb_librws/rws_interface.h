@@ -348,13 +348,13 @@ struct RuntimeInfo
 
 
 /**
- * \brief Mapping from IO signal name to a value. 
- * 
+ * \brief Mapping from IO signal name to a value.
+ *
  * The value of a digital signal is a \a bool, the value of an analog signal is a \a float.
  */
 using IOSignalInfo = std::map<std::string, std::variant<bool, float>>;
-  
-  
+
+
 /**
  * \brief A class for wrapping a Robot Web Services (RWS) client in a more user friendly interface.
  */
@@ -536,19 +536,19 @@ public:
 
   /**
    * \brief Get values of all IO signals.
-   * 
-   * \return Mapping from IO signal names to values. 
+   *
+   * \return Mapping from IO signal names to values.
    */
   IOSignalInfo getIOSignals();
-  
+
 
   /**
    * \brief A method for retrieving static information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * 
+   *
    * \return static information about a mechanical unit.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   MechanicalUnitStaticInfo getMechanicalUnitStaticInfo(const std::string& mechunit);
@@ -557,9 +557,9 @@ public:
    * \brief A method for retrieving dynamic information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * 
+   *
    * \return dynamic information about a mechanical unit.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   MechanicalUnitDynamicInfo getMechanicalUnitDynamicInfo(const std::string& mechunit);
@@ -568,7 +568,7 @@ public:
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
-   * 
+   *
    * \return jointtarget data.
    *
    * \throw \a std::runtime_error if something goes wrong.
@@ -582,9 +582,9 @@ public:
    * \param coordinate for the coordinate mode (base, world, tool, or wobj) in which the robtarget will be reported.
    * \param tool for the tool frame relative to which the robtarget will be reported.
    * \param wobj for the work object (wobj) relative to which the robtarget will be reported.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
-   * 
+   *
    * \return robtarget data.
    */
   RobTarget getMechanicalUnitRobTarget(const std::string& mechunit,
@@ -602,7 +602,7 @@ public:
    * \param name name of the RAPID symbol.
    *
    * \return std::string containing the data. Empty if not found.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   std::string getRAPIDSymbolData(const std::string& task, const std::string& module, const std::string& name);
@@ -610,10 +610,10 @@ public:
 
   /**
    * \brief Retrieves the data of a RAPID symbol (parsed into a struct representing the RAPID data).
-   * 
+   *
    * \param resource specifies the RAPID task, module and symbol name.
    * \param data for storing the retrieved RAPID symbol data.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data);
@@ -623,7 +623,7 @@ public:
    * \brief A method for retrieving information about the RAPID modules of a RAPID task defined in the robot controller.
    *
    * \return \a std::vector<RAPIDModuleInfo> containing the RAPID modules information.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   std::vector<RAPIDModuleInfo> getRAPIDModulesInfo(const std::string& task);
@@ -632,7 +632,7 @@ public:
    * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
    *
    * \return \a std::vector<RAPIDTaskInfo> containing the RAPID tasks information.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   std::vector<RAPIDTaskInfo> getRAPIDTasks();
@@ -650,7 +650,7 @@ public:
    * \brief A method for retrieving some system information from the robot controller.
    *
    * \return SystemInfo containing the system information (info will be empty if e.g. a timeout occurred).
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   SystemInfo getSystemInfo();
@@ -659,7 +659,7 @@ public:
    * \brief A method for checking if the robot controller mode is in auto mode.
    *
    * \return if the mode is auto or not.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   bool isAutoMode();
@@ -668,7 +668,7 @@ public:
    * \brief A method for checking if the motors are on.
    *
    * \return if the motors are on or not.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   bool isMotorsOn();
@@ -677,7 +677,7 @@ public:
    * \brief A method for checking if RAPID is running.
    *
    * \return if RAPID is running or not.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   bool isRAPIDRunning();
@@ -721,7 +721,7 @@ public:
    * \param module name of the RAPID module containing the RAPID symbol.
    * \param name the name of the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void setRAPIDSymbolData(const std::string& task,
@@ -735,7 +735,7 @@ public:
    *
    * \param resource identifying the RAPID symbol.
    * \param data containing the RAPID symbol's new data.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void setRAPIDSymbolData(RAPIDResource const& resource,
@@ -744,35 +744,35 @@ public:
 
   /**
    * \brief A method for starting RAPID execution in the robot controller.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void startRAPIDExecution();
 
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void stopRAPIDExecution();
 
   /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void resetRAPIDProgramPointer();
 
   /**
    * \brief A method for turning on the robot controller's motors.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void setMotorsOn();
 
   /**
    * \brief A method for turning off the robot controller's motors.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void setMotorsOff();
@@ -783,7 +783,7 @@ public:
    * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
    *
    * \param ratio specifying the new ratio.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void setSpeedRatio(unsigned int ratio);
@@ -815,9 +815,9 @@ public:
    * Note: Depending on the file, then the content can be in text or binary format.
    *
    * \param resource specifying the file's directory and name.
-   * 
+   *
    * \return file content.
-   * 
+   *
    * \throw \a std::exception if something goes wrong.
    */
   std::string getFile(const FileResource& resource);
@@ -827,7 +827,7 @@ public:
    *
    * \param resource specifying the file's directory and name.
    * \param file_content for the file's content.
-   * 
+   *
    * \throw \a std::exception if something goes wrong.
    */
   void uploadFile(const FileResource& resource, const std::string& file_content);
@@ -836,7 +836,7 @@ public:
    * \brief A method for deleting a file from the robot controller.
    *
    * \param resource specifying the file's directory and name.
-   * 
+   *
    * \throw \a std::exception if something goes wrong.
    */
   void deleteFile(const FileResource& resource);
@@ -847,7 +847,7 @@ public:
    * \param resources specifying the resources to subscribe to.
    *
    * \return Newly created \a SubscriptionGroup for specified subscription resources.
-   * 
+   *
    * \throw \a std::exception if something goes wrong
    */
   SubscriptionGroup openSubscription(const SubscriptionResources& resources);
@@ -858,7 +858,7 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   * 
+   *
    * \throw \a std::exception if something goes wrong.
    */
   void registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
@@ -871,30 +871,12 @@ public:
    * \param username specifying the user name.
    * \param application specifying the external application.
    * \param location specifying the location.
-   * 
+   *
    * \throw \a std::exception if something goes wrong.
    */
   void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                           const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                           const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
-
-  /**
-   * \brief A method for retrieving the internal log as a text string.
-   *
-   * \param verbose indicating if the log text should be verbose or not.
-   *
-   * \return std::string containing the log text. An empty text string is returned if the log is empty.
-   */
-  std::string getLogText(const bool verbose = false);
-
-  /**
-   * \brief Method for retrieving only the most recently logged event as a text string.
-   *
-   * \param verbose indicating if the log text should be verbose or not.
-   *
-   * \return std::string containing the log text. An empty text string is returned if the log is empty.
-   */
-  std::string getLogTextLatestEvent(const bool verbose = false);
 
   /**
    * \brief A method for setting the HTTP communication timeout.
@@ -905,7 +887,7 @@ public:
 
   /**
    * \brief Get HTTP communication timeout.
-   * 
+   *
    * \return HTTP communication timeout.
    */
   std::chrono::microseconds getHTTPTimeout() const noexcept;
@@ -946,7 +928,7 @@ private:
    *
    * \param iosignal for the name of the IO signal.
    * \param value for the IO signal's new value.
-   * 
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void setIOSignal(const std::string& iosignal, const std::string& value);

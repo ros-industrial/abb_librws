@@ -45,7 +45,6 @@
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/Net/WebSocket.h>
 
-#include <memory>
 #include <deque>
 #include <optional>
 
@@ -62,27 +61,19 @@ namespace rws
     /**
      * \brief A constructor.
      *
-     * \param ip_address for the remote server's IP address.
-     * \param port for the remote server's port.
+     * \param session HTTP session. This can be either an HTTPClientSession or an HTTPSClientSession,
+     *  depending on which protocol should be used.
      * \param username for the username to the remote server's authentication process.
      * \param password for the password to the remote server's authentication process.
      */
-    POCOClient(const std::string& ip_address,
-              const Poco::UInt16 port,
+    POCOClient(Poco::Net::HTTPClientSession& session,
               const std::string& username,
-              const std::string& password)
-    :
-    http_client_session_(ip_address, port),
-    http_credentials_(username, password)
-    {
-      http_client_session_.setKeepAlive(true);
-      http_client_session_.setTimeout(Poco::Timespan(DEFAULT_HTTP_TIMEOUT));
-    }
+              const std::string& password);
 
     /**
      * \brief A destructor.
      */
-    ~POCOClient() {}
+    ~POCOClient();
 
     /**
      * \brief A method for sending a HTTP GET request.
@@ -123,31 +114,13 @@ namespace rws
     POCOResult httpDelete(const std::string& uri);
 
     /**
-     * \brief A method for setting the HTTP communication timeout.
-     *
-     * \note This method resets the internal HTTP client session, causing the
-     *       RWS server (robot controller) to send a new cookie. The RWS
-     *       session id is not changed.
-     *
-     * \param timeout for the HTTP communication timeout.
-     */
-    void setHTTPTimeout(Poco::Timespan timeout);
-
-    /**
-     * \brief Get HTTP receive timeout.
-     * 
-     * \return HTTP receive timeout.
-     */
-    Poco::Timespan getHTTPTimeout() const noexcept;
-
-    /**
      * \brief A method for connecting a WebSocket.
      *
      * \param uri for the URI (path and query).
      * \param protocol for the WebSocket protocol.
      *
      * \return Newly created client WebSocket.
-     * 
+     *
      * \throw \a std::runtime_error if something goes wrong
      */
     Poco::Net::WebSocket webSocketConnect(const std::string& uri, const std::string& protocol);
@@ -321,7 +294,7 @@ namespace rws
     /**
      * \brief A HTTP client session.
      */
-    Poco::Net::HTTPClientSession http_client_session_;
+    Poco::Net::HTTPClientSession& http_client_session_;
 
     /**
      * \brief HTTP credentials for the remote server's access authentication process.

@@ -1,13 +1,15 @@
 #pragma once
 
 #include "rws_resource.h"
-#include "rws_poco_client.h"
 #include "rws_websocket.h"
 
 #include <Poco/DOM/DOMParser.h>
+#include <Poco/Net/WebSocket.h>
 
 #include <string>
 #include <iosfwd>
+#include <vector>
+#include <memory>
 
 
 namespace abb :: rws
@@ -24,77 +26,76 @@ namespace abb :: rws
 
 
   /**
-   * \brief A struct for containing information about a subscription resource.
+   * Maps RWS resources to URIs.
    */
-  struct SubscriptionResource
+  class URIProvider
   {
-    /**
-     * \brief URI of the resource.
-     */
-    std::string resource_uri;
-
-    /**
-     * \brief Priority of the subscription.
-     */
-    SubscriptionPriority priority;
-
-    /**
-     * \brief A constructor.
-     *
-     * \param resource_uri for the URI of the resource.
-     * \param priority for the priority of the subscription.
-     */
-    SubscriptionResource(const std::string& resource_uri, const SubscriptionPriority priority)
-    :
-    resource_uri(resource_uri),
-    priority(priority)
-    {}
+  public:
+    virtual std::string getResourceURI(IOSignalResource const& io_signal) const = 0;
+    virtual std::string getResourceURI(RAPIDResource const& resource) const = 0;
   };
 
 
   /**
-   * \brief A class for representing subscription resources.
+   * \brief Subscription resource that has URI and priority.
    */
-  class SubscriptionResources
+  class SubscriptionResource
   {
   public:
-    /**
-     * \brief A method to add information about a subscription resource.
-     *
-     * \param resource_uri for the URI of the resource.
-     * \param priority for the priority of the subscription.
-     */
-    void add(const std::string& resource_uri, const SubscriptionPriority priority);
+    template <typename T>
+    SubscriptionResource(T const& resource, SubscriptionPriority priority)
+    : resource_ {new ResourceImpl<T> {resource}}
+    , priority_ {priority}
+    {
+    }
 
-    /**
-     * \brief A method to add information about a IO signal subscription resource.
-     *
-     * \param iosignal for the IO signal's name.
-     * \param priority for the priority of the subscription.
-     */
-    void addIOSignal(const std::string& iosignal, const SubscriptionPriority priority);
+    std::string getURI(URIProvider const& uri_gen) const
+    {
+      return resource_->getURI(uri_gen);
+    }
 
-    /**
-     * \brief A method to add information about a RAPID persistant symbol subscription resource.
-     *
-     * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
-     * \param priority for the priority of the subscription.
-     */
-    void addRAPIDPersistantVariable(const RAPIDResource& resource, const SubscriptionPriority priority);
-
-    /**
-     * \brief A method for retrieving the contained subscription resources information.
-     *
-     * \return std::vector<SubscriptionResource> containing information of the subscription resources.
-     */
-    const std::vector<SubscriptionResource>& getResources() const { return resources_; }
+    SubscriptionPriority getPriority() const noexcept
+    {
+      return priority_;
+    }
 
   private:
+    struct ResourceInterface
+    {
+      virtual std::string getURI(URIProvider const& uri_gen) const = 0;
+      virtual ~ResourceInterface() {};
+    };
+
+    template <typename T>
+    class ResourceImpl
+    : public ResourceInterface
+    {
+    public:
+      ResourceImpl(T const& resource)
+      : resource_ {resource}
+      {
+      }
+
+      std::string getURI(URIProvider const& uri_gen) const override
+      {
+        return uri_gen.getResourceURI(resource_);
+      }
+
+    private:
+      T resource_;
+    };
+
+
+    std::unique_ptr<ResourceInterface> resource_;
+
     /**
-     * \brief A vector of subscription resources.
+     * \brief Priority of the subscription.
      */
-    std::vector<SubscriptionResource> resources_;
+    SubscriptionPriority priority_;
   };
+
+
+  using SubscriptionResources = std::vector<SubscriptionResource>;
 
 
   /**
@@ -213,6 +214,9 @@ namespace abb :: rws
   };
 
 
+  class RWSClient;
+
+
   /**
    * \brief Manages an RWS subscription group.
    */
@@ -225,13 +229,13 @@ namespace abb :: rws
      * \param client a client to subscribe. The lifetime of the client must exceed the lifetime of the subscription group.
      * \param resources list of resources to subscribe
      */
-    SubscriptionGroup(POCOClient& client, SubscriptionResources const& resources);
+    SubscriptionGroup(RWSClient& client, SubscriptionResources const& resources);
 
 
     /**
      * \a SubscriptionGroup objects are moveable, but not copyable.
      */
-    SubscriptionGroup(SubscriptionGroup&&) = default;
+    SubscriptionGroup(SubscriptionGroup&&);
 
 
     /**
@@ -259,7 +263,7 @@ namespace abb :: rws
 
 
   private:
-    POCOClient& client_;
+    RWSClient& client_;
 
     /**
      * \brief A subscription group id.

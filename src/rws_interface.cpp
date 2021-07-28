@@ -63,7 +63,7 @@ static bool digitalSignalToBool(std::string const& value)
 {
   if (value != SystemConstants::IOSignals::HIGH && value != SystemConstants::IOSignals::LOW)
     throw std::logic_error("Unexpected value \"" + value + "\" of a digital signal");
-    
+
   return value == SystemConstants::IOSignals::HIGH;
 }
 
@@ -710,7 +710,7 @@ JointTarget RWSInterface::getMechanicalUnitJointTarget(const std::string& mechun
 
   JointTarget jointtarget;
   jointtarget.parseString(ss.str());
-  
+
   return jointtarget;
 }
 
@@ -857,7 +857,7 @@ unsigned int RWSInterface::getSpeedRatio()
   unsigned int speed_ratio = 0;
 
   RWSResult rws_result = rws_client_.getSpeedRatio();
-  
+
   std::stringstream ss(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "speedratio")));
   ss >> speed_ratio;
   if(ss.fail()) throw std::runtime_error("Failed to parse the speed ratio");
@@ -975,16 +975,6 @@ void RWSInterface::registerRemoteUser(const std::string& username,
   rws_client_.registerRemoteUser(username, application, location);
 }
 
-std::string RWSInterface::getLogText(const bool verbose)
-{
-  return rws_client_.getLogText(verbose);
-}
-
-std::string RWSInterface::getLogTextLatestEvent(const bool verbose)
-{
-  return rws_client_.getLogTextLatestEvent(verbose);
-}
-
 
 void RWSInterface::setDigitalSignal(std::string const& signal_name, bool value)
 {
@@ -1016,13 +1006,13 @@ IOSignalInfo RWSInterface::getIOSignals()
 {
   auto const doc = rws_client_.getIOSignals();
   IOSignalInfo signals;
-  
+
   for (auto&& node : xmlFindNodes(doc, {"class", "ios-signal-li"}))
   {
     std::string const name = xmlFindTextContent(node, {"class", "name"});
     std::string const value = xmlFindTextContent(node, {"class", "lvalue"});
     std::string const type = xmlFindTextContent(node, {"class", "type"});
-    
+
     if (!name.empty() && !value.empty())
     {
       if (type == "DI" || type == "DO")
