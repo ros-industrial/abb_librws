@@ -77,20 +77,6 @@ static bool digitalSignalToBool(std::string const& value)
  * Primary methods
  */
 
-RuntimeInfo RWSInterface::collectRuntimeInfo()
-{
-  RuntimeInfo runtime_info;
-
-  runtime_info.auto_mode     = isAutoMode();
-  runtime_info.motors_on     = isMotorsOn();
-  runtime_info.rapid_running = isRAPIDRunning();
-  runtime_info.rws_connected = (runtime_info.auto_mode != TriBool::UNKNOWN_VALUE &&
-                                runtime_info.motors_on != TriBool::UNKNOWN_VALUE &&
-                                runtime_info.rapid_running != TriBool::UNKNOWN_VALUE);
-
-  return runtime_info;
-}
-
 StaticInfo RWSInterface::collectStaticInfo()
 {
   StaticInfo static_info;

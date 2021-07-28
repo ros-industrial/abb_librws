@@ -315,37 +315,6 @@ struct StaticInfo
   SystemInfo system_info;
 };
 
-/**
- * \brief A struct for containing runtime information about the robot controller.
- */
-struct RuntimeInfo
-{
-  /**
-   * \brief A default constructor.
-   */
-  RuntimeInfo() : rws_connected(false) {}
-
-  /**
-   * \brief Indicator for if the mode is auto or not or unknown.
-   */
-  TriBool auto_mode;
-
-  /**
-   * \brief Indicator for if the motors are on or not or unknown.
-   */
-  TriBool motors_on;
-
-  /**
-   * \brief Indicator for if RAPID is running or not or unknown.
-   */
-  TriBool rapid_running;
-
-  /**
-   * \brief Indicator for if RWS is connected to the robot controller system.
-   */
-  bool rws_connected;
-};
-
 
 /**
  * \brief Mapping from IO signal name to a value.
@@ -421,13 +390,6 @@ public:
               username,
               password)
   {}
-
-  /**
-   * \brief A method for collecting runtime information of the robot controller.
-   *
-   * \return RuntimeInfo containing the runtime information.
-   */
-  RuntimeInfo collectRuntimeInfo();
 
   /**
    * \brief A method for collecting static information (at least during runtime) of the robot controller.
