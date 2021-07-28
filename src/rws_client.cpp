@@ -124,25 +124,25 @@ RWSClient::~RWSClient()
 }
 
 
-RWSResult RWSClient::getContollerService()
+RWSClient::RWSResult RWSClient::getContollerService()
 {
   std::string uri = Services::CTRL;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getConfigurationInstances(const std::string& topic, const std::string& type)
+RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string& topic, const std::string& type)
 {
   std::string uri = generateConfigurationPath(topic, type) + Resources::INSTANCES;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getIOSignals()
+RWSClient::RWSResult RWSClient::getIOSignals()
 {
   std::string const & uri = SystemConstants::RWS::Resources::RW_IOSYSTEM_SIGNALS;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getIOSignal(const std::string& iosignal)
+RWSClient::RWSResult RWSClient::getIOSignal(const std::string& iosignal)
 {
   try
   {
@@ -156,25 +156,25 @@ RWSResult RWSClient::getIOSignal(const std::string& iosignal)
   }
 }
 
-RWSResult RWSClient::getMechanicalUnitStaticInfo(const std::string& mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitStaticInfo(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + "?resource=static";
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getMechanicalUnitDynamicInfo(const std::string& mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitDynamicInfo(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + "?resource=dynamic";
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + Resources::JOINTTARGET;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
+RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
                                                            const Coordinate& coordinate,
                                                            const std::string& tool,
                                                            const std::string& wobj)
@@ -215,49 +215,49 @@ RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getRAPIDExecution()
+RWSClient::RWSResult RWSClient::getRAPIDExecution()
 {
   std::string uri = Resources::RW_RAPID_EXECUTION;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getRAPIDModulesInfo(const std::string& task)
+RWSClient::RWSResult RWSClient::getRAPIDModulesInfo(const std::string& task)
 {
   std::string uri = Resources::RW_RAPID_MODULES + "?" + Queries::TASK + task;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getRAPIDTasks()
+RWSClient::RWSResult RWSClient::getRAPIDTasks()
 {
   std::string uri = Resources::RW_RAPID_TASKS;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getRobotWareSystem()
+RWSClient::RWSResult RWSClient::getRobotWareSystem()
 {
   std::string uri = Resources::RW_SYSTEM;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getSpeedRatio()
+RWSClient::RWSResult RWSClient::getSpeedRatio()
 {
   std::string uri = "/rw/panel/speedratio";
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getPanelControllerState()
+RWSClient::RWSResult RWSClient::getPanelControllerState()
 {
   std::string uri = Resources::RW_PANEL_CTRLSTATE;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getPanelOperationMode()
+RWSClient::RWSResult RWSClient::getPanelOperationMode()
 {
   std::string uri = Resources::RW_PANEL_OPMODE;
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource)
+RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource)
 {
   std::string uri = generateRAPIDDataPath(resource);
   return parseContent(httpGet(uri));
@@ -289,7 +289,7 @@ void RWSClient::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDat
   }
 }
 
-RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource& resource)
+RWSClient::RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource& resource)
 {
   std::string uri = generateRAPIDPropertiesPath(resource);
   return parseContent(httpGet(uri));
@@ -458,7 +458,7 @@ void RWSClient::registerRemoteUser(const std::string& username,
  * Auxiliary methods
  */
 
-RWSResult RWSClient::parseContent(const POCOResult& poco_result)
+RWSClient::RWSResult RWSClient::parseContent(const POCOResult& poco_result)
 {
   return Poco::XML::DOMParser().parseString(poco_result.content());
 }

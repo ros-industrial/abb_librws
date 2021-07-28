@@ -48,31 +48,13 @@
 #include "rws_poco_client.h"
 #include "rws_resource.h"
 #include "rws_subscription.h"
+#include "coordinate.h"
 
 
 namespace abb
 {
 namespace rws
 {
-/**
- * \brief A struct for containing an evaluated communication result.
- */
-using RWSResult = Poco::AutoPtr<Poco::XML::Document>;
-
-
-/**
- * \brief An enumeration of controller coordinate frames.
- */
-enum class Coordinate
-{
-  BASE,  ///< \brief Base frame coordinate.
-  WORLD, ///< \brief World frame coordinate.
-  TOOL,  ///< \brief Tool frame coordinate.
-  WOBJ,  ///< \brief Work object (wobj) frame coordinate.
-  ACTIVE ///< \brief Currently active coordinate.
-};
-
-
 /**
  * \brief A class for a Robot Web Services (RWS) client based on a POCO client.
  *
@@ -87,6 +69,11 @@ enum class Coordinate
 class RWSClient
 {
 public:
+  /**
+   * \brief A struct for containing an evaluated communication result.
+   */
+  using RWSResult = Poco::AutoPtr<Poco::XML::Document>;
+
   /**
    * \brief A constructor.
    *

@@ -892,7 +892,10 @@ public:
    */
   std::chrono::microseconds getHTTPTimeout() const noexcept;
 
-protected:
+private:
+  using RWSResult = RWSClient::RWSResult;
+
+
   /**
    * \brief A method for comparing a single text content (from a XML document node) with a specific string value.
    *
@@ -906,13 +909,6 @@ protected:
                                const XMLAttribute& attribute,
                                const std::string& compare_string);
 
-  /**
-   * \brief The RWS client used to communicate with the robot controller.
-   */
-  RWSClient rws_client_;
-
-
-private:
   /**
    * \brief A method for retrieving the value if an IO signal.
    *
@@ -932,6 +928,12 @@ private:
    * \throw \a std::runtime_error if something goes wrong.
    */
   void setIOSignal(const std::string& iosignal, const std::string& value);
+
+
+  /**
+   * \brief The RWS client used to communicate with the robot controller.
+   */
+  RWSClient rws_client_;
 };
 
 } // end namespace rws
