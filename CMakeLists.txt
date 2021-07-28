@@ -48,6 +48,7 @@ set(
     src/rws_subscription.cpp
     src/rws_websocket.cpp
     src/rws.cpp
+    src/parsing.cpp
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES})
