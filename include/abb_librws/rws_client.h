@@ -37,9 +37,6 @@
 #ifndef RWS_CLIENT_H
 #define RWS_CLIENT_H
 
-#include <sstream>
-#include <vector>
-
 #include <Poco/DOM/DOMParser.h>
 #include <Poco/Net/HTTPClientSession.h>
 
@@ -534,8 +531,7 @@ private:
    *
    * \throw \a RWSError if something goes wrong.
    */
-  static RWSResult parseContent(const POCOResult& poco_result);
-
+  RWSResult parseContent(const POCOResult& poco_result);
 
   /**
    * \brief A method for sending a HTTP GET request and checking response status.
@@ -648,16 +644,7 @@ private:
 
   Poco::Net::HTTPClientSession session_;
   POCOClient http_client_;
-
-  /**
-   * \brief Static constant for the log's size.
-   */
-  static const size_t LOG_SIZE = 20;
-
-  /**
-   * \brief Container for logging communication results.
-   */
-  std::deque<POCOResult> log_;
+  Poco::XML::DOMParser parser_;
 };
 
 } // end namespace rws

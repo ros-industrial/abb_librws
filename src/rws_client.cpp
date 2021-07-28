@@ -460,7 +460,7 @@ void RWSClient::registerRemoteUser(const std::string& username,
 
 RWSClient::RWSResult RWSClient::parseContent(const POCOResult& poco_result)
 {
-  return Poco::XML::DOMParser().parseString(poco_result.content());
+  return parser_.parseString(poco_result.content());
 }
 
 
