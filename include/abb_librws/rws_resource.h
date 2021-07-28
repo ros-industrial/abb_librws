@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rws_common.h"
+#include "rws.h"
 
 #include <string>
 
@@ -119,7 +119,7 @@ namespace abb :: rws
      * \param directory specifying the directory of the file on the robot controller (set to $home by default).
      */
     FileResource(const std::string& filename,
-                  const std::string& directory = SystemConstants::RWS::Identifiers::HOME_DIRECTORY)
+                  const std::string& directory = RWS::Identifiers::HOME_DIRECTORY)
     :
     filename(filename),
     directory(directory)

@@ -55,8 +55,8 @@ namespace rws
 
 typedef SystemConstants::ContollerStates ContollerStates;
 typedef SystemConstants::RAPID RAPID;
-typedef SystemConstants::RWS::Identifiers Identifiers;
-typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
+typedef RWS::Identifiers Identifiers;
+typedef RWS::XMLAttributes XMLAttributes;
 
 
 static bool digitalSignalToBool(std::string const& value)

@@ -56,11 +56,11 @@ namespace rws
 {
 using namespace Poco::Net;
 
-typedef SystemConstants::RWS::Identifiers   Identifiers;
-typedef SystemConstants::RWS::Queries       Queries;
-typedef SystemConstants::RWS::Resources     Resources;
-typedef SystemConstants::RWS::Services      Services;
-typedef SystemConstants::RWS::XMLAttributes XMLAttributes;
+typedef RWS::Identifiers   Identifiers;
+typedef RWS::Queries       Queries;
+typedef RWS::Resources     Resources;
+typedef RWS::Services      Services;
+typedef RWS::XMLAttributes XMLAttributes;
 
 
 /***********************************************************************************************************************
@@ -138,7 +138,7 @@ RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string& top
 
 RWSClient::RWSResult RWSClient::getIOSignals()
 {
-  std::string const & uri = SystemConstants::RWS::Resources::RW_IOSYSTEM_SIGNALS;
+  std::string const & uri = RWS::Resources::RW_IOSYSTEM_SIGNALS;
   return parseContent(httpGet(uri));
 }
 
