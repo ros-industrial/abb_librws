@@ -176,7 +176,7 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& 
 }
 
 RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
-                                                           const Coordinate& coordinate,
+                                                           Coordinate coordinate,
                                                            const std::string& tool,
                                                            const std::string& wobj)
 {

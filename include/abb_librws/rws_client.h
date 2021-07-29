@@ -208,7 +208,7 @@ public:
    * \throw \a RWSError if something goes wrong.
    */
   RWSResult getMechanicalUnitRobTarget(const std::string& mechunit,
-                                       const Coordinate& coordinate = Coordinate::ACTIVE,
+                                       Coordinate coordinate = Coordinate::ACTIVE,
                                        const std::string& tool = "",
                                        const std::string& wobj = "");
 
