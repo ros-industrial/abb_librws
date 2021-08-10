@@ -7,9 +7,9 @@
 namespace abb :: rws
 {
   /**
-   * \brief Robot Web Services (RWS) 1.0 related constants.
+   * \brief Robot Web Services (RWS) 2.0 related constants.
    */
-  struct RWS
+  struct RWS2
   {
     /**
      * \brief XML attributes specifying names with corresponding values.

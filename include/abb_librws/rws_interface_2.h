@@ -34,11 +34,11 @@
  ***********************************************************************************************************************
  */
 
-#ifndef RWS_INTERFACE_H
-#define RWS_INTERFACE_H
+#ifndef RWS_INTERFACE_2_H
+#define RWS_INTERFACE_2_H
 
 #include "rws_cfg.h"
-#include "rws_client.h"
+#include "rws_client_2.h"
 #include "rws_subscription.h"
 #include "rws_info.h"
 #include "xml_attribute.h"
@@ -52,12 +52,12 @@ namespace abb
 namespace rws
 {
 /**
- * \brief User-friendly interface to Robot Web Services (RWS) 1.0.
+ * \brief User-friendly interface to Robot Web Services (RWS) 2.0.
  *
  * Only a subset of the features available in RWS are implemented here.
- * See https://developercenter.robotstudio.com/api/rwsApi/ for details about RWS 1.0
+ * See https://developercenter.robotstudio.com/api/RWS for details about RWS 2.0
  */
-class RWSInterface
+class RWSInterface2
 : private MastershipManager
 {
 public:
@@ -66,7 +66,7 @@ public:
    *
    * \param ip_address specifying the robot controller's IP address.
    */
-  RWSInterface(const std::string& ip_address)
+  RWSInterface2(const std::string& ip_address)
   :
   rws_client_(ip_address,
               SystemConstants::General::DEFAULT_PORT_NUMBER,
@@ -81,7 +81,7 @@ public:
    * \param username for the username to the RWS authentication process.
    * \param password for the password to the RWS authentication process.
    */
-  RWSInterface(const std::string& ip_address, const std::string& username, const std::string& password)
+  RWSInterface2(const std::string& ip_address, const std::string& username, const std::string& password)
   :
   rws_client_(ip_address,
               SystemConstants::General::DEFAULT_PORT_NUMBER,
@@ -95,7 +95,7 @@ public:
    * \param ip_address specifying the robot controller's IP address.
    * \param port for the port used by the RWS server.
    */
-  RWSInterface(const std::string& ip_address, const unsigned short port)
+  RWSInterface2(const std::string& ip_address, const unsigned short port)
   :
   rws_client_(ip_address,
               port,
@@ -111,7 +111,7 @@ public:
    * \param username for the username to the RWS authentication process.
    * \param password for the password to the RWS authentication process.
    */
-  RWSInterface(const std::string& ip_address,
+  RWSInterface2(const std::string& ip_address,
                const unsigned short port,
                const std::string& username,
                const std::string& password)
@@ -121,13 +121,6 @@ public:
               username,
               password)
   {}
-
-  /**
-   * \brief A method for collecting static information (at least during runtime) of the robot controller.
-   *
-   * \return StaticInfo containing the static information (at least during runtime).
-   */
-  StaticInfo collectStaticInfo();
 
   /**
    * \brief Retrieves the configuration instances for the arms defined in the system.
@@ -593,7 +586,7 @@ public:
   Mastership getMastership(std::string const& type);
 
 private:
-  using RWSResult = RWSClient::RWSResult;
+  using RWSResult = RWSClient2::RWSResult;
 
   // Implementation of MastershipManager
   void requestMastership(std::string const& type) override;
@@ -637,7 +630,7 @@ private:
   /**
    * \brief The RWS client used to communicate with the robot controller.
    */
-  RWSClient rws_client_;
+  RWSClient2 rws_client_;
 };
 
 } // end namespace rws

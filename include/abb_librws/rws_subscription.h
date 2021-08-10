@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include <vector>
 #include <memory>
+#include <utility>
 
 
 namespace abb :: rws
@@ -26,12 +27,58 @@ namespace abb :: rws
 
 
   /**
-   * Maps RWS resources to URIs.
+   * \brief Provides the mechanism to open, receive, and close RWS event subscription.
    */
-  class URIProvider
+  class SubscriptionManager
   {
   public:
+    /**
+     * \brief Subscribe to specified resources.
+     *
+     * \param resources list of pairs (resource URIs, priority) to subscribe
+     *
+     * \return Id of the created subscription group.
+     *
+     * \throw \a RWSError if something goes wrong.
+     */
+    virtual std::string openSubscription(std::vector<std::pair<std::string, SubscriptionPriority>> const& resources) = 0;
+
+    /**
+     * \brief End subscription to a specified group.
+     *
+     * \param subscription_group_id id of the subscription group to unsubscribe from.
+     *
+     * \throw \a RWSError if something goes wrong.
+     */
+    virtual void closeSubscription(std::string const& subscription_group_id) = 0;
+
+    /**
+     * \brief Open a WebSocket and start receiving subscription events.
+     *
+     * \param subscription_group_id subscription group id for which to receive event.
+     *
+     * \return WebSocket created to receive the events.
+     *
+     * \throw \a RWSError if something goes wrong.
+     */
+    virtual Poco::Net::WebSocket receiveSubscription(std::string const& subscription_group_id) = 0;
+
+    /**
+     * \brief Get URI for subscribing to an IO signal
+     *
+     * \param io_signal IO signal to subscribe
+     *
+     * \return Subscription URI for \a io_signal
+     */
     virtual std::string getResourceURI(IOSignalResource const& io_signal) const = 0;
+
+    /**
+     * \brief Get URI for subscribing to a RAPID variable
+     *
+     * \param resource RAPID variable resource
+     *
+     * \return Subscription URI for \a resource
+     */
     virtual std::string getResourceURI(RAPIDResource const& resource) const = 0;
   };
 
@@ -49,9 +96,9 @@ namespace abb :: rws
     {
     }
 
-    std::string getURI(URIProvider const& uri_gen) const
+    std::string getURI(SubscriptionManager const& subscription_manager) const
     {
-      return resource_->getURI(uri_gen);
+      return resource_->getURI(subscription_manager);
     }
 
     SubscriptionPriority getPriority() const noexcept
@@ -62,7 +109,7 @@ namespace abb :: rws
   private:
     struct ResourceInterface
     {
-      virtual std::string getURI(URIProvider const& uri_gen) const = 0;
+      virtual std::string getURI(SubscriptionManager const& subscription_manager) const = 0;
       virtual ~ResourceInterface() {};
     };
 
@@ -76,13 +123,13 @@ namespace abb :: rws
       {
       }
 
-      std::string getURI(URIProvider const& uri_gen) const override
+      std::string getURI(SubscriptionManager const& subscription_manager) const override
       {
-        return uri_gen.getResourceURI(resource_);
+        return subscription_manager.getResourceURI(resource_);
       }
 
     private:
-      T resource_;
+      T const resource_;
     };
 
 
@@ -214,9 +261,6 @@ namespace abb :: rws
   };
 
 
-  class RWSClient;
-
-
   /**
    * \brief Manages an RWS subscription group.
    */
@@ -226,10 +270,10 @@ namespace abb :: rws
     /**
      * \brief Registers a subscription at the server.
      *
-     * \param client a client to subscribe. The lifetime of the client must exceed the lifetime of the subscription group.
+     * \param subscription_manager an interface to control the subscription
      * \param resources list of resources to subscribe
      */
-    SubscriptionGroup(RWSClient& client, SubscriptionResources const& resources);
+    explicit SubscriptionGroup(SubscriptionManager& subscription_manager, SubscriptionResources const& resources);
 
 
     /**
@@ -263,7 +307,11 @@ namespace abb :: rws
 
 
   private:
-    RWSClient& client_;
+    static std::vector<std::pair<std::string, SubscriptionPriority>> getURI(
+      SubscriptionManager& subscription_manager, SubscriptionResources const& resources);
+
+
+    SubscriptionManager& subscription_manager_;
 
     /**
      * \brief A subscription group id.

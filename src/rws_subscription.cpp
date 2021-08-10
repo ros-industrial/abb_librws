@@ -15,15 +15,15 @@ namespace abb :: rws
   using namespace Poco::Net;
 
 
-  SubscriptionGroup::SubscriptionGroup(RWSClient& client, SubscriptionResources const& resources)
-  : client_ {client}
-  , subscription_group_id_ {client.openSubscription(resources)}
+  SubscriptionGroup::SubscriptionGroup(SubscriptionManager& subscription_manager, SubscriptionResources const& resources)
+  : subscription_manager_ {subscription_manager}
+  , subscription_group_id_ {subscription_manager.openSubscription(getURI(subscription_manager, resources))}
   {
   }
 
 
   SubscriptionGroup::SubscriptionGroup(SubscriptionGroup&& rhs)
-  : client_ {rhs.client_}
+  : subscription_manager_ {rhs.subscription_manager_}
   , subscription_group_id_ {rhs.subscription_group_id_}
   {
     // Clear subscription_group_id_ of the SubscriptionGroup that has been moved from,
@@ -39,7 +39,7 @@ namespace abb :: rws
       // The subscription_group_id_ will be empty if the SubscriptionGroup has been moved from.
       // In this case, we don't have to close the subscription.
       if (!subscription_group_id_.empty())
-        client_.closeSubscription(subscription_group_id_);
+        subscription_manager_.closeSubscription(subscription_group_id_);
     }
     catch (...)
     {
@@ -51,7 +51,20 @@ namespace abb :: rws
 
   SubscriptionReceiver SubscriptionGroup::receive() const
   {
-    return SubscriptionReceiver {client_.receiveSubscription(subscription_group_id_)};
+    return SubscriptionReceiver {subscription_manager_.receiveSubscription(subscription_group_id_)};
+  }
+
+
+  std::vector<std::pair<std::string, SubscriptionPriority>> SubscriptionGroup::getURI(
+      SubscriptionManager& subscription_manager, SubscriptionResources const& resources)
+  {
+    std::vector<std::pair<std::string, SubscriptionPriority>> uri;
+    uri.reserve(resources.size());
+
+    for (auto&& r : resources)
+      uri.emplace_back(r.getURI(subscription_manager), r.getPriority());
+
+    return uri;
   }
 
 

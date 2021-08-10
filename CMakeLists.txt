@@ -39,8 +39,10 @@ endif()
 set(
   SRC_FILES
     src/rws_client.cpp
+    src/rws_client_2.cpp
     src/system_constants.cpp
     src/rws_interface.cpp
+    src/rws_interface_2.cpp
     src/rws_poco_client.cpp
     src/rws_poco_result.cpp
     src/rws_rapid.cpp
@@ -48,7 +50,9 @@ set(
     src/rws_subscription.cpp
     src/rws_websocket.cpp
     src/rws.cpp
+    src/rws_2.cpp
     src/parsing.cpp
+    src/mastership.cpp
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES})

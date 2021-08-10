@@ -34,11 +34,10 @@
  ***********************************************************************************************************************
  */
 
-#ifndef RWS_CLIENT_H
-#define RWS_CLIENT_H
+#pragma once
 
 #include <Poco/DOM/DOMParser.h>
-#include <Poco/Net/HTTPClientSession.h>
+#include <Poco/Net/HTTPSClientSession.h>
 
 #include "system_constants.h"
 #include "rws_rapid.h"
@@ -46,6 +45,9 @@
 #include "rws_resource.h"
 #include "rws_subscription.h"
 #include "coordinate.h"
+#include "mastership.h"
+
+#include <map>
 
 
 namespace abb
@@ -53,13 +55,13 @@ namespace abb
 namespace rws
 {
 /**
- * \brief A class for a Robot Web Services (RWS) 1.0 client.
+ * \brief A class for a Robot Web Services (RWS) 2.0 client.
  *
  * Note: Only a subset of the features available in RWS are implemented here.
  *
- * See https://developercenter.robotstudio.com/api/rwsApi/ for details about RWS 1.0.
+ * See https://developercenter.robotstudio.com/api/RWS for details about RWS 2.0
  */
-class RWSClient
+class RWSClient2
 : public SubscriptionManager
 {
 public:
@@ -75,7 +77,7 @@ public:
    *
    * \throw \a RWSError if something goes wrong.
    */
-  RWSClient(const std::string& ip_address);
+  RWSClient2(const std::string& ip_address);
 
   /**
    * \brief A constructor.
@@ -86,7 +88,7 @@ public:
    *
    * \throw \a RWSError if something goes wrong.
    */
-  RWSClient(const std::string& ip_address, const std::string& username, const std::string& password);
+  RWSClient2(const std::string& ip_address, const std::string& username, const std::string& password);
 
   /**
    * \brief A constructor.
@@ -96,7 +98,7 @@ public:
    *
    * \throw \a RWSError if something goes wrong.
    */
-  RWSClient(const std::string& ip_address, const unsigned short port);
+  RWSClient2(const std::string& ip_address, const unsigned short port);
 
   /**
    * \brief A constructor.
@@ -108,7 +110,7 @@ public:
    *
    * \throw \a RWSError if something goes wrong.
    */
-  RWSClient(const std::string& ip_address,
+  RWSClient2(const std::string& ip_address,
             const unsigned short port,
             const std::string& username,
             const std::string& password);
@@ -116,7 +118,7 @@ public:
   /**
    * \brief Logs out the currently active RWS session.
    */
-  ~RWSClient();
+  ~RWSClient2();
 
   /**
    * \brief Retrieves a list of controller resources (e.g. controller identity and clock information).
@@ -467,14 +469,6 @@ public:
                                const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                                const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
-  // SubscriptionManager implementation
-  std::string openSubscription(std::vector<std::pair<std::string, SubscriptionPriority>> const& resources) override;
-  void closeSubscription(std::string const& subscription_group_id) override;
-  Poco::Net::WebSocket receiveSubscription(std::string const& subscription_group_id) override;
-  std::string getResourceURI(IOSignalResource const& io_signal) const override;
-  std::string getResourceURI(RAPIDResource const& resource) const override;
-
-
   /**
    * \brief A method for setting the HTTP communication timeout.
    *
@@ -492,6 +486,28 @@ public:
    * \return HTTP receive timeout.
    */
   Poco::Timespan getHTTPTimeout() const noexcept;
+
+  /**
+   * @brief Request mastership of given type
+   *
+   * @param type type of requested mastership
+   */
+  void requestMastership(std::string const& type);
+
+  /**
+   * @brief Release mastership of given type
+   *
+   * @param type type of mastership to be released
+   */
+  void releaseMastership(std::string const& type);
+
+
+  // SubscriptionManager implementation
+  std::string openSubscription(std::vector<std::pair<std::string, SubscriptionPriority>> const& resources) override;
+  void closeSubscription(std::string const& subscription_group_id) override;
+  Poco::Net::WebSocket receiveSubscription(std::string const& subscription_group_id) override;
+  std::string getResourceURI(IOSignalResource const& io_signal) const override;
+  std::string getResourceURI(RAPIDResource const& resource) const override;
 
 
 private:
@@ -523,7 +539,7 @@ private:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpPost(const std::string& uri, const std::string& content = "");
+  POCOResult httpPost(const std::string& uri, const std::string& content = "", const std::string& content_type = "");
 
   /**
    * \brief A method for sending a HTTP PUT request and checking response status.
@@ -533,7 +549,7 @@ private:
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpPut(const std::string& uri, const std::string& content = "");
+  POCOResult httpPut(const std::string& uri, const std::string& content = "", const std::string& content_type = "");
 
   /**
    * \brief A method for sending a HTTP DELETE request and checking response status.
@@ -614,13 +630,12 @@ private:
    */
   std::string generateRAPIDTasksPath(const std::string& task);
 
-
-  Poco::Net::HTTPClientSession session_;
+  Poco::Net::Context::Ptr context_;
+  Poco::Net::HTTPSClientSession session_;
   POCOClient http_client_;
   Poco::XML::DOMParser parser_;
+  std::map<std::string, int> mastership_count_;
 };
 
 } // end namespace rws
 } // end namespace abb
-
-#endif
