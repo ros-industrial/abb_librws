@@ -34,12 +34,12 @@
  ***********************************************************************************************************************
  */
 
-#include "Poco/DOM/NamedNodeMap.h"
-#include "Poco/DOM/NodeFilter.h"
-#include "Poco/DOM/NodeIterator.h"
-#include "Poco/DOM/NodeList.h"
+#include <Poco/DOM/NamedNodeMap.h>
+#include <Poco/DOM/NodeFilter.h>
+#include <Poco/DOM/NodeIterator.h>
+#include <Poco/DOM/NodeList.h>
 
-#include "abb_librws/rws_common.h"
+#include <abb_librws/rws_common.h>
 
 namespace abb
 {
@@ -199,7 +199,6 @@ bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const std::string& name,
 {
   return xmlNodeHasAttribute(p_node, XMLAttribute(name, value));
 }
-
 
 
 

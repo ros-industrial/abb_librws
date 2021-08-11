@@ -41,7 +41,7 @@
 #include <vector>
 #include <sstream>
 
-#include "Poco/SharedPtr.h"
+#include <Poco/SharedPtr.h>
 
 namespace abb
 {
@@ -94,15 +94,31 @@ struct RAPIDAtomicTemplate : public RAPIDSymbolDataAbstract
 {
 public:
   /**
+   * \brief Type of contained value.
+   */
+  using value_type = T;
+
+
+  /**
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
    */
-  void parseString(const std::string& value_string)
+  void parseString(const std::string& value_string) override
   {
     std::stringstream ss(value_string);
     ss >> value;
   }
+
+
+  /**
+   * \brief Conversion to a standard data type.
+   */
+  operator T const&() const
+  {
+    return value;
+  }
+
 
   /**
    * \brief Container for the data's value.
@@ -141,21 +157,21 @@ struct RAPIDAtomic<RAPID_BOOL> : public RAPIDAtomicTemplate<bool>
    *
    * \return std::string containing the data type name.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
    */
-  void parseString(const std::string& value_string);
+  void parseString(const std::string& value_string) override;
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 };
 
 /**
@@ -176,14 +192,14 @@ struct RAPIDAtomic<RAPID_NUM> : public RAPIDAtomicTemplate<float>
    *
    * \return std::string containing the data type name.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 };
 
 /**
@@ -204,14 +220,14 @@ struct RAPIDAtomic<RAPID_DNUM> : public RAPIDAtomicTemplate<double>
    *
    * \return std::string containing the data type name.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 };
 
 /**
@@ -232,21 +248,21 @@ struct RAPIDAtomic<RAPID_STRING> : public RAPIDAtomicTemplate<std::string>
    *
    * \return std::string containing the data type name.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
    */
-  void parseString(const std::string& value_string);
+  void parseString(const std::string& value_string) override;
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 };
 
 /**
@@ -287,21 +303,21 @@ public:
    *
    * \return std::string containing the constructed string.
    */
-  std::string constructString() const;
+  std::string constructString() const override;
 
   /**
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
    */
-  void parseString(const std::string& value_string);
+  void parseString(const std::string& value_string) override;
 
   /**
    * \brief A method for getting the type of the RAPID record.
    *
    * \return std::string containing the type.
    */
-  std::string getType() const;
+  std::string getType() const override;
 
   /**
    * \brief Operator for copying the RAPID record to another RAPID record.
@@ -961,6 +977,96 @@ public:
    * \brief The rotational speed [degrees/s] of external axes.
    */
   RAPIDNum v_reax;
+};
+
+
+/**
+ * \brief A struct, for representing a RAPID zonedata record.
+ */
+struct ZoneData : public RAPIDRecord
+{
+public:
+  /**
+   * \brief A default constructor.
+   */
+  ZoneData()
+  :
+  RAPIDRecord("zonedata")
+  {
+    components_.push_back(&finep);
+    components_.push_back(&pzone_tcp);
+    components_.push_back(&pzone_ori);
+    components_.push_back(&pzone_eax);
+    components_.push_back(&zone_ori);
+    components_.push_back(&zone_leax);
+    components_.push_back(&zone_reax);
+  }
+
+  /**
+   * \brief Copy constructor.
+   *
+   * \param other containing the values to copy.
+   */
+  ZoneData(const ZoneData& other)
+  : RAPIDRecord(other.record_type_name_)
+  , finep {other.finep}
+  , pzone_tcp {other.pzone_tcp}
+  , pzone_ori {other.pzone_ori}
+  , pzone_eax {other.pzone_eax}
+  , zone_ori {other.zone_ori}
+  , zone_leax {other.zone_leax}
+  , zone_reax {other.zone_reax}
+  {
+    components_.clear();
+    components_.push_back(&finep);
+    components_.push_back(&pzone_tcp);
+    components_.push_back(&pzone_ori);
+    components_.push_back(&pzone_eax);
+    components_.push_back(&zone_ori);
+    components_.push_back(&zone_leax);
+    components_.push_back(&zone_reax);
+  }
+
+  /**
+   * \brief Defines whether the movement is to terminate as a stop point (fine point) or as a fly-by point.
+   */
+  RAPIDBool finep;
+
+  /**
+   * \brief The size (the radius) of the TCP zone in mm.
+   */
+  RAPIDNum pzone_tcp;
+
+  /**
+   * \brief The zone size (the radius) for the tool reorientation.
+   * 
+   * The size is defined as the distance of the TCP from the programmed point in mm.
+   */
+  RAPIDNum pzone_ori;
+
+  /**
+   * \brief The zone size (the radius) for external axes.
+   * 
+   * The size is defined as the distance of the TCP from the programmed point in mm.
+   */
+  RAPIDNum pzone_eax;
+
+  /**
+   * \brief The zone size for the tool reorientation in degrees.
+   * 
+   * If the robot is holding the work object, this means an angle of rotation for the work object.
+   */
+  RAPIDNum zone_ori;
+
+  /**
+   * \brief The zone size for linear external axes in mm.
+   */
+  RAPIDNum zone_leax;
+
+  /**
+   * \brief The zone size for rotating external axes in degrees.
+   */
+  RAPIDNum zone_reax;
 };
 
 } // end namespace rws

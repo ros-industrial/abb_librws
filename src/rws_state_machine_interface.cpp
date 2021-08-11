@@ -44,7 +44,6 @@ namespace rws
  * Struct definitions: RWSStateMachineInterface::ResourceIdentifiers
  */
 
-typedef RWSClient::RAPIDSymbolResource                                   RAPIDSymbolResource;
 typedef RWSStateMachineInterface::States                                 States;
 typedef RWSStateMachineInterface::EGMActions                             EGMActions;
 typedef RWSStateMachineInterface::ResourceIdentifiers::RAPID::Symbols    Symbols;
@@ -112,68 +111,63 @@ EGMActions RWSStateMachineInterface::Services::EGM::getCurrentAction(const std::
   EGMActions result;
   RAPIDNum temp_current_action;
 
-  if (p_rws_interface_->getRAPIDSymbolData(task, Symbols::EGM_CURRENT_ACTION, &temp_current_action))
+  p_rws_interface_->getRAPIDSymbolData({task, Symbols::EGM_CURRENT_ACTION}, temp_current_action);
+  
+  switch ((int) temp_current_action.value)
   {
-    switch ((int) temp_current_action.value)
-    {
-      case EGM_ACTION_STOP:
-        result = EGM_ACTION_STOP;
-      break;
+    case EGM_ACTION_STOP:
+      result = EGM_ACTION_STOP;
+    break;
 
-      case EGM_ACTION_RUN_JOINT:
-        result = EGM_ACTION_RUN_JOINT;
-      break;
+    case EGM_ACTION_RUN_JOINT:
+      result = EGM_ACTION_RUN_JOINT;
+    break;
 
-      case EGM_ACTION_RUN_POSE:
-        result = EGM_ACTION_RUN_POSE;
-      break;
+    case EGM_ACTION_RUN_POSE:
+      result = EGM_ACTION_RUN_POSE;
+    break;
 
-      default:
-        result = EGM_ACTION_UNKNOWN;
-      break;
-    }
-  }
-  else
-  {
-    result = EGM_ACTION_UNKNOWN;
+    default:
+      result = EGM_ACTION_UNKNOWN;
+    break;
   }
 
   return result;
 }
 
-bool RWSStateMachineInterface::Services::EGM::getSettings(const std::string& task, EGMSettings* p_settings) const
+void RWSStateMachineInterface::Services::EGM::getSettings(const std::string& task, EGMSettings* p_settings) const
 {
-  return p_rws_interface_->getRAPIDSymbolData(task, Symbols::EGM_SETTINGS, p_settings);
+  p_rws_interface_->getRAPIDSymbolData({task, Symbols::EGM_SETTINGS}, *p_settings);
 }
 
-bool RWSStateMachineInterface::Services::EGM::setSettings(const std::string& task, const EGMSettings& settings) const
+void RWSStateMachineInterface::Services::EGM::setSettings(const std::string& task, const EGMSettings& settings) const
 {
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::EGM_SETTINGS, settings);
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::EGM_SETTINGS}, settings);
 }
 
-bool RWSStateMachineInterface::Services::EGM::signalEGMStartJoint() const
+void RWSStateMachineInterface::Services::EGM::signalEGMStartJoint() const
 {
-  return p_rws_interface_->toggleIOSignal(IOSignals::EGM_START_JOINT);
+  p_rws_interface_->toggleIOSignal(IOSignals::EGM_START_JOINT);
 }
 
-bool RWSStateMachineInterface::Services::EGM::signalEGMStartPose() const
+void RWSStateMachineInterface::Services::EGM::signalEGMStartPose() const
 {
-  return p_rws_interface_->toggleIOSignal(IOSignals::EGM_START_POSE);
+  p_rws_interface_->toggleIOSignal(IOSignals::EGM_START_POSE);
 }
 
-bool RWSStateMachineInterface::Services::EGM::signalEGMStartStream() const
+void RWSStateMachineInterface::Services::EGM::signalEGMStartStream() const
 {
-  return p_rws_interface_->toggleIOSignal(IOSignals::EGM_START_STREAM);
+  p_rws_interface_->toggleIOSignal(IOSignals::EGM_START_STREAM);
 }
 
-bool RWSStateMachineInterface::Services::EGM::signalEGMStop() const
+void RWSStateMachineInterface::Services::EGM::signalEGMStop() const
 {
-  return p_rws_interface_->toggleIOSignal(IOSignals::EGM_STOP);
+  p_rws_interface_->toggleIOSignal(IOSignals::EGM_STOP);
 }
 
-bool RWSStateMachineInterface::Services::EGM::signalEGMStopStream() const
+void RWSStateMachineInterface::Services::EGM::signalEGMStopStream() const
 {
-  return p_rws_interface_->toggleIOSignal(IOSignals::EGM_STOP_STREAM);
+  p_rws_interface_->toggleIOSignal(IOSignals::EGM_STOP_STREAM);
 }
 
 
@@ -189,69 +183,42 @@ bool RWSStateMachineInterface::Services::EGM::signalEGMStopStream() const
 
 States RWSStateMachineInterface::Services::Main::getCurrentState(const std::string& task) const
 {
-  States result;
+  States result = STATE_UNKNOWN;
   RAPIDNum temp_current_state;
+  p_rws_interface_->getRAPIDSymbolData({task, Symbols::MAIN_CURRENT_STATE}, temp_current_state);
 
-  if (p_rws_interface_->getRAPIDSymbolData(task, Symbols::MAIN_CURRENT_STATE, &temp_current_state))
+  switch (static_cast<int>(temp_current_state.value))
   {
-    switch ((int) temp_current_state.value)
-    {
-      case STATE_IDLE:
-        result = STATE_IDLE;
-      break;
+    case STATE_IDLE:
+      result = STATE_IDLE;
+    break;
 
-      case STATE_INITIALIZE:
-        result = STATE_INITIALIZE;
-      break;
+    case STATE_INITIALIZE:
+      result = STATE_INITIALIZE;
+    break;
 
-      case STATE_RUN_RAPID_ROUTINE:
-        result = STATE_RUN_RAPID_ROUTINE;
-      break;
+    case STATE_RUN_RAPID_ROUTINE:
+      result = STATE_RUN_RAPID_ROUTINE;
+    break;
 
-      case STATE_RUN_EGM_ROUTINE:
-        result = STATE_RUN_EGM_ROUTINE;
-      break;
-
-      default:
-        result = STATE_UNKNOWN;
-      break;
-    }
-  }
-  else
-  {
-    result = STATE_UNKNOWN;
+    case STATE_RUN_EGM_ROUTINE:
+      result = STATE_RUN_EGM_ROUTINE;
+    break;
   }
 
   return result;
 }
 
 
-TriBool RWSStateMachineInterface::Services::Main::isStateIdle(const std::string& task) const
-
+bool RWSStateMachineInterface::Services::Main::isStateIdle(const std::string& task) const
 {
-  TriBool result;
-  States temp_current_state = getCurrentState(task);
-
-  if (temp_current_state != STATE_UNKNOWN)
-  {
-    result = (temp_current_state == STATE_IDLE);
-  }
-
-  return result;
+  return getCurrentState(task) == STATE_IDLE;
 }
 
-TriBool RWSStateMachineInterface::Services::Main::isStationary(const std::string& mechanical_unit) const
+
+bool RWSStateMachineInterface::Services::Main::isStationary(const std::string& mechanical_unit) const
 {
-  TriBool result;
-
-  std::string temp_stationary = p_rws_interface_->getIOSignal(IOSignals::OUTPUT_STATIONARY + "_" + mechanical_unit);
-
-  if (!temp_stationary.empty())
-  {
-    result = (temp_stationary == SystemConstants::IOSignals::HIGH);
-  }
-
-  return result;
+  return p_rws_interface_->getDigitalSignal(IOSignals::OUTPUT_STATIONARY + "_" + mechanical_unit);
 }
 
 
@@ -265,66 +232,72 @@ TriBool RWSStateMachineInterface::Services::Main::isStationary(const std::string
  * Primary methods
  */
 
-bool RWSStateMachineInterface::Services::RAPID::runCallByVar(const std::string& task,
+void RWSStateMachineInterface::Services::RAPID::runCallByVar(const std::string& task,
                                                              const std::string& routine_name,
                                                              const unsigned int routine_number) const
 {
   RAPIDString temp_routine_name(routine_name);
   RAPIDNum temp_routine_number(routine_number);
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_CALL_BY_VAR_NAME_INPUT, temp_routine_name) &&
-         p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_CALL_BY_VAR_NUM_INPUT, temp_routine_number) &&
-         setRoutineName(task, Procedures::RUN_CALL_BY_VAR) && signalRunRAPIDRoutine();
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::RAPID_CALL_BY_VAR_NAME_INPUT}, temp_routine_name);
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::RAPID_CALL_BY_VAR_NUM_INPUT}, temp_routine_number);
+  setRoutineName(task, Procedures::RUN_CALL_BY_VAR);
+  signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runModuleLoad(const std::string& task,
+void RWSStateMachineInterface::Services::RAPID::runModuleLoad(const std::string& task,
                                                               const std::string& file_path) const
 {
   RAPIDString temp_file_path(file_path);
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MODULE_FILE_PATH_INPUT, temp_file_path) &&
-         setRoutineName(task, Procedures::RUN_MODULE_LOAD) && signalRunRAPIDRoutine();
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::RAPID_MODULE_FILE_PATH_INPUT}, temp_file_path);
+  setRoutineName(task, Procedures::RUN_MODULE_LOAD);
+  signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runModuleUnload(const std::string& task,
+void RWSStateMachineInterface::Services::RAPID::runModuleUnload(const std::string& task,
                                                                 const std::string& file_path) const
 {
   RAPIDString temp_file_path(file_path);
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MODULE_FILE_PATH_INPUT, temp_file_path) &&
-         setRoutineName(task, Procedures::RUN_MODULE_UNLOAD) && signalRunRAPIDRoutine();
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::RAPID_MODULE_FILE_PATH_INPUT}, temp_file_path);
+  setRoutineName(task, Procedures::RUN_MODULE_UNLOAD);
+  signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runMoveAbsJ(const std::string& task,
+void RWSStateMachineInterface::Services::RAPID::runMoveAbsJ(const std::string& task,
                                                             const JointTarget& joint_target) const
 {
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MOVE_JOINT_TARGET_INPUT, joint_target) &&
-         setRoutineName(task, Procedures::RUN_MOVE_ABS_J) && signalRunRAPIDRoutine();
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::RAPID_MOVE_JOINT_TARGET_INPUT}, joint_target);
+  setRoutineName(task, Procedures::RUN_MOVE_ABS_J);
+  signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runMoveJ(const std::string& task, const RobTarget& rob_target) const
+void RWSStateMachineInterface::Services::RAPID::runMoveJ(const std::string& task, const RobTarget& rob_target) const
 {
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MOVE_ROB_TARGET_INPUT, rob_target) &&
-         setRoutineName(task, Procedures::RUN_MOVE_J) && signalRunRAPIDRoutine();
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::RAPID_MOVE_ROB_TARGET_INPUT}, rob_target);
+  setRoutineName(task, Procedures::RUN_MOVE_J);
+  signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::runMoveToCalibrationPosition(const std::string& task) const
+void RWSStateMachineInterface::Services::RAPID::runMoveToCalibrationPosition(const std::string& task) const
 {
-  return setRoutineName(task, Procedures::RUN_MOVE_TO_CALIBRATION_POSITION) && signalRunRAPIDRoutine();
+  setRoutineName(task, Procedures::RUN_MOVE_TO_CALIBRATION_POSITION);
+  signalRunRAPIDRoutine();
 }
 
-bool RWSStateMachineInterface::Services::RAPID::setMoveSpeed(const std::string& task, const SpeedData& speed_data) const
+void RWSStateMachineInterface::Services::RAPID::setMoveSpeed(const std::string& task, const SpeedData& speed_data) const
 {
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_MOVE_SPEED_INPUT, speed_data);
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::RAPID_MOVE_SPEED_INPUT}, speed_data);
 }
 
-bool RWSStateMachineInterface::Services::RAPID::setRoutineName(const std::string& task,
+void RWSStateMachineInterface::Services::RAPID::setRoutineName(const std::string& task,
                                                                const std::string& routine_name) const
 {
   RAPIDString temp_routine_name(routine_name);
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::RAPID_ROUTINE_NAME_INPUT, temp_routine_name);
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::RAPID_ROUTINE_NAME_INPUT}, temp_routine_name);
 }
 
-bool RWSStateMachineInterface::Services::RAPID::signalRunRAPIDRoutine() const
+void RWSStateMachineInterface::Services::RAPID::signalRunRAPIDRoutine() const
 {
-  return p_rws_interface_->toggleIOSignal(IOSignals::RUN_RAPID_ROUTINE);
+  p_rws_interface_->toggleIOSignal(IOSignals::RUN_RAPID_ROUTINE);
 }
 
 
@@ -338,346 +311,346 @@ bool RWSStateMachineInterface::Services::RAPID::signalRunRAPIDRoutine() const
  * Primary methods
  */
 
-bool RWSStateMachineInterface::Services::SG::dualBlow1Off() const
+void RWSStateMachineInterface::Services::SG::dualBlow1Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_OFF_1) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_OFF_1) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_OFF_1);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_OFF_1);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualBlow1On() const
+void RWSStateMachineInterface::Services::SG::dualBlow1On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_ON_1) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_ON_1) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_ON_1);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_ON_1);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualBlow2Off() const
+void RWSStateMachineInterface::Services::SG::dualBlow2Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_OFF_2) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_OFF_2) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_OFF_2);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_OFF_2);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualBlow2On() const
+void RWSStateMachineInterface::Services::SG::dualBlow2On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_ON_2) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_ON_2) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_ON_2);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_ON_2);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualCalibrate() const
+void RWSStateMachineInterface::Services::SG::dualCalibrate() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_CALIBRATE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_CALIBRATE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_CALIBRATE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_CALIBRATE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualGetSettings(SGSettings* p_left_settings,
+void RWSStateMachineInterface::Services::SG::dualGetSettings(SGSettings* p_left_settings,
                                                              SGSettings* p_right_settings) const
 {
-  return getSettings(SystemConstants::RAPID::TASK_ROB_L, p_left_settings) &&
-         getSettings(SystemConstants::RAPID::TASK_ROB_R, p_right_settings);
+  getSettings(SystemConstants::RAPID::TASK_ROB_L, p_left_settings);
+  getSettings(SystemConstants::RAPID::TASK_ROB_R, p_right_settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::dualGripIn() const
+void RWSStateMachineInterface::Services::SG::dualGripIn() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_GRIP_IN) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_GRIP_IN) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_GRIP_IN);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_GRIP_IN);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualGripOut() const
+void RWSStateMachineInterface::Services::SG::dualGripOut() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_GRIP_OUT) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_GRIP_OUT) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_GRIP_OUT);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_GRIP_OUT);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualInitialize() const
+void RWSStateMachineInterface::Services::SG::dualInitialize() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_INITIALIZE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_INITIALIZE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_INITIALIZE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_INITIALIZE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualMoveTo(const float left_position, const float right_position) const
+void RWSStateMachineInterface::Services::SG::dualMoveTo(const float left_position, const float right_position) const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_MOVE_TO) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_MOVE_TO) &&
-         setTargetPositionInput(SystemConstants::RAPID::TASK_ROB_L, left_position) &&
-         setTargetPositionInput(SystemConstants::RAPID::TASK_ROB_R, right_position) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_MOVE_TO);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_MOVE_TO);
+  setTargetPositionInput(SystemConstants::RAPID::TASK_ROB_L, left_position);
+  setTargetPositionInput(SystemConstants::RAPID::TASK_ROB_R, right_position);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualSetSettings(const SGSettings& left_settings,
+void RWSStateMachineInterface::Services::SG::dualSetSettings(const SGSettings& left_settings,
                                                              const SGSettings& right_settings) const
 {
-  return setSettings(SystemConstants::RAPID::TASK_ROB_L, left_settings) &&
-         setSettings(SystemConstants::RAPID::TASK_ROB_R, right_settings);
+  setSettings(SystemConstants::RAPID::TASK_ROB_L, left_settings);
+  setSettings(SystemConstants::RAPID::TASK_ROB_R, right_settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::dualVacuum1Off() const
+void RWSStateMachineInterface::Services::SG::dualVacuum1Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_OFF_1) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_OFF_1) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_OFF_1);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_OFF_1);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualVacuum1On() const
+void RWSStateMachineInterface::Services::SG::dualVacuum1On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_ON_1) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_ON_1) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_ON_1);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_ON_1);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualVacuum2Off() const
+void RWSStateMachineInterface::Services::SG::dualVacuum2Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_OFF_2) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_OFF_2) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_OFF_2);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_OFF_2);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::dualVacuum2On() const
+void RWSStateMachineInterface::Services::SG::dualVacuum2On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_ON_2) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_ON_2) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_ON_2);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_ON_2);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftBlow1Off() const
+void RWSStateMachineInterface::Services::SG::leftBlow1Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_OFF_1) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_OFF_1);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftBlow1On() const
+void RWSStateMachineInterface::Services::SG::leftBlow1On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_ON_1) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_ON_1);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftBlow2Off() const
+void RWSStateMachineInterface::Services::SG::leftBlow2Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_OFF_2) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_OFF_2);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftBlow2On() const
+void RWSStateMachineInterface::Services::SG::leftBlow2On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_ON_2) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_BLOW_ON_2);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftCalibrate() const
+void RWSStateMachineInterface::Services::SG::leftCalibrate() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_CALIBRATE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_CALIBRATE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftGetSettings(SGSettings* p_settings) const
+void RWSStateMachineInterface::Services::SG::leftGetSettings(SGSettings* p_settings) const
 {
-  return getSettings(SystemConstants::RAPID::TASK_ROB_L, p_settings);
+  getSettings(SystemConstants::RAPID::TASK_ROB_L, p_settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::leftGripIn() const
+void RWSStateMachineInterface::Services::SG::leftGripIn() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_GRIP_IN) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_GRIP_IN);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftGripOut() const
+void RWSStateMachineInterface::Services::SG::leftGripOut() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_GRIP_OUT) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_GRIP_OUT);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftInitialize() const
+void RWSStateMachineInterface::Services::SG::leftInitialize() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_INITIALIZE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_INITIALIZE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftMoveTo(const float position) const
+void RWSStateMachineInterface::Services::SG::leftMoveTo(const float position) const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_MOVE_TO) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         setTargetPositionInput(SystemConstants::RAPID::TASK_ROB_L, position) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_MOVE_TO);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  setTargetPositionInput(SystemConstants::RAPID::TASK_ROB_L, position);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftSetSettings(const SGSettings& settings) const
+void RWSStateMachineInterface::Services::SG::leftSetSettings(const SGSettings& settings) const
 {
-  return setSettings(SystemConstants::RAPID::TASK_ROB_L, settings);
+  setSettings(SystemConstants::RAPID::TASK_ROB_L, settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::leftVacuum1Off() const
+void RWSStateMachineInterface::Services::SG::leftVacuum1Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_OFF_1) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_OFF_1);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftVacuum1On() const
+void RWSStateMachineInterface::Services::SG::leftVacuum1On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_ON_1) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_ON_1);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftVacuum2Off() const
+void RWSStateMachineInterface::Services::SG::leftVacuum2Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_OFF_2) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_OFF_2);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::leftVacuum2On() const
+void RWSStateMachineInterface::Services::SG::leftVacuum2On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_ON_2) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_VACUUM_ON_2);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_NONE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightBlow1Off() const
+void RWSStateMachineInterface::Services::SG::rightBlow1Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_OFF_1) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_OFF_1);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightBlow1On() const
+void RWSStateMachineInterface::Services::SG::rightBlow1On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_ON_1) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_ON_1);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightBlow2Off() const
+void RWSStateMachineInterface::Services::SG::rightBlow2Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_OFF_2) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_OFF_2);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightBlow2On() const
+void RWSStateMachineInterface::Services::SG::rightBlow2On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_ON_2) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_BLOW_ON_2);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightCalibrate() const
+void RWSStateMachineInterface::Services::SG::rightCalibrate() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_CALIBRATE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_CALIBRATE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightGetSettings(SGSettings* p_settings) const
+void RWSStateMachineInterface::Services::SG::rightGetSettings(SGSettings* p_settings) const
 {
-  return getSettings(SystemConstants::RAPID::TASK_ROB_R, p_settings);
+  getSettings(SystemConstants::RAPID::TASK_ROB_R, p_settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::rightGripIn() const
+void RWSStateMachineInterface::Services::SG::rightGripIn() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_GRIP_IN) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_GRIP_IN);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightGripOut() const
+void RWSStateMachineInterface::Services::SG::rightGripOut() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_GRIP_OUT) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_GRIP_OUT);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightInitialize() const
+void RWSStateMachineInterface::Services::SG::rightInitialize() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_INITIALIZE) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_INITIALIZE);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightMoveTo(const float position) const
+void RWSStateMachineInterface::Services::SG::rightMoveTo(const float position) const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_MOVE_TO) &&
-         setTargetPositionInput(SystemConstants::RAPID::TASK_ROB_R, position) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_MOVE_TO);
+  setTargetPositionInput(SystemConstants::RAPID::TASK_ROB_R, position);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightSetSettings(const SGSettings& settings) const
+void RWSStateMachineInterface::Services::SG::rightSetSettings(const SGSettings& settings) const
 {
-  return setSettings(SystemConstants::RAPID::TASK_ROB_R, settings);
+  setSettings(SystemConstants::RAPID::TASK_ROB_R, settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::rightVacuum1Off() const
+void RWSStateMachineInterface::Services::SG::rightVacuum1Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_OFF_1) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_OFF_1);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightVacuum1On() const
+void RWSStateMachineInterface::Services::SG::rightVacuum1On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_ON_1) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_ON_1);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightVacuum2Off() const
+void RWSStateMachineInterface::Services::SG::rightVacuum2Off() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_OFF_2) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_OFF_2);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::rightVacuum2On() const
+void RWSStateMachineInterface::Services::SG::rightVacuum2On() const
 {
-  return setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE) &&
-         setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_ON_2) &&
-         signalRunSGRoutine();
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_L, SG_COMMAND_NONE);
+  setCommandInput(SystemConstants::RAPID::TASK_ROB_R, SG_COMMAND_VACUUM_ON_2);
+  signalRunSGRoutine();
 }
 
-bool RWSStateMachineInterface::Services::SG::signalRunSGRoutine() const
+void RWSStateMachineInterface::Services::SG::signalRunSGRoutine() const
 {
-  return p_rws_interface_->toggleIOSignal(IOSignals::RUN_SG_ROUTINE);
+  p_rws_interface_->toggleIOSignal(IOSignals::RUN_SG_ROUTINE);
 }
 
 /************************************************************
  * Auxiliary methods
  */
 
-bool RWSStateMachineInterface::Services::SG::getSettings(const std::string& task, SGSettings* p_settings) const
+void RWSStateMachineInterface::Services::SG::getSettings(const std::string& task, SGSettings* p_settings) const
 {
-  return p_rws_interface_->getRAPIDSymbolData(task, Symbols::SG_SETTINGS, p_settings);
+  p_rws_interface_->getRAPIDSymbolData({task, Symbols::SG_SETTINGS}, *p_settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::setCommandInput(const std::string& task, const SGCommands& command) const
+void RWSStateMachineInterface::Services::SG::setCommandInput(const std::string& task, const SGCommands& command) const
 {
   RAPIDNum temp_command(command);
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::SG_COMMAND_INPUT, temp_command);
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::SG_COMMAND_INPUT}, temp_command);
 }
 
-bool RWSStateMachineInterface::Services::SG::setSettings(const std::string& task, const SGSettings& settings) const
+void RWSStateMachineInterface::Services::SG::setSettings(const std::string& task, const SGSettings& settings) const
 {
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::SG_SETTINGS, settings);
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::SG_SETTINGS}, settings);
 }
 
-bool RWSStateMachineInterface::Services::SG::setTargetPositionInput(const std::string& task, const float position) const
+void RWSStateMachineInterface::Services::SG::setTargetPositionInput(const std::string& task, const float position) const
 {
   RAPIDNum temp_position(position);
-  return p_rws_interface_->setRAPIDSymbolData(task, Symbols::SG_TARGET_POSTION_INPUT, temp_position);
+  p_rws_interface_->setRAPIDSymbolData({task, Symbols::SG_TARGET_POSTION_INPUT}, temp_position);
 }
 
 
@@ -691,15 +664,15 @@ bool RWSStateMachineInterface::Services::SG::setTargetPositionInput(const std::s
  * Primary methods
  */
 
-bool RWSStateMachineInterface::Services::Utility::getBaseFrame(const std::string& task, Pose* p_base_frame) const
+void RWSStateMachineInterface::Services::Utility::getBaseFrame(const std::string& task, Pose* p_base_frame) const
 {
-  return p_rws_interface_->getRAPIDSymbolData(task, Symbols::UTILITY_BASE_FRAME, p_base_frame);
+  p_rws_interface_->getRAPIDSymbolData({task, Symbols::UTILITY_BASE_FRAME}, *p_base_frame);
 }
 
-bool RWSStateMachineInterface::Services::Utility::getCalibrationTarget(const std::string& task,
+void RWSStateMachineInterface::Services::Utility::getCalibrationTarget(const std::string& task,
                                                                        JointTarget* p_calibration_joint_target) const
 {
-  return p_rws_interface_->getRAPIDSymbolData(task, Symbols::UTILITY_CALIBRATION_TARGET, p_calibration_joint_target);
+  p_rws_interface_->getRAPIDSymbolData({task, Symbols::UTILITY_CALIBRATION_TARGET}, *p_calibration_joint_target);
 }
 
 
@@ -713,40 +686,30 @@ bool RWSStateMachineInterface::Services::Utility::getCalibrationTarget(const std
  * Primary methods
  */
 
-TriBool RWSStateMachineInterface::Services::Watchdog::isActive(const std::string& task) const
+bool RWSStateMachineInterface::Services::Watchdog::isActive(const std::string& task) const
 {
-  TriBool result;
   RAPIDBool temp_active;
+  p_rws_interface_->getRAPIDSymbolData({task, Symbols::WATCHDOG_ACTIVE}, temp_active);
 
-  if (p_rws_interface_->getRAPIDSymbolData(task, Symbols::WATCHDOG_ACTIVE, &temp_active))
-  {
-    result = temp_active.value;
-  }
-
-  return result;
+  return temp_active;
 }
 
-TriBool RWSStateMachineInterface::Services::Watchdog::isCheckingExternalStatus(const std::string& task) const
+bool RWSStateMachineInterface::Services::Watchdog::isCheckingExternalStatus(const std::string& task) const
 {
-  TriBool result;
   RAPIDBool temp_check_external_status;
+  p_rws_interface_->getRAPIDSymbolData({task, Symbols::WATCHDOG_CHECK_EXTERNAL_STATUS}, temp_check_external_status);
 
-  if (p_rws_interface_->getRAPIDSymbolData(task, Symbols::WATCHDOG_CHECK_EXTERNAL_STATUS, &temp_check_external_status))
-  {
-    result = temp_check_external_status.value;
-  }
-
-  return result;
+  return temp_check_external_status;
 }
 
-bool RWSStateMachineInterface::Services::Watchdog::setExternalStatusSignal() const
+void RWSStateMachineInterface::Services::Watchdog::setExternalStatusSignal() const
 {
-  return p_rws_interface_->setIOSignal(IOSignals::WD_EXTERNAL_STATUS, SystemConstants::IOSignals::HIGH);
+  p_rws_interface_->setDigitalSignal(IOSignals::WD_EXTERNAL_STATUS, true);
 }
 
-bool RWSStateMachineInterface::Services::Watchdog::signalStopRequest() const
+void RWSStateMachineInterface::Services::Watchdog::signalStopRequest() const
 {
-  return p_rws_interface_->toggleIOSignal(IOSignals::WD_STOP_REQUEST);
+  p_rws_interface_->toggleIOSignal(IOSignals::WD_STOP_REQUEST);
 }
 
 
@@ -760,20 +723,17 @@ bool RWSStateMachineInterface::Services::Watchdog::signalStopRequest() const
  * Auxiliary methods
  */
 
-bool RWSStateMachineInterface::toggleIOSignal(const std::string& iosignal)
+void RWSStateMachineInterface::toggleIOSignal(const std::string& iosignal)
 {
   bool result = false;
   int max_number_of_attempts = 5;
 
-  if (isAutoMode().isTrue())
+  if (isAutoMode())
   {
     for (int i = 0; i < max_number_of_attempts && !result; ++i)
     {
-      result = setIOSignal(iosignal, SystemConstants::IOSignals::LOW);
-      if (result)
-      {
-        result = (getIOSignal(iosignal) == SystemConstants::IOSignals::LOW);
-      }
+      setDigitalSignal(iosignal, false);
+      result = !getDigitalSignal(iosignal);
     }
 
     if (result)
@@ -782,16 +742,14 @@ bool RWSStateMachineInterface::toggleIOSignal(const std::string& iosignal)
 
       for (int i = 0; i < max_number_of_attempts && !result; ++i)
       {
-        result = setIOSignal(iosignal, SystemConstants::IOSignals::HIGH);
-        if (result)
-        {
-          result = (getIOSignal(iosignal) == SystemConstants::IOSignals::HIGH);
-        }
+        setDigitalSignal(iosignal, true);
+        result = getDigitalSignal(iosignal);
       }
     }
   }
 
-  return result;
+  if (!result)
+    throw std::runtime_error("RWSStateMachineInterface::toggleIOSignal() failed");
 }
 
 } // end namespace rws
