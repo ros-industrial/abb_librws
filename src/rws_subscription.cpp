@@ -51,7 +51,7 @@ namespace abb :: rws
 
   SubscriptionReceiver SubscriptionGroup::receive() const
   {
-    return SubscriptionReceiver {subscription_manager_.receiveSubscription(subscription_group_id_)};
+    return SubscriptionReceiver {subscription_manager_, subscription_group_id_};
   }
 
 
@@ -71,8 +71,9 @@ namespace abb :: rws
   const Poco::Timespan SubscriptionReceiver::DEFAULT_SUBSCRIPTION_TIMEOUT {40000000000};
 
 
-  SubscriptionReceiver::SubscriptionReceiver(Poco::Net::WebSocket&& websocket)
-  : webSocket_ {websocket}
+  SubscriptionReceiver::SubscriptionReceiver(SubscriptionManager& subscription_manager, std::string const& subscription_group_id)
+  : subscription_manager_ {subscription_manager}
+  , webSocket_ {subscription_manager_.receiveSubscription(subscription_group_id)}
   {
     webSocket_.setReceiveTimeout(DEFAULT_SUBSCRIPTION_TIMEOUT);
   }
@@ -83,19 +84,13 @@ namespace abb :: rws
   }
 
 
-  bool SubscriptionReceiver::waitForEvent(SubscriptionEvent& event)
+  bool SubscriptionReceiver::waitForEvent(SubscriptionCallback& callback)
   {
     WebSocketFrame frame;
     if (webSocketReceiveFrame(frame))
     {
       Poco::AutoPtr<Poco::XML::Document> doc = parser_.parseString(frame.frame_content);
-
-      event.value = xmlFindTextContent(doc, XMLAttribute {"class", "lvalue"});
-
-      // IMPORTANT: don't use AutoPtr<XML::Node> here! Otherwise you will get memory corruption.
-      if (Poco::XML::Node const * node = doc->getNodeByPath("html/body/div/ul/li/a"))
-        event.resourceUri = xmlNodeGetAttributeValue(node, "href");
-
+      subscription_manager_.processEvent(doc, callback);
       return true;
     }
 
@@ -152,9 +147,13 @@ namespace abb :: rws
   }
 
 
-  std::ostream& operator<<(std::ostream& os, SubscriptionEvent const& event)
+  void SubscriptionCallback::processEvent(IOSignalStateEvent const& event)
   {
-    return os << "resourceUri=" << event.resourceUri << std::endl
-      << "value=" << event.value;
   }
+
+
+  void SubscriptionCallback::processEvent(RAPIDExecutionStateEvent const& event)
+  {
+  }
+
 }

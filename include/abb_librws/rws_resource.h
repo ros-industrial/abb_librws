@@ -108,6 +108,14 @@ namespace abb :: rws
 
 
   /**
+   * \brief RAPID execution state as a resource
+   */
+  struct RAPIDExecutionStateResource
+  {
+  };
+
+
+  /**
    * \brief A class for representing a file resource.
    */
   struct FileResource

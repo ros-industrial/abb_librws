@@ -2,12 +2,12 @@
 
 #include "rws_resource.h"
 #include "rws_websocket.h"
+#include "rapid_execution_state.h"
 
 #include <Poco/DOM/DOMParser.h>
 #include <Poco/Net/WebSocket.h>
 
 #include <string>
-#include <iosfwd>
 #include <vector>
 #include <memory>
 #include <utility>
@@ -24,6 +24,9 @@ namespace abb :: rws
     MEDIUM, ///< Medium priority.
     HIGH    ///< High priority. Only RobotWare 6.05 (or newer) and for IO signals and persistant RAPID variables.
   };
+
+
+  class SubscriptionCallback;
 
 
   /**
@@ -80,6 +83,23 @@ namespace abb :: rws
      * \return Subscription URI for \a resource
      */
     virtual std::string getResourceURI(RAPIDResource const& resource) const = 0;
+
+    /**
+     * \brief Get URI for subscribing to RAPID execution state
+     *
+     * \return Subscription URI
+     */
+    virtual std::string getResourceURI(RAPIDExecutionStateResource const&) const = 0;
+
+    /**
+     * \brief Process subscription event.
+     *
+     * Parses the event content \a content, determines event type, and calls the appropriate function in \a callback.
+     *
+     * \param content XML content of the event
+     * \param callback event callback
+     */
+    virtual void processEvent(Poco::AutoPtr<Poco::XML::Document> content, SubscriptionCallback& callback) const = 0;
   };
 
 
@@ -146,26 +166,41 @@ namespace abb :: rws
 
 
   /**
-   * \brief Contains info about a subscribed event.
+   * \brief Event received when an IO signal state changes.
    */
-  struct SubscriptionEvent
+  struct IOSignalStateEvent
   {
-    /**
-     * \brief URI of the subscribed resource
-     */
-    std::string resourceUri;
+    /// \brief IO signal name
+    std::string signal;
 
     /**
-     * \brief Value associated with the resource
+     * \brief IO signal value
      */
     std::string value;
   };
 
 
   /**
-   * \brief Outputs a \a SubscriptionEvent in a human-readable format.
+   * \brief Event received when an IO signal state changes.
    */
-  std::ostream& operator<<(std::ostream& os, SubscriptionEvent const& event);
+  struct RAPIDExecutionStateEvent
+  {
+    /**
+     * \brief RAPID execution state
+     */
+    RAPIDExecutionState state;
+  };
+
+
+  /**
+   * \brief Defines callbacks for different types of RWS subscription events.
+   */
+  class SubscriptionCallback
+  {
+  public:
+    virtual void processEvent(IOSignalStateEvent const& event);
+    virtual void processEvent(RAPIDExecutionStateEvent const& event);
+  };
 
 
   /**
@@ -177,12 +212,10 @@ namespace abb :: rws
     /**
      * \brief Prepares to receive events from a specified subscription WebSocket.
      *
-     * Normally you don't want to construct \a SubscriptionReceiver manually.
-     * Use \a SubscriptionGroup::receive() for this.
-     *
-     * \param websocket A connected WebSocket that should be used to receive events.
+     * \param subscription_manager used to initiate WebSocket connection and parse incomoing message content
+     * \param subscription_group_id id of the subscription group for which to receive events
      */
-    explicit SubscriptionReceiver(Poco::Net::WebSocket&& websocket);
+    explicit SubscriptionReceiver(SubscriptionManager& subscription_manager, std::string const& subscription_group_id);
 
 
     /**
@@ -200,11 +233,11 @@ namespace abb :: rws
     /**
      * \brief Waits for a subscription event.
      *
-     * \param event event data
+     * \param callback callback to be called when an event arrives
      *
      * \return true if the connection is still alive, false if the connection has been closed.
      */
-    bool waitForEvent(SubscriptionEvent& event);
+    bool waitForEvent(SubscriptionCallback& callback);
 
 
     /**
@@ -238,6 +271,8 @@ namespace abb :: rws
      * \brief A buffer for a Subscription.
      */
     char websocket_buffer_[BUFFER_SIZE];
+
+    SubscriptionManager& subscription_manager_;
 
     /**
      * \brief WebSocket for receiving events.

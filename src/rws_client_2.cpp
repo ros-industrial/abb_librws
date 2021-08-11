@@ -681,6 +681,59 @@ std::string RWSClient2::getResourceURI(RAPIDResource const& resource) const
 }
 
 
+std::string RWSClient2::getResourceURI(RAPIDExecutionStateResource const&) const
+{
+  return "/rw/rapid/execution;ctrlexecstate";
+}
+
+
+void RWSClient2::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, SubscriptionCallback& callback) const
+{
+  // IMPORTANT: don't use AutoPtr<XML::Node> here! Otherwise you will get memory corruption.
+  Poco::XML::Node const * li_node = doc->getNodeByPath("html/body/div/ul/li");
+  if (!li_node)
+    BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: can't find XML path html/body/div/ul/li"});
+
+  auto const * a_node = li_node->getNodeByPath("a");
+  if (!a_node)
+    BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: can't find XML path html/body/div/ul/li/a"});
+
+  std::string uri;
+  uri = xmlNodeGetAttributeValue(a_node, "href");
+
+  std::string const class_attribute_value = xmlNodeGetAttributeValue(li_node, "class");
+
+  if (class_attribute_value == "ios-signalstate-ev")
+  {
+    IOSignalStateEvent event;
+    std::string const prefix = "/rw/iosystem/signals/";
+
+    if (uri.find(prefix) != 0)
+      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: invalid resource URI"} << UriErrorInfo {uri});
+
+    event.signal = uri.substr(prefix.length(), uri.find(";") - prefix.length());
+    event.value = xmlFindTextContent(li_node, XMLAttribute {"class", "lvalue"});
+    callback.processEvent(event);
+  }
+  else if (class_attribute_value == "rap-ctrlexecstate-ev")
+  {
+    RAPIDExecutionStateEvent event;
+
+    std::string const state_string = xmlFindTextContent(li_node, XMLAttribute {"class", "ctrlexecstate"});
+    if (state_string == "running")
+      event.state = RAPIDExecutionState::running;
+    else if (state_string == "stopped")
+      event.state = RAPIDExecutionState::stopped;
+    else
+      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: invalid RAPID execution state string"});
+
+    callback.processEvent(event);
+  }
+  else
+    BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: unrecognized class " + class_attribute_value});
+}
+
+
 void RWSClient2::setHTTPTimeout(Poco::Timespan timeout)
 {
   session_.setTimeout(timeout);
