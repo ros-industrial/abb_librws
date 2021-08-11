@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+set(CMAKE_CXX_STANDARD 17)
 
 # Read version from the package.xml file.
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/package.xml package_xml_str)
@@ -28,19 +29,14 @@ find_package(Poco 1.4.3 REQUIRED COMPONENTS Foundation Net Util XML)
 ###########
 ## Build ##
 ###########
-if(NOT DEFINED BUILD_SHARED_LIBS)
-  option(BUILD_SHARED_LIBS "Build dynamically-linked binaries" ON)
-endif()
+option(BUILD_SHARED_LIBS "Build dynamically-linked binaries" ON)
+option(USE_PYTHON "Build the Python interface" ON)
 
-set(
-  SRC_FILES
-    src/rws_client.cpp
-    src/rws_common.cpp
-    src/rws_interface.cpp
-    src/rws_poco_client.cpp
-    src/rws_rapid.cpp
-    src/rws_state_machine_interface.cpp
-)
+file (GLOB SRC_FILES "src/*.cpp")
+
+if (USE_PYTHON)
+  add_subdirectory(python)
+endif()
 
 add_library(${PROJECT_NAME} ${SRC_FILES})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -66,22 +62,6 @@ endif()
 ## Install ##
 #############
 install(
-  DIRECTORY include/
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-install(
-  FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-)
-
-install(
-  DIRECTORY cmake/modules/third_party/
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
-)
-
-install(
   TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -89,39 +69,57 @@ install(
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-include(CMakePackageConfigHelpers)
+if (NOT SKBUILD)
+  install(
+    DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  )
 
-# Create the ${PROJECT_NAME}Config.cmake.
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
-  "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake" @ONLY
-)
+  install(
+    FILES
+      ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+  )
 
-# Create the ${PROJECT_NAME}ConfigVersion.cmake.
-write_basic_package_version_file(
-  ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-  COMPATIBILITY AnyNewerVersion
-)
+  install(
+    DIRECTORY cmake/modules/third_party/
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
+  )
 
-install(
-  FILES
-    "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake"
-    "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/package.xml"
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
-)
+  include(CMakePackageConfigHelpers)
+  
+  # Create the ${PROJECT_NAME}Config.cmake.
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake" @ONLY
+  )
 
-# Export targets.
-set(export_targets ${export_targets};${PROJECT_NAME})
-export(
-  EXPORT export_${PROJECT_NAME}
-  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
-  NAMESPACE ${PROJECT_NAME}::
-)
+  # Create the ${PROJECT_NAME}ConfigVersion.cmake.
+  write_basic_package_version_file(
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    COMPATIBILITY AnyNewerVersion
+  )
 
-install(
-  EXPORT export_${PROJECT_NAME}
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
-  FILE ${PROJECT_NAME}Targets.cmake
-  NAMESPACE ${PROJECT_NAME}::
-)
+  install(
+    FILES
+      "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake"
+      "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+      "${CMAKE_CURRENT_SOURCE_DIR}/package.xml"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+  )
+
+  # Export targets.
+  set(export_targets ${export_targets};${PROJECT_NAME})
+  export(
+    EXPORT export_${PROJECT_NAME}
+    FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+    NAMESPACE ${PROJECT_NAME}::
+  )
+
+  install(
+    EXPORT export_${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+  )
+endif()

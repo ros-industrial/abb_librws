@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Build files
+build
+_skbuild
+
+# Python files
+__pycache__
+*.egg-info
