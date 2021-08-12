@@ -3,6 +3,7 @@
 #include "rws_resource.h"
 #include "rws_websocket.h"
 #include "rapid_execution_state.h"
+#include "rws_error.h"
 
 #include <Poco/DOM/DOMParser.h>
 #include <Poco/Net/WebSocket.h>
@@ -11,6 +12,7 @@
 #include <vector>
 #include <memory>
 #include <utility>
+#include <future>
 
 
 namespace abb :: rws
@@ -153,7 +155,7 @@ namespace abb :: rws
     };
 
 
-    std::unique_ptr<ResourceInterface> resource_;
+    std::shared_ptr<ResourceInterface> resource_;
 
     /**
      * \brief Priority of the subscription.
@@ -353,4 +355,40 @@ namespace abb :: rws
      */
     std::string subscription_group_id_;
   };
+
+
+  /**
+   * \brief Wait for a subscription event of a specific type.
+   *
+   * \tparam T type of an event to wait for
+   *
+   * \param receiver RWS subscription receiver
+   *
+   * \return \a std::future with the received event.
+   *
+   * \throw \a CommunicationError if the subscription WebSocket connection is closed while waiting for the event.
+   */
+  template <typename T>
+  inline std::future<T> waitForEvent(SubscriptionReceiver& receiver)
+  {
+    struct Callback : rws::SubscriptionCallback
+    {
+        void processEvent(T const& event) override
+        {
+            event_ = event;
+        }
+
+        T event_;
+    };
+
+
+    return std::async(std::launch::async,
+        [&receiver] {
+            Callback callback;
+            if (!receiver.waitForEvent(callback))
+              BOOST_THROW_EXCEPTION(CommunicationError {"WebSocket connection shut down when waiting for a subscription event"});
+            return callback.event_;
+        }
+    );
+  }
 }
