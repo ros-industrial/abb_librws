@@ -431,12 +431,16 @@ public:
   /**
    * \brief A method for starting RAPID execution in the robot controller.
    *
+   * There can be a delay between the function returns and when the RAPID program enters the "running" state.
+   *
    * \throw \a std::runtime_error if something goes wrong.
    */
   void startRAPIDExecution();
 
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
+   *
+   * There can be a delay between the function returns and when the RAPID program enters the "stopped" state.
    *
    * \throw \a std::runtime_error if something goes wrong.
    */
