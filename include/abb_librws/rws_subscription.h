@@ -13,6 +13,7 @@
 #include <memory>
 #include <utility>
 #include <future>
+#include <chrono>
 
 
 namespace abb :: rws
@@ -236,10 +237,13 @@ namespace abb :: rws
      * \brief Waits for a subscription event.
      *
      * \param callback callback to be called when an event arrives
+     * \param timeout wait timeout
      *
      * \return true if the connection is still alive, false if the connection has been closed.
+     *
+     * \throw \a TimeoutError if waiting time exceeds \a timeout.
      */
-    bool waitForEvent(SubscriptionCallback& callback);
+    bool waitForEvent(SubscriptionCallback& callback, std::chrono::microseconds timeout = DEFAULT_SUBSCRIPTION_TIMEOUT);
 
 
     /**
@@ -262,7 +266,7 @@ namespace abb :: rws
     /**
      * \brief Default RWS subscription timeout [microseconds].
      */
-    static const Poco::Timespan DEFAULT_SUBSCRIPTION_TIMEOUT;
+    static const std::chrono::microseconds DEFAULT_SUBSCRIPTION_TIMEOUT;
 
     /**
      * \brief Static constant for the socket's buffer size.
@@ -287,14 +291,7 @@ namespace abb :: rws
     Poco::XML::DOMParser parser_;
 
 
-    /**
-     * \brief A method for receiving a WebSocket frame.
-     *
-     * \brief frame the received frame
-     *
-     * \return true if the connection is still active, false otherwise.
-     */
-    bool webSocketReceiveFrame(WebSocketFrame& frame);
+    bool webSocketReceiveFrame(WebSocketFrame& frame, std::chrono::microseconds timeout);
   };
 
 
@@ -363,13 +360,15 @@ namespace abb :: rws
    * \tparam T type of an event to wait for
    *
    * \param receiver RWS subscription receiver
+   * \param timeout wait timeout
    *
    * \return \a std::future with the received event.
    *
    * \throw \a CommunicationError if the subscription WebSocket connection is closed while waiting for the event.
+   * \throw \a TimeoutError if waiting time exceeds \a timeout.
    */
   template <typename T>
-  inline std::future<T> waitForEvent(SubscriptionReceiver& receiver)
+  inline std::future<T> waitForEvent(SubscriptionReceiver& receiver, std::chrono::microseconds timeout)
   {
     struct Callback : rws::SubscriptionCallback
     {
@@ -383,9 +382,9 @@ namespace abb :: rws
 
 
     return std::async(std::launch::async,
-        [&receiver] {
+        [&receiver, timeout] {
             Callback callback;
-            if (!receiver.waitForEvent(callback))
+            if (!receiver.waitForEvent(callback, timeout))
               BOOST_THROW_EXCEPTION(CommunicationError {"WebSocket connection shut down when waiting for a subscription event"});
             return callback.event_;
         }

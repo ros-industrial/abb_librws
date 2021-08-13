@@ -68,14 +68,13 @@ namespace abb :: rws
   }
 
 
-  const Poco::Timespan SubscriptionReceiver::DEFAULT_SUBSCRIPTION_TIMEOUT {40000000000};
+  const std::chrono::microseconds SubscriptionReceiver::DEFAULT_SUBSCRIPTION_TIMEOUT {40000000000};
 
 
   SubscriptionReceiver::SubscriptionReceiver(SubscriptionManager& subscription_manager, std::string const& subscription_group_id)
   : subscription_manager_ {subscription_manager}
   , webSocket_ {subscription_manager_.receiveSubscription(subscription_group_id)}
   {
-    webSocket_.setReceiveTimeout(DEFAULT_SUBSCRIPTION_TIMEOUT);
   }
 
 
@@ -84,10 +83,10 @@ namespace abb :: rws
   }
 
 
-  bool SubscriptionReceiver::waitForEvent(SubscriptionCallback& callback)
+  bool SubscriptionReceiver::waitForEvent(SubscriptionCallback& callback, std::chrono::microseconds timeout)
   {
     WebSocketFrame frame;
-    if (webSocketReceiveFrame(frame))
+    if (webSocketReceiveFrame(frame, timeout))
     {
       Poco::AutoPtr<Poco::XML::Document> doc = parser_.parseString(frame.frame_content);
       subscription_manager_.processEvent(doc, callback);
@@ -98,8 +97,11 @@ namespace abb :: rws
   }
 
 
-  bool SubscriptionReceiver::webSocketReceiveFrame(WebSocketFrame& frame)
+  bool SubscriptionReceiver::webSocketReceiveFrame(WebSocketFrame& frame, std::chrono::microseconds timeout)
   {
+    auto now = std::chrono::steady_clock::now();
+    auto deadline = std::chrono::steady_clock::now() + timeout;
+
     // If the connection is still active...
     int flags = 0;
     std::string content;
@@ -108,8 +110,25 @@ namespace abb :: rws
     // Wait for (non-ping) WebSocket frames.
     do
     {
+      now = std::chrono::steady_clock::now();
+      if (now >= deadline)
+        BOOST_THROW_EXCEPTION(TimeoutError {"WebSocket frame receive timeout"});
+
+      webSocket_.setReceiveTimeout(std::chrono::duration_cast<std::chrono::microseconds>(deadline - now).count());
       flags = 0;
-      number_of_bytes_received = webSocket_.receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
+
+      try
+      {
+        number_of_bytes_received = webSocket_.receiveFrame(websocket_buffer_, sizeof(websocket_buffer_), flags);
+      }
+      catch (Poco::TimeoutException const&)
+      {
+        BOOST_THROW_EXCEPTION(
+          TimeoutError {"WebSocket frame receive timeout"}
+            << boost::errinfo_nested_exception(boost::current_exception())
+        );
+      }
+
       content = std::string(websocket_buffer_, number_of_bytes_received);
 
       // Check for ping frame.

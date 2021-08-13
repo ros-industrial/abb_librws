@@ -185,6 +185,7 @@ Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const 
       BOOST_THROW_EXCEPTION(
         ProtocolError {"webSocketConnect() failed"}
           << HttpStatusErrorInfo {response.getStatus()}
+          << HttpReasonErrorInfo {response.getReason()}
           << HttpMethodErrorInfo {request.getMethod()}
           << UriErrorInfo {uri}
       );
@@ -194,8 +195,9 @@ Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const 
   catch (Poco::Exception const& e)
   {
     BOOST_THROW_EXCEPTION(
-      CommunicationError {"webSocketConnect() failed"}
+      CommunicationError {"webSocketConnect() failed: " + e.displayText()}
         << HttpStatusErrorInfo {response.getStatus()}
+        << HttpReasonErrorInfo {response.getReason()}
         << HttpMethodErrorInfo {request.getMethod()}
         << UriErrorInfo {uri}
         << boost::errinfo_nested_exception {boost::current_exception()}

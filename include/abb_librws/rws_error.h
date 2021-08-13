@@ -55,6 +55,20 @@ namespace abb :: rws
 
 
   /**
+   * \brief Timeout errors e.g. WebSocket receive timeout.
+   */
+  class TimeoutError
+  : public RWSError
+  {
+  public:
+    explicit TimeoutError(std::string const& message)
+    : RWSError {message}
+    {
+    }
+  };
+
+
+  /**
    * \brief Error info containing IO signal name.
    */
   using IoSignalErrorInfo = boost::error_info<struct IoSignalErrorInfoTag, std::string>;
