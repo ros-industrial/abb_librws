@@ -39,7 +39,6 @@
 
 #include <abb_librws/rws_poco_result.h>
 
-#include <Poco/Mutex.h>
 #include <Poco/Net/HTTPClientSession.h>
 #include <Poco/Net/HTTPCredentials.h>
 #include <Poco/Net/HTTPResponse.h>
@@ -286,11 +285,6 @@ namespace rws
      */
     static const Poco::Int64 DEFAULT_HTTP_TIMEOUT = 400e3;
 
-
-    /**
-     * \brief A mutex for protecting the clients's HTTP resources.
-     */
-    Poco::Mutex http_mutex_;
 
     /**
      * \brief A HTTP client session.

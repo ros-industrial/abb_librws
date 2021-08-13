@@ -99,8 +99,6 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
                                                    const std::string& content,
                                                    const std::string& content_type)
 {
-  // Lock the object's mutex. It is released when the method goes out of scope.
-  ScopedLock<Mutex> lock(http_mutex_);
   // The response and the request.
   HTTPResponse response;
   std::string response_content;
@@ -167,9 +165,6 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
 
 Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const std::string& protocol, Poco::Net::HTTPClientSession& session)
 {
-  // Lock the object's mutex. It is released when the method goes out of scope.
-  ScopedLock<Mutex> lock(http_mutex_);
-
   // The response and the request.
   HTTPResponse response;
   HTTPRequest request(HTTPRequest::HTTP_GET, uri, HTTPRequest::HTTP_1_1);
