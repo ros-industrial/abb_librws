@@ -737,7 +737,6 @@ void RWSClient2::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, Subscripti
 void RWSClient2::setHTTPTimeout(Poco::Timespan timeout)
 {
   session_.setTimeout(timeout);
-  session_.reset();
 }
 
 
