@@ -714,10 +714,7 @@ public:
    */
   RWSStateMachineInterface(const std::string& ip_address)
   :
-  RWSInterface(ip_address,
-               SystemConstants::General::DEFAULT_PORT_NUMBER,
-               SystemConstants::General::DEFAULT_USERNAME,
-               SystemConstants::General::DEFAULT_PASSWORD),
+  RWSInterface {ConnectionOptions {ip_address}},
   services_(this)
   {}
 
@@ -730,10 +727,14 @@ public:
    */
   RWSStateMachineInterface(const std::string& ip_address, const std::string& username, const std::string& password)
   :
-  RWSInterface(ip_address,
-               SystemConstants::General::DEFAULT_PORT_NUMBER,
-               username,
-               password),
+  RWSInterface {
+    ConnectionOptions {
+      ip_address,
+      SystemConstants::General::DEFAULT_PORT_NUMBER,
+      username,
+      password
+    }
+  },
   services_(this)
   {}
 
@@ -745,10 +746,14 @@ public:
    */
   RWSStateMachineInterface(const std::string& ip_address, const unsigned short port)
   :
-  RWSInterface(ip_address,
-               port,
-               SystemConstants::General::DEFAULT_USERNAME,
-               SystemConstants::General::DEFAULT_PASSWORD),
+  RWSInterface {
+    ConnectionOptions {
+      ip_address,
+      port,
+      SystemConstants::General::DEFAULT_USERNAME,
+      SystemConstants::General::DEFAULT_PASSWORD
+    }
+  },
   services_(this)
   {}
 
@@ -765,10 +770,14 @@ public:
                            const std::string& username,
                            const std::string& password)
   :
-  RWSInterface(ip_address,
-               port,
-               username,
-               password),
+  RWSInterface {
+    ConnectionOptions {
+      ip_address,
+      port,
+      username,
+      password
+    }
+  },
   services_(this)
   {}
 

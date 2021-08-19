@@ -77,6 +77,10 @@ static bool digitalSignalToBool(std::string const& value)
  /************************************************************
  * Primary methods
  */
+RWSInterface2::RWSInterface2(ConnectionOptions const& connection_options)
+: rws_client_ {connection_options}
+{
+}
 
 std::vector<cfg::moc::Arm> RWSInterface2::getCFGArms()
 {
@@ -1019,18 +1023,6 @@ void RWSInterface2::requestMastership(std::string const& type)
 void RWSInterface2::releaseMastership(std::string const& type)
 {
   rws_client_.releaseMastership(type);
-}
-
-
-void RWSInterface2::setHTTPTimeout(std::chrono::microseconds timeout)
-{
-  rws_client_.setHTTPTimeout(Poco::Timespan {timeout.count()});
-}
-
-
-std::chrono::microseconds RWSInterface2::getHTTPTimeout() const noexcept
-{
-  return std::chrono::microseconds {rws_client_.getHTTPTimeout().totalMicroseconds()};
 }
 
 

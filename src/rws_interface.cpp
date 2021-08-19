@@ -78,6 +78,11 @@ static bool digitalSignalToBool(std::string const& value)
  * Primary methods
  */
 
+RWSInterface::RWSInterface(ConnectionOptions const& connection_options)
+: rws_client_ {connection_options}
+{
+}
+
 StaticInfo RWSInterface::collectStaticInfo()
 {
   StaticInfo static_info;
@@ -1029,18 +1034,6 @@ void RWSInterface::requestMastership(std::string const& type)
 void RWSInterface::releaseMastership(std::string const& type)
 {
   // Empty mastership implementation for RWS 1.0.
-}
-
-
-void RWSInterface::setHTTPTimeout(std::chrono::microseconds timeout)
-{
-  rws_client_.setHTTPTimeout(Poco::Timespan {timeout.count()});
-}
-
-
-std::chrono::microseconds RWSInterface::getHTTPTimeout() const noexcept
-{
-  return std::chrono::microseconds {rws_client_.getHTTPTimeout().totalMicroseconds()};
 }
 
 

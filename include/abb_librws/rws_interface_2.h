@@ -64,63 +64,9 @@ public:
   /**
    * \brief A constructor.
    *
-   * \param ip_address specifying the robot controller's IP address.
+   * \param connection_options RWS connection options
    */
-  RWSInterface2(const std::string& ip_address)
-  :
-  rws_client_(ip_address,
-              SystemConstants::General::DEFAULT_PORT_NUMBER,
-              SystemConstants::General::DEFAULT_USERNAME,
-              SystemConstants::General::DEFAULT_PASSWORD)
-  {}
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param username for the username to the RWS authentication process.
-   * \param password for the password to the RWS authentication process.
-   */
-  RWSInterface2(const std::string& ip_address, const std::string& username, const std::string& password)
-  :
-  rws_client_(ip_address,
-              SystemConstants::General::DEFAULT_PORT_NUMBER,
-              username,
-              password)
-  {}
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param port for the port used by the RWS server.
-   */
-  RWSInterface2(const std::string& ip_address, const unsigned short port)
-  :
-  rws_client_(ip_address,
-              port,
-              SystemConstants::General::DEFAULT_USERNAME,
-              SystemConstants::General::DEFAULT_PASSWORD)
-  {}
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param port for the port used by the RWS server.
-   * \param username for the username to the RWS authentication process.
-   * \param password for the password to the RWS authentication process.
-   */
-  RWSInterface2(const std::string& ip_address,
-               const unsigned short port,
-               const std::string& username,
-               const std::string& password)
-  :
-  rws_client_(ip_address,
-              port,
-              username,
-              password)
-  {}
+  explicit RWSInterface2(ConnectionOptions const& connection_options);
 
   /**
    * \brief Retrieves the configuration instances for the arms defined in the system.
@@ -567,20 +513,6 @@ public:
   void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                           const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                           const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
-
-  /**
-   * \brief A method for setting the HTTP communication timeout.
-   *
-   * \param timeout HTTP communication timeout.
-   */
-  void setHTTPTimeout(std::chrono::microseconds timeout);
-
-  /**
-   * \brief Get HTTP communication timeout.
-   *
-   * \return HTTP communication timeout.
-   */
-  std::chrono::microseconds getHTTPTimeout() const noexcept;
 
   /**
    * \brief Get RWS mastership

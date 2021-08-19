@@ -73,40 +73,16 @@ typedef RWS::XMLAttributes XMLAttributes;
  * Primary methods
  */
 
-RWSClient::RWSClient(const std::string& ip_address)
-:
-RWSClient {ip_address,
-            SystemConstants::General::DEFAULT_PORT_NUMBER,
-            SystemConstants::General::DEFAULT_USERNAME,
-            SystemConstants::General::DEFAULT_PASSWORD}
-{}
-
-
-RWSClient::RWSClient(const std::string& ip_address, const std::string& username, const std::string& password)
-:
-RWSClient {ip_address,
-            SystemConstants::General::DEFAULT_PORT_NUMBER,
-            username,
-            password}
-{}
-
-
-RWSClient::RWSClient(const std::string& ip_address, const unsigned short port)
-:
-RWSClient {ip_address,
-            port,
-            SystemConstants::General::DEFAULT_USERNAME,
-            SystemConstants::General::DEFAULT_PASSWORD}
-{}
-
-
-RWSClient::RWSClient(const std::string& ip_address,
-          const unsigned short port,
-          const std::string& username,
-          const std::string& password)
-: session_ {ip_address, port}
-, http_client_ {session_, username, password}
+RWSClient::RWSClient(ConnectionOptions const& connection_options)
+: session_ {connection_options.ip_address, connection_options.port}
+, http_client_ {session_, connection_options.username, connection_options.password}
 {
+  session_.setTimeout(
+    connection_options.connection_timeout.count(),
+    connection_options.send_timeout.count(),
+    connection_options.receive_timeout.count()
+  );
+
   // Make a request to the server to check connection and initiate authentification.
   getRobotWareSystem();
 }
@@ -714,19 +690,6 @@ void RWSClient::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, Subscriptio
   else
     BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: unrecognized class " + class_attribute_value});
 }
-
-
-void RWSClient::setHTTPTimeout(Poco::Timespan timeout)
-{
-  session_.setTimeout(timeout);
-}
-
-
-Poco::Timespan RWSClient::getHTTPTimeout() const noexcept
-{
-  return session_.getTimeout();
-}
-
 
 } // end namespace rws
 } // end namespace abb

@@ -63,7 +63,6 @@ POCOClient::POCOClient(
 , http_credentials_ {username, password}
 {
   http_client_session_.setKeepAlive(true);
-  http_client_session_.setTimeout(Poco::Timespan(DEFAULT_HTTP_TIMEOUT));
 }
 
 POCOClient::~POCOClient()
@@ -215,12 +214,26 @@ void POCOClient::sendAndReceive(HTTPRequest& request,
   // Add request info to the log entry.
   log_entry.addHTTPRequestInfo(request, request_content);
 
+  // Contact the server.
+
   try
   {
-    // Contact the server.
     std::ostream& request_content_stream = http_client_session_.sendRequest(request);
     request_content_stream << request_content;
+  }
+  catch (Poco::Exception const& e)
+  {
+    BOOST_THROW_EXCEPTION(
+      CommunicationError {"HTTP send timeout: " + e.displayText()}
+        << HttpMethodErrorInfo {request.getMethod()}
+        << UriErrorInfo {request.getURI()}
+        << HttpRequestContentErrorInfo {request_content}
+        << boost::errinfo_nested_exception {boost::current_exception()}
+    );
+  }
 
+  try
+  {
     std::istream& response_content_stream = http_client_session_.receiveResponse(response);
 
     response_content.clear();
@@ -229,7 +242,7 @@ void POCOClient::sendAndReceive(HTTPRequest& request,
   catch (Poco::Exception const& e)
   {
     BOOST_THROW_EXCEPTION(
-      CommunicationError {e.displayText()}
+      CommunicationError {"HTTP receive timeout: " + e.displayText()}
         << HttpMethodErrorInfo {request.getMethod()}
         << UriErrorInfo {request.getURI()}
         << HttpRequestContentErrorInfo {request_content}

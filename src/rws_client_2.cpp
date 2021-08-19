@@ -73,45 +73,21 @@ typedef RWS2::XMLAttributes XMLAttributes;
  * Primary methods
  */
 
-RWSClient2::RWSClient2(const std::string& ip_address)
-:
-RWSClient2 {ip_address,
-            SystemConstants::General::DEFAULT_PORT_NUMBER,
-            SystemConstants::General::DEFAULT_USERNAME,
-            SystemConstants::General::DEFAULT_PASSWORD}
-{}
-
-
-RWSClient2::RWSClient2(const std::string& ip_address, const std::string& username, const std::string& password)
-:
-RWSClient2 {ip_address,
-            SystemConstants::General::DEFAULT_PORT_NUMBER,
-            username,
-            password}
-{}
-
-
-RWSClient2::RWSClient2(const std::string& ip_address, const unsigned short port)
-:
-RWSClient2 {ip_address,
-            port,
-            SystemConstants::General::DEFAULT_USERNAME,
-            SystemConstants::General::DEFAULT_PASSWORD}
-{}
-
-
-RWSClient2::RWSClient2(const std::string& ip_address,
-          const unsigned short port,
-          const std::string& username,
-          const std::string& password)
+RWSClient2::RWSClient2(ConnectionOptions const& connection_options)
 : context_ {
     new Poco::Net::Context {
       Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_NONE, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH"
     }
   }
-, session_ {ip_address, port, context_}
-, http_client_ {session_, username, password}
+, session_ {connection_options.ip_address, connection_options.port, context_}
+, http_client_ {session_, connection_options.username, connection_options.password}
 {
+  session_.setTimeout(
+    connection_options.connection_timeout.count(),
+    connection_options.send_timeout.count(),
+    connection_options.receive_timeout.count()
+  );
+
   // Make a request to the server to check connection and initiate authentification.
   getRobotWareSystem();
 }
@@ -731,18 +707,6 @@ void RWSClient2::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, Subscripti
   }
   else
     BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: unrecognized class " + class_attribute_value});
-}
-
-
-void RWSClient2::setHTTPTimeout(Poco::Timespan timeout)
-{
-  session_.setTimeout(timeout);
-}
-
-
-Poco::Timespan RWSClient2::getHTTPTimeout() const noexcept
-{
-  return session_.getTimeout();
 }
 
 

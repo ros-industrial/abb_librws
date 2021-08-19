@@ -46,6 +46,7 @@
 #include "rws_subscription.h"
 #include "coordinate.h"
 #include "mastership.h"
+#include "connection_options.h"
 
 #include <map>
 
@@ -73,47 +74,11 @@ public:
   /**
    * \brief A constructor.
    *
-   * \param ip_address specifying the robot controller's IP address.
+   * \param connection_options RWS connection options.
    *
    * \throw \a RWSError if something goes wrong.
    */
-  RWSClient2(const std::string& ip_address);
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param username for the username to the RWS authentication process.
-   * \param password for the password to the RWS authentication process.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSClient2(const std::string& ip_address, const std::string& username, const std::string& password);
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param port for the port used by the RWS server.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSClient2(const std::string& ip_address, const unsigned short port);
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param port for the port used by the RWS server.
-   * \param username for the username to the RWS authentication process.
-   * \param password for the password to the RWS authentication process.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSClient2(const std::string& ip_address,
-            const unsigned short port,
-            const std::string& username,
-            const std::string& password);
+  explicit RWSClient2(ConnectionOptions const& connection_options);
 
   /**
    * \brief Logs out the currently active RWS session.
@@ -468,24 +433,6 @@ public:
   void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
                                const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                                const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
-
-  /**
-   * \brief A method for setting the HTTP communication timeout.
-   *
-   * \note This method resets the internal HTTP client session, causing the
-   *       RWS server (robot controller) to send a new cookie. The RWS
-   *       session id is not changed.
-   *
-   * \param timeout for the HTTP communication timeout.
-   */
-  void setHTTPTimeout(Poco::Timespan timeout);
-
-  /**
-   * \brief Get HTTP receive timeout.
-   *
-   * \return HTTP receive timeout.
-   */
-  Poco::Timespan getHTTPTimeout() const noexcept;
 
   /**
    * @brief Request mastership of given type

@@ -281,12 +281,6 @@ namespace rws
     void extractAndStoreCookie(const std::string& cookie_string);
 
     /**
-     * \brief Static constant for the default HTTP communication timeout [microseconds].
-     */
-    static const Poco::Int64 DEFAULT_HTTP_TIMEOUT = 400e3;
-
-
-    /**
      * \brief A HTTP client session.
      */
     Poco::Net::HTTPClientSession& http_client_session_;
