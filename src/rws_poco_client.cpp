@@ -224,7 +224,7 @@ void POCOClient::sendAndReceive(HTTPRequest& request,
   catch (Poco::Exception const& e)
   {
     BOOST_THROW_EXCEPTION(
-      CommunicationError {"HTTP send timeout: " + e.displayText()}
+      CommunicationError {"HTTP send error: " + e.displayText()}
         << HttpMethodErrorInfo {request.getMethod()}
         << UriErrorInfo {request.getURI()}
         << HttpRequestContentErrorInfo {request_content}
@@ -242,7 +242,7 @@ void POCOClient::sendAndReceive(HTTPRequest& request,
   catch (Poco::Exception const& e)
   {
     BOOST_THROW_EXCEPTION(
-      CommunicationError {"HTTP receive timeout: " + e.displayText()}
+      CommunicationError {"HTTP receive error: " + e.displayText()}
         << HttpMethodErrorInfo {request.getMethod()}
         << UriErrorInfo {request.getURI()}
         << HttpRequestContentErrorInfo {request_content}
