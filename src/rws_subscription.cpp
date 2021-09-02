@@ -45,6 +45,7 @@ namespace abb :: rws
     {
       // Catch potential exceptions, s.t. the destructor does not throw.
       std::cerr << "Exception in ~SubscriptionGroup(): " << boost::current_exception_diagnostic_information() << std::endl;
+      throw;
     }
   }
 
