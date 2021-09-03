@@ -761,9 +761,12 @@ void RWSInterface::startRAPIDExecution()
   rws_client_.startRAPIDExecution();
 }
 
-void RWSInterface::stopRAPIDExecution()
+void RWSInterface::stopRAPIDExecution(StopMode stopmode, UseTsp usetsp)
 {
-  rws_client_.stopRAPIDExecution();
+  std::stringstream content;
+  content << "stopmode=" << stopmode << "&usetsp=" << usetsp;
+
+  rws_client_.httpPost("/rw/rapid/execution?action=stop", content.str());
 }
 
 void RWSInterface::resetRAPIDProgramPointer()

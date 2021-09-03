@@ -41,7 +41,6 @@
 #include <vector>
 #include <sstream>
 
-#include "Poco/SharedPtr.h"
 
 namespace abb
 {
@@ -1052,21 +1051,21 @@ public:
 
   /**
    * \brief The zone size (the radius) for the tool reorientation.
-   * 
+   *
    * The size is defined as the distance of the TCP from the programmed point in mm.
    */
   RAPIDNum pzone_ori;
 
   /**
    * \brief The zone size (the radius) for external axes.
-   * 
+   *
    * The size is defined as the distance of the TCP from the programmed point in mm.
    */
   RAPIDNum pzone_eax;
 
   /**
    * \brief The zone size for the tool reorientation in degrees.
-   * 
+   *
    * If the robot is holding the work object, this means an angle of rotation for the work object.
    */
   RAPIDNum zone_ori;

@@ -309,13 +309,6 @@ public:
   void startRAPIDExecution();
 
   /**
-   * \brief A method for stopping RAPID execution in the robot controller.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  void stopRAPIDExecution();
-
-  /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.
    *
    * \throw \a RWSError if something goes wrong.
@@ -442,18 +435,6 @@ public:
   void processEvent(Poco::AutoPtr<Poco::XML::Document> content, SubscriptionCallback& callback) const override;
 
 
-private:
-  /**
-   * \brief Method for parsing a communication result into an XML document.
-   *
-   * \param result containing the result of the parsing.
-   *
-   * \return parsed content of \a poco_result.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSResult parseContent(const POCOResult& poco_result);
-
   /**
    * \brief A method for sending a HTTP GET request and checking response status.
    *
@@ -491,6 +472,19 @@ private:
    * \return POCOResult containing the result.
    */
   POCOResult httpDelete(const std::string& uri);
+
+
+private:
+  /**
+   * \brief Method for parsing a communication result into an XML document.
+   *
+   * \param result containing the result of the parsing.
+   *
+   * \return parsed content of \a poco_result.
+   *
+   * \throw \a RWSError if something goes wrong.
+   */
+  RWSResult parseContent(const POCOResult& poco_result);
 
 
   /**

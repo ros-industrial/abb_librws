@@ -43,6 +43,7 @@
 #include "rws_info.h"
 #include "xml_attribute.h"
 #include "mastership.h"
+#include "rws.h"
 
 #include <chrono>
 
@@ -393,11 +394,16 @@ public:
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
    *
+   * https://developercenter.robotstudio.com/api/rwsApi/rapid_execution_stop_page.html
+   *
    * There can be a delay between the function returns and when the RAPID program enters the "stopped" state.
+   *
+   * \param stopmode stop mode
+   * \param usetsp which tasks to stop (?)
    *
    * \throw \a std::runtime_error if something goes wrong.
    */
-  void stopRAPIDExecution();
+  void stopRAPIDExecution(StopMode stopmode = StopMode::stop, UseTsp usetsp = UseTsp::normal);
 
   /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.

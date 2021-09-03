@@ -311,14 +311,6 @@ void RWSClient::startRAPIDExecution()
   httpPost(uri, content);
 }
 
-void RWSClient::stopRAPIDExecution()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_STOP;
-  std::string content = "stopmode=stop";
-
-  httpPost(uri, content);
-}
-
 void RWSClient::resetRAPIDProgramPointer()
 {
   std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_RESETPP;
