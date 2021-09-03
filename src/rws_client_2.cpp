@@ -74,18 +74,19 @@ typedef RWS2::XMLAttributes XMLAttributes;
  */
 
 RWSClient2::RWSClient2(ConnectionOptions const& connection_options)
-: context_ {
+: connectionOptions_ {connection_options}
+, context_ {
     new Poco::Net::Context {
       Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_NONE, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH"
     }
   }
-, session_ {connection_options.ip_address, connection_options.port, context_}
-, http_client_ {session_, connection_options.username, connection_options.password}
+, session_ {connectionOptions_.ip_address, connectionOptions_.port, context_}
+, http_client_ {session_, connectionOptions_.username, connectionOptions_.password}
 {
   session_.setTimeout(
-    connection_options.connection_timeout.count(),
-    connection_options.send_timeout.count(),
-    connection_options.receive_timeout.count()
+    connectionOptions_.connection_timeout.count(),
+    connectionOptions_.send_timeout.count(),
+    connectionOptions_.receive_timeout.count()
   );
 
   // Make a request to the server to check connection and initiate authentification.
@@ -626,8 +627,8 @@ void RWSClient2::closeSubscription(std::string const& subscription_group_id)
 
 Poco::Net::WebSocket RWSClient2::receiveSubscription(std::string const& subscription_group_id)
 {
-  Poco::Net::HTTPSClientSession session {session_.getHost(), session_.getPort(), context_};
-  return http_client_.webSocketConnect("/poll/" + subscription_group_id, "rws_subscription", session);
+  return http_client_.webSocketConnect("/poll/" + subscription_group_id, "rws_subscription",
+    Poco::Net::HTTPSClientSession {connectionOptions_.ip_address, connectionOptions_.port, context_});
 }
 
 

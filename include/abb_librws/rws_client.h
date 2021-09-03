@@ -563,6 +563,7 @@ private:
   std::string generateRAPIDTasksPath(const std::string& task);
 
 
+  ConnectionOptions const connectionOptions_;
   Poco::Net::HTTPClientSession session_;
   POCOClient http_client_;
   Poco::XML::DOMParser parser_;

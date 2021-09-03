@@ -74,13 +74,14 @@ typedef RWS::XMLAttributes XMLAttributes;
  */
 
 RWSClient::RWSClient(ConnectionOptions const& connection_options)
-: session_ {connection_options.ip_address, connection_options.port}
-, http_client_ {session_, connection_options.username, connection_options.password}
+: connectionOptions_ {connection_options}
+, session_ {connectionOptions_.ip_address, connectionOptions_.port}
+, http_client_ {session_, connectionOptions_.username, connectionOptions_.password}
 {
   session_.setTimeout(
-    connection_options.connection_timeout.count(),
-    connection_options.send_timeout.count(),
-    connection_options.receive_timeout.count()
+    connectionOptions_.connection_timeout.count(),
+    connectionOptions_.send_timeout.count(),
+    connectionOptions_.receive_timeout.count()
   );
 
   // Make a request to the server to check connection and initiate authentification.
@@ -608,8 +609,8 @@ void RWSClient::closeSubscription(std::string const& subscription_group_id)
 
 Poco::Net::WebSocket RWSClient::receiveSubscription(std::string const& subscription_group_id)
 {
-  Poco::Net::HTTPClientSession session {session_.getHost(), session_.getPort()};
-  return http_client_.webSocketConnect("/poll/" + subscription_group_id, "robapi2_subscription", session);
+  return http_client_.webSocketConnect("/poll/" + subscription_group_id, "robapi2_subscription",
+    Poco::Net::HTTPClientSession {connectionOptions_.ip_address, connectionOptions_.port});
 }
 
 

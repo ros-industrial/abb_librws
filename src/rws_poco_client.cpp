@@ -162,7 +162,7 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
 }
 
 
-Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const std::string& protocol, Poco::Net::HTTPClientSession& session)
+Poco::Net::WebSocket POCOClient::webSocketConnect(const std::string& uri, const std::string& protocol, Poco::Net::HTTPClientSession&& session)
 {
   // The response and the request.
   HTTPResponse response;
