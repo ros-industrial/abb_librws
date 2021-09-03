@@ -33,7 +33,7 @@
  *
  ***********************************************************************************************************************
  */
-#include <abb_librws/rws_interface.h>
+#include <abb_librws/v1_0/rws_interface.h>
 #include <abb_librws/rws_rapid.h>
 #include <abb_librws/parsing.h>
 #include <abb_librws/rws.h>
@@ -50,15 +50,11 @@ static const char EXCEPTION_GET_CFG[]{"Failed to get configuration instances"};
 static const char EXCEPTION_PARSE_CFG[]{"Failed to parse configuration instances"};
 }
 
-namespace abb
-{
-namespace rws
+namespace abb :: rws :: v1_0
 {
 
 typedef SystemConstants::ContollerStates ContollerStates;
 typedef SystemConstants::RAPID RAPID;
-typedef RWS::Identifiers Identifiers;
-typedef RWS::XMLAttributes XMLAttributes;
 
 
 static bool digitalSignalToBool(std::string const& value)
@@ -1075,5 +1071,4 @@ bool RWSInterface::compareSingleContent(const RWSResult& rws_result,
   return xmlFindTextContent(rws_result, attribute) == compare_string;
 }
 
-} // end namespace rws
-} // end namespace abb
+}

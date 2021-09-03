@@ -34,8 +34,8 @@
  ***********************************************************************************************************************
  */
 
-#include <abb_librws/rws_client_2.h>
-#include <abb_librws/rws_2.h>
+#include <abb_librws/v1_0/rws_client.h>
+#include <abb_librws/v1_0/rws.h>
 #include <abb_librws/rws_error.h>
 #include <abb_librws/parsing.h>
 
@@ -52,35 +52,22 @@ namespace
 static const char EXCEPTION_CREATE_STRING[]{"Failed to create string"};
 }
 
-namespace abb
-{
-namespace rws
+namespace abb :: rws :: v1_0
 {
 using namespace Poco::Net;
 
-typedef RWS2::Identifiers   Identifiers;
-typedef RWS2::Queries       Queries;
-typedef RWS2::Resources     Resources;
-typedef RWS2::Services      Services;
-typedef RWS2::XMLAttributes XMLAttributes;
-
 
 /***********************************************************************************************************************
- * Class definitions: RWSClient2
+ * Class definitions: RWSClient
  */
 
 /************************************************************
  * Primary methods
  */
 
-RWSClient2::RWSClient2(ConnectionOptions const& connection_options)
+RWSClient::RWSClient(ConnectionOptions const& connection_options)
 : connectionOptions_ {connection_options}
-, context_ {
-    new Poco::Net::Context {
-      Poco::Net::Context::CLIENT_USE, "", "", "", Poco::Net::Context::VERIFY_NONE, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH"
-    }
-  }
-, session_ {connectionOptions_.ip_address, connectionOptions_.port, context_}
+, session_ {connectionOptions_.ip_address, connectionOptions_.port}
 , http_client_ {session_, connectionOptions_.username, connectionOptions_.password}
 {
   session_.setTimeout(
@@ -94,7 +81,7 @@ RWSClient2::RWSClient2(ConnectionOptions const& connection_options)
 }
 
 
-RWSClient2::~RWSClient2()
+RWSClient::~RWSClient()
 {
   try
   {
@@ -103,30 +90,30 @@ RWSClient2::~RWSClient2()
   catch (std::exception const& e)
   {
     // Catch all exceptions in dtor.
-    std::cerr << "Exception in RWSClient2::~RWSClient2(): " << e.what() << std::endl;
+    std::cerr << "Exception in RWSClient::~RWSClient(): " << e.what() << std::endl;
   }
 }
 
 
-RWSClient2::RWSResult RWSClient2::getContollerService()
+RWSClient::RWSResult RWSClient::getContollerService()
 {
   std::string uri = Services::CTRL;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getConfigurationInstances(const std::string& topic, const std::string& type)
+RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string& topic, const std::string& type)
 {
   std::string uri = generateConfigurationPath(topic, type) + Resources::INSTANCES;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getIOSignals()
+RWSClient::RWSResult RWSClient::getIOSignals()
 {
-  std::string const & uri = RWS2::Resources::RW_IOSYSTEM_SIGNALS;
+  std::string const & uri = Resources::RW_IOSYSTEM_SIGNALS;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getIOSignal(const std::string& iosignal)
+RWSClient::RWSResult RWSClient::getIOSignal(const std::string& iosignal)
 {
   try
   {
@@ -140,25 +127,25 @@ RWSClient2::RWSResult RWSClient2::getIOSignal(const std::string& iosignal)
   }
 }
 
-RWSClient2::RWSResult RWSClient2::getMechanicalUnitStaticInfo(const std::string& mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitStaticInfo(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + "?resource=static";
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getMechanicalUnitDynamicInfo(const std::string& mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitDynamicInfo(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + "?resource=dynamic";
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getMechanicalUnitJointTarget(const std::string& mechunit)
+RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + Resources::JOINTTARGET;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getMechanicalUnitRobTarget(const std::string& mechunit,
+RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
                                                            Coordinate coordinate,
                                                            const std::string& tool,
                                                            const std::string& wobj)
@@ -199,55 +186,55 @@ RWSClient2::RWSResult RWSClient2::getMechanicalUnitRobTarget(const std::string& 
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getRAPIDExecution()
+RWSClient::RWSResult RWSClient::getRAPIDExecution()
 {
   std::string uri = Resources::RW_RAPID_EXECUTION;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getRAPIDModulesInfo(const std::string& task)
+RWSClient::RWSResult RWSClient::getRAPIDModulesInfo(const std::string& task)
 {
   std::string uri = Resources::RW_RAPID_MODULES + "?" + Queries::TASK + task;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getRAPIDTasks()
+RWSClient::RWSResult RWSClient::getRAPIDTasks()
 {
   std::string uri = Resources::RW_RAPID_TASKS;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getRobotWareSystem()
+RWSClient::RWSResult RWSClient::getRobotWareSystem()
 {
   std::string uri = Resources::RW_SYSTEM;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getSpeedRatio()
+RWSClient::RWSResult RWSClient::getSpeedRatio()
 {
   std::string uri = "/rw/panel/speedratio";
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getPanelControllerState()
+RWSClient::RWSResult RWSClient::getPanelControllerState()
 {
   std::string uri = Resources::RW_PANEL_CTRLSTATE;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getPanelOperationMode()
+RWSClient::RWSResult RWSClient::getPanelOperationMode()
 {
   std::string uri = Resources::RW_PANEL_OPMODE;
   return parseContent(httpGet(uri));
 }
 
-RWSClient2::RWSResult RWSClient2::getRAPIDSymbolData(const RAPIDResource& resource)
+RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource)
 {
   std::string uri = generateRAPIDDataPath(resource);
   return parseContent(httpGet(uri));
 }
 
-void RWSClient2::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract& data)
+void RWSClient::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract& data)
 {
   RWSResult result;
   std::string data_type;
@@ -273,21 +260,20 @@ void RWSClient2::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDa
   }
 }
 
-RWSClient2::RWSResult RWSClient2::getRAPIDSymbolProperties(const RAPIDResource& resource)
+RWSClient::RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource& resource)
 {
   std::string uri = generateRAPIDPropertiesPath(resource);
   return parseContent(httpGet(uri));
 }
 
-void RWSClient2::setIOSignal(const std::string& iosignal, const std::string& value)
+void RWSClient::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   try
   {
-    std::string uri = generateIOSignalPath(iosignal) + "/" + Queries::ACTION_SET;
+    std::string uri = generateIOSignalPath(iosignal) + "?" + Queries::ACTION_SET;
     std::string content = Identifiers::LVALUE + "=" + value;
-    std::string content_type = "application/x-www-form-urlencoded;v=2.0";
 
-    httpPost(uri, content, content_type);
+    httpPost(uri, content);
   }
   catch (boost::exception& e)
   {
@@ -296,65 +282,51 @@ void RWSClient2::setIOSignal(const std::string& iosignal, const std::string& val
   }
 }
 
-void RWSClient2::setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data)
+void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data)
 {
-  std::string uri = generateRAPIDDataPath(resource);
+  std::string uri = generateRAPIDDataPath(resource) + "?" + Queries::ACTION_SET;
   std::string content = Identifiers::VALUE + "=" + data;
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
 
-  httpPost(uri, content, content_type);
+  httpPost(uri, content);
 }
 
-void RWSClient2::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
+void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
 {
   setRAPIDSymbolData(resource, data.constructString());
 }
 
-void RWSClient2::startRAPIDExecution()
+void RWSClient::startRAPIDExecution()
 {
-  std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_START;
+  std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_START;
   std::string content = "regain=continue&execmode=continue&cycle=forever&condition=none&stopatbp=disabled&alltaskbytsp=false";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
 
-  httpPost(uri, content, content_type);
+  httpPost(uri, content);
 }
 
-void RWSClient2::stopRAPIDExecution()
+void RWSClient::resetRAPIDProgramPointer()
 {
-  std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_STOP;
-  std::string content = "stopmode=stop";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
+  std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_RESETPP;
 
-  httpPost(uri, content, content_type);
+  httpPost(uri);
 }
 
-void RWSClient2::resetRAPIDProgramPointer()
+void RWSClient::setMotorsOn()
 {
-  std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_RESETPP;
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, "", content_type);
-}
-
-void RWSClient2::setMotorsOn()
-{
-  std::string uri = Resources::RW_PANEL_CTRLSTATE;
+  std::string uri = Resources::RW_PANEL_CTRLSTATE + "?" + Queries::ACTION_SETCTRLSTATE;
   std::string content = "ctrl-state=motoron";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
 
-  httpPost(uri, content, content_type);
+  httpPost(uri, content);
 }
 
-void RWSClient2::setMotorsOff()
+void RWSClient::setMotorsOff()
 {
-  std::string uri = Resources::RW_PANEL_CTRLSTATE;
+  std::string uri = Resources::RW_PANEL_CTRLSTATE + "?" + Queries::ACTION_SETCTRLSTATE;
   std::string content = "ctrl-state=motoroff";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
 
-  httpPost(uri, content, content_type);
+  httpPost(uri, content);
 }
 
-void RWSClient2::setSpeedRatio(unsigned int ratio)
+void RWSClient::setSpeedRatio(unsigned int ratio)
 {
   if(ratio > 100) throw std::out_of_range("Speed ratio argument out of range (should be 0 <= ratio <= 100)");
 
@@ -369,45 +341,42 @@ void RWSClient2::setSpeedRatio(unsigned int ratio)
 }
 
 
-void RWSClient2::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
+void RWSClient::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
 {
-  std::string uri = generateRAPIDTasksPath(task) + "/" + Queries::ACTION_LOAD_MODULE;
+  std::string uri = generateRAPIDTasksPath(task) + "?" + Queries::ACTION_LOAD_MODULE;
 
   // Path to file should be a direct path, i.e. without "/fileservice/"
   std::string content =
       Identifiers::MODULEPATH + "=" + resource.directory + "/" + resource.filename +
       "&replace=" + ((replace) ? "true" : "false");
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
 
-  httpPost(uri, content, content_type);
+  httpPost(uri, content);
 }
 
 
-void RWSClient2::unloadModuleFromTask(const std::string& task, const FileResource& resource)
+void RWSClient::unloadModuleFromTask(const std::string& task, const FileResource& resource)
 {
-  std::string uri = generateRAPIDTasksPath(task) + "/" + Queries::ACTION_UNLOAD_MODULE;
+  std::string uri = generateRAPIDTasksPath(task) + "?" + Queries::ACTION_UNLOAD_MODULE;
   std::string content = Identifiers::MODULE + "=" + resource.filename;
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
 
-  httpPost(uri, content, content_type);
+  httpPost(uri, content);
 }
 
-std::string RWSClient2::getFile(const FileResource& resource)
+std::string RWSClient::getFile(const FileResource& resource)
 {
   std::string uri = generateFilePath(resource);
   return httpGet(uri).content();
 }
 
-void RWSClient2::uploadFile(const FileResource& resource, const std::string& file_content)
+void RWSClient::uploadFile(const FileResource& resource, const std::string& file_content)
 {
   std::string uri = generateFilePath(resource);
   std::string content = file_content;
-  std::string content_type = "text/plain;v=2.0";
 
-  httpPut(uri, content, content_type);
+  httpPut(uri, content);
 }
 
-void RWSClient2::deleteFile(const FileResource& resource)
+void RWSClient::deleteFile(const FileResource& resource)
 {
   std::string uri = generateFilePath(resource);
 
@@ -415,14 +384,14 @@ void RWSClient2::deleteFile(const FileResource& resource)
 }
 
 
-void RWSClient2::logout()
+void RWSClient::logout()
 {
   std::string uri = Resources::LOGOUT;
   httpGet(uri);
 }
 
 
-void RWSClient2::registerLocalUser(const std::string& username,
+void RWSClient::registerLocalUser(const std::string& username,
                                                   const std::string& application,
                                                   const std::string& location)
 {
@@ -435,7 +404,7 @@ void RWSClient2::registerLocalUser(const std::string& username,
   httpPost(uri, content);
 }
 
-void RWSClient2::registerRemoteUser(const std::string& username,
+void RWSClient::registerRemoteUser(const std::string& username,
                                                    const std::string& application,
                                                    const std::string& location)
 {
@@ -452,53 +421,53 @@ void RWSClient2::registerRemoteUser(const std::string& username,
  * Auxiliary methods
  */
 
-RWSClient2::RWSResult RWSClient2::parseContent(const POCOResult& poco_result)
+RWSClient::RWSResult RWSClient::parseContent(const POCOResult& poco_result)
 {
   return parser_.parseString(poco_result.content());
 }
 
 
-std::string RWSClient2::generateConfigurationPath(const std::string& topic, const std::string& type)
+std::string RWSClient::generateConfigurationPath(const std::string& topic, const std::string& type)
 {
   return Resources::RW_CFG + "/" + topic + "/" + type;
 }
 
-std::string RWSClient2::generateIOSignalPath(const std::string& iosignal)
+std::string RWSClient::generateIOSignalPath(const std::string& iosignal)
 {
   return Resources::RW_IOSYSTEM_SIGNALS + "/" + iosignal;
 }
 
-std::string RWSClient2::generateMechanicalUnitPath(const std::string& mechunit)
+std::string RWSClient::generateMechanicalUnitPath(const std::string& mechunit)
 {
   return Resources::RW_MOTIONSYSTEM_MECHUNITS + "/" + mechunit;
 }
 
-std::string RWSClient2::generateRAPIDDataPath(const RAPIDResource& resource)
+std::string RWSClient::generateRAPIDDataPath(const RAPIDResource& resource)
 {
-  return Resources::RW_RAPID_SYMBOL_DATA_RAPID + "/" + resource.task + "/" + resource.module + "/" + resource.name + "/data";
+  return Resources::RW_RAPID_SYMBOL_DATA_RAPID + "/" + resource.task + "/" + resource.module + "/" + resource.name;
 }
 
-std::string RWSClient2::generateRAPIDPropertiesPath(const RAPIDResource& resource)
+std::string RWSClient::generateRAPIDPropertiesPath(const RAPIDResource& resource)
 {
-  return Resources::RW_RAPID_SYMBOL_PROPERTIES_RAPID + "/" + resource.task + "/" + resource.module + "/"+ resource.name + "/properties";
+  return Resources::RW_RAPID_SYMBOL_PROPERTIES_RAPID + "/" + resource.task + "/" + resource.module + "/"+ resource.name;
 }
 
-std::string RWSClient2::generateFilePath(const FileResource& resource)
+std::string RWSClient::generateFilePath(const FileResource& resource)
 {
   return Services::FILESERVICE + "/" + resource.directory + "/" + resource.filename;
 }
 
-std::string RWSClient2::generateRAPIDTasksPath(const std::string& task)
+std::string RWSClient::generateRAPIDTasksPath(const std::string& task)
 {
   return Resources::RW_RAPID_TASKS + "/" + task;
 }
 
 
-POCOResult RWSClient2::httpGet(const std::string& uri)
+POCOResult RWSClient::httpGet(const std::string& uri)
 {
   POCOResult const result = http_client_.httpGet(uri);
 
-  if (result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT && result.httpStatus() != HTTPResponse::HTTP_OK)
+  if (result.httpStatus() != HTTPResponse::HTTP_OK)
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"GET"}
       << UriErrorInfo {uri}
@@ -511,11 +480,12 @@ POCOResult RWSClient2::httpGet(const std::string& uri)
 }
 
 
-POCOResult RWSClient2::httpPost(const std::string& uri, const std::string& content, const std::string& content_type)
+POCOResult RWSClient::httpPost(const std::string& uri, const std::string& content,
+  std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status)
 {
-  POCOResult const result = http_client_.httpPost(uri, content, content_type);
+  POCOResult const result = http_client_.httpPost(uri, content);
 
-  if (result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT && result.httpStatus() != HTTPResponse::HTTP_OK)
+  if (accepted_status.find(result.httpStatus()) == accepted_status.end())
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"POST"}
       << UriErrorInfo {uri}
@@ -529,10 +499,9 @@ POCOResult RWSClient2::httpPost(const std::string& uri, const std::string& conte
 }
 
 
-POCOResult RWSClient2::httpPut(const std::string& uri, const std::string& content, const std::string& content_type)
+POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content)
 {
-  POCOResult const result = http_client_.httpPut(uri, content, content_type);
-
+  POCOResult const result = http_client_.httpPut(uri, content);
   if (result.httpStatus() != HTTPResponse::HTTP_OK && result.httpStatus() != HTTPResponse::HTTP_CREATED)
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"PUT"}
@@ -547,7 +516,7 @@ POCOResult RWSClient2::httpPut(const std::string& uri, const std::string& conten
 }
 
 
-POCOResult RWSClient2::httpDelete(const std::string& uri)
+POCOResult RWSClient::httpDelete(const std::string& uri)
 {
   POCOResult const result = http_client_.httpDelete(uri);
   if (result.httpStatus() != HTTPResponse::HTTP_OK && result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT)
@@ -563,7 +532,7 @@ POCOResult RWSClient2::httpDelete(const std::string& uri)
 }
 
 
-std::string RWSClient2::openSubscription(std::vector<std::pair<std::string, SubscriptionPriority>> const& resources)
+std::string RWSClient::openSubscription(std::vector<std::pair<std::string, SubscriptionPriority>> const& resources)
 {
   // Generate content for a subscription HTTP post request.
   std::stringstream subscription_content;
@@ -577,10 +546,8 @@ std::string RWSClient2::openSubscription(std::vector<std::pair<std::string, Subs
                           << (i < resources.size() - 1 ? "&" : "");
   }
 
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
   // Make a subscription request.
-  POCOResult const poco_result = http_client_.httpPost(Services::SUBSCRIPTION, subscription_content.str(), content_type);
+  POCOResult const poco_result = http_client_.httpPost(Services::SUBSCRIPTION, subscription_content.str());
 
   if (poco_result.httpStatus() != HTTPResponse::HTTP_CREATED)
     BOOST_THROW_EXCEPTION(
@@ -617,7 +584,7 @@ std::string RWSClient2::openSubscription(std::vector<std::pair<std::string, Subs
 }
 
 
-void RWSClient2::closeSubscription(std::string const& subscription_group_id)
+void RWSClient::closeSubscription(std::string const& subscription_group_id)
 {
   // Unsubscribe from events
   std::string const uri = Services::SUBSCRIPTION + "/" + subscription_group_id;
@@ -625,14 +592,14 @@ void RWSClient2::closeSubscription(std::string const& subscription_group_id)
 }
 
 
-Poco::Net::WebSocket RWSClient2::receiveSubscription(std::string const& subscription_group_id)
+Poco::Net::WebSocket RWSClient::receiveSubscription(std::string const& subscription_group_id)
 {
-  return http_client_.webSocketConnect("/poll/" + subscription_group_id, "rws_subscription",
-    Poco::Net::HTTPSClientSession {connectionOptions_.ip_address, connectionOptions_.port, context_});
+  return http_client_.webSocketConnect("/poll/" + subscription_group_id, "robapi2_subscription",
+    Poco::Net::HTTPClientSession {connectionOptions_.ip_address, connectionOptions_.port});
 }
 
 
-std::string RWSClient2::getResourceURI(IOSignalResource const& io_signal) const
+std::string RWSClient::getResourceURI(IOSignalResource const& io_signal) const
 {
   std::string resource_uri = Resources::RW_IOSYSTEM_SIGNALS;
   resource_uri += "/";
@@ -643,7 +610,7 @@ std::string RWSClient2::getResourceURI(IOSignalResource const& io_signal) const
 }
 
 
-std::string RWSClient2::getResourceURI(RAPIDResource const& resource) const
+std::string RWSClient::getResourceURI(RAPIDResource const& resource) const
 {
   std::string resource_uri = Resources::RW_RAPID_SYMBOL_DATA_RAPID;
   resource_uri += "/";
@@ -658,13 +625,13 @@ std::string RWSClient2::getResourceURI(RAPIDResource const& resource) const
 }
 
 
-std::string RWSClient2::getResourceURI(RAPIDExecutionStateResource const&) const
+std::string RWSClient::getResourceURI(RAPIDExecutionStateResource const&) const
 {
   return "/rw/rapid/execution;ctrlexecstate";
 }
 
 
-void RWSClient2::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, SubscriptionCallback& callback) const
+void RWSClient::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, SubscriptionCallback& callback) const
 {
   // IMPORTANT: don't use AutoPtr<XML::Node> here! Otherwise you will get memory corruption.
   Poco::XML::Node const * li_node = doc->getNodeByPath("html/body/div/ul/li");
@@ -709,37 +676,4 @@ void RWSClient2::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, Subscripti
   else
     BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: unrecognized class " + class_attribute_value});
 }
-
-
-void RWSClient2::requestMastership(std::string const& type)
-{
-  // Count will be default-initialized to 0.
-  auto& count = mastership_count_[type];
-
-  if (count == 0)
-  {
-    std::string uri = Services::RW + "/mastership/" + type + "/request";
-    httpPost(uri, "", "application/x-www-form-urlencoded;v=2.0");
-  }
-
-  ++count;
 }
-
-
-void RWSClient2::releaseMastership(std::string const& type)
-{
-  // Count will be default-initialized to 0.
-  auto& count = mastership_count_[type];
-
-  if (count == 1)
-  {
-    std::string uri = Services::RW + "/mastership/" + type + "/release";
-    httpPost(uri, "", "application/x-www-form-urlencoded;v=2.0");
-  }
-
-  --count;
-}
-
-
-} // end namespace rws
-} // end namespace abb

@@ -39,7 +39,7 @@
 
 #include <string>
 
-#include "abb_librws_export.h"
+#include <abb_librws/abb_librws_export.h>
 
 namespace abb
 {

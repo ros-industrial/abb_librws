@@ -39,20 +39,18 @@
 #include <Poco/DOM/DOMParser.h>
 #include <Poco/Net/HTTPSClientSession.h>
 
-#include "system_constants.h"
-#include "rws_rapid.h"
-#include "rws_poco_client.h"
-#include "rws_resource.h"
-#include "rws_subscription.h"
-#include "coordinate.h"
-#include "connection_options.h"
+#include <abb_librws/system_constants.h>
+#include <abb_librws/rws_rapid.h>
+#include <abb_librws/rws_poco_client.h>
+#include <abb_librws/rws_resource.h>
+#include <abb_librws/rws_subscription.h>
+#include <abb_librws/coordinate.h>
+#include <abb_librws/connection_options.h>
 
 #include <map>
 
 
-namespace abb
-{
-namespace rws
+namespace abb :: rws :: v2_0
 {
 /**
  * \brief A class for a Robot Web Services (RWS) 2.0 client.
@@ -61,7 +59,7 @@ namespace rws
  *
  * See https://developercenter.robotstudio.com/api/RWS for details about RWS 2.0
  */
-class RWSClient2
+class RWSClient
 : public SubscriptionManager
 {
 public:
@@ -77,12 +75,12 @@ public:
    *
    * \throw \a RWSError if something goes wrong.
    */
-  explicit RWSClient2(ConnectionOptions const& connection_options);
+  explicit RWSClient(ConnectionOptions const& connection_options);
 
   /**
    * \brief Logs out the currently active RWS session.
    */
-  ~RWSClient2();
+  ~RWSClient();
 
   /**
    * \brief Retrieves a list of controller resources (e.g. controller identity and clock information).
@@ -433,21 +431,6 @@ public:
                                const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                                const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
-  /**
-   * @brief Request mastership of given type
-   *
-   * @param type type of requested mastership
-   */
-  void requestMastership(std::string const& type);
-
-  /**
-   * @brief Release mastership of given type
-   *
-   * @param type type of mastership to be released
-   */
-  void releaseMastership(std::string const& type);
-
-
   // SubscriptionManager implementation
   std::string openSubscription(std::vector<std::pair<std::string, SubscriptionPriority>> const& resources) override;
   void closeSubscription(std::string const& subscription_group_id) override;
@@ -456,19 +439,6 @@ public:
   std::string getResourceURI(RAPIDResource const& resource) const override;
   std::string getResourceURI(RAPIDExecutionStateResource const&) const override;
   void processEvent(Poco::AutoPtr<Poco::XML::Document> content, SubscriptionCallback& callback) const override;
-
-
-private:
-  /**
-   * \brief Method for parsing a communication result into an XML document.
-   *
-   * \param result containing the result of the parsing.
-   *
-   * \return parsed content of \a poco_result.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSResult parseContent(const POCOResult& poco_result);
 
   /**
    * \brief A method for sending a HTTP GET request and checking response status.
@@ -508,6 +478,18 @@ private:
    */
   POCOResult httpDelete(const std::string& uri);
 
+
+private:
+  /**
+   * \brief Method for parsing a communication result into an XML document.
+   *
+   * \param result containing the result of the parsing.
+   *
+   * \return parsed content of \a poco_result.
+   *
+   * \throw \a RWSError if something goes wrong.
+   */
+  RWSResult parseContent(const POCOResult& poco_result);
 
   /**
    * \brief A method for logging out the currently active RWS session.
@@ -585,6 +567,4 @@ private:
   Poco::XML::DOMParser parser_;
   std::map<std::string, int> mastership_count_;
 };
-
-} // end namespace rws
-} // end namespace abb
+}

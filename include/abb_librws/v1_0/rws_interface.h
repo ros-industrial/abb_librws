@@ -34,22 +34,20 @@
  ***********************************************************************************************************************
  */
 
-#ifndef RWS_INTERFACE_H
-#define RWS_INTERFACE_H
+#pragma once
 
-#include "rws_cfg.h"
-#include "rws_client.h"
-#include "rws_subscription.h"
-#include "rws_info.h"
-#include "xml_attribute.h"
-#include "rws.h"
+#include <abb_librws/v1_0/rws_client.h>
+#include <abb_librws/v1_0/rws.h>
+#include <abb_librws/rws.h>
+#include <abb_librws/rws_cfg.h>
+#include <abb_librws/rws_subscription.h>
+#include <abb_librws/rws_info.h>
+#include <abb_librws/xml_attribute.h>
 
 #include <chrono>
 
 
-namespace abb
-{
-namespace rws
+namespace abb :: rws :: v1_0
 {
 /**
  * \brief User-friendly interface to Robot Web Services (RWS) 1.0.
@@ -605,6 +603,3 @@ private:
 };
 
 } // end namespace rws
-} // end namespace abb
-
-#endif

@@ -34,26 +34,23 @@
  ***********************************************************************************************************************
  */
 
-#ifndef RWS_CLIENT_H
-#define RWS_CLIENT_H
+#pragma once
 
 #include <Poco/DOM/DOMParser.h>
 #include <Poco/Net/HTTPClientSession.h>
 
-#include "system_constants.h"
-#include "rws_rapid.h"
-#include "rws_poco_client.h"
-#include "rws_resource.h"
-#include "rws_subscription.h"
-#include "coordinate.h"
-#include "connection_options.h"
+#include <abb_librws/system_constants.h>
+#include <abb_librws/rws_rapid.h>
+#include <abb_librws/rws_poco_client.h>
+#include <abb_librws/rws_resource.h>
+#include <abb_librws/rws_subscription.h>
+#include <abb_librws/coordinate.h>
+#include <abb_librws/connection_options.h>
 
 #include <set>
 
 
-namespace abb
-{
-namespace rws
+namespace abb :: rws :: v1_0
 {
 /**
  * \brief A class for a Robot Web Services (RWS) 1.0 client.
@@ -568,6 +565,3 @@ private:
 };
 
 } // end namespace rws
-} // end namespace abb
-
-#endif

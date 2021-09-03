@@ -34,21 +34,19 @@
  ***********************************************************************************************************************
  */
 
-#ifndef RWS_INTERFACE_2_H
-#define RWS_INTERFACE_2_H
+#pragma once
 
-#include "rws_cfg.h"
-#include "rws_client_2.h"
-#include "rws_subscription.h"
-#include "rws_info.h"
-#include "xml_attribute.h"
+#include <abb_librws/rws_cfg.h>
+#include <abb_librws/v2_0/rws_client.h>
+#include <abb_librws/v2_0/rws.h>
+#include <abb_librws/rws_subscription.h>
+#include <abb_librws/rws_info.h>
+#include <abb_librws/xml_attribute.h>
 
 #include <chrono>
 
 
-namespace abb
-{
-namespace rws
+namespace abb :: rws :: v2_0
 {
 /**
  * \brief User-friendly interface to Robot Web Services (RWS) 2.0.
@@ -56,7 +54,7 @@ namespace rws
  * Only a subset of the features available in RWS are implemented here.
  * See https://developercenter.robotstudio.com/api/RWS for details about RWS 2.0
  */
-class RWSInterface2
+class RWSInterface
 {
 public:
   /**
@@ -64,7 +62,7 @@ public:
    *
    * \param connection_options RWS connection options
    */
-  explicit RWSInterface2(ConnectionOptions const& connection_options);
+  explicit RWSInterface(ConnectionOptions const& connection_options);
 
   /**
    * \brief Retrieves the configuration instances for the arms defined in the system.
@@ -517,17 +515,17 @@ public:
    *
    * \param domain requested mastership domain
    */
-  void requestMastership(std::string const& domain);
+  void requestMastership(MastershipDomain domain);
 
   /**
    * \brief Release RWS mastership
    *
    * \param domain mastership domain to be released
    */
-  void releaseMastership(std::string const& domain);
+  void releaseMastership(MastershipDomain domain);
 
 private:
-  using RWSResult = RWSClient2::RWSResult;
+  using RWSResult = RWSClient::RWSResult;
 
 
   /**
@@ -567,10 +565,7 @@ private:
   /**
    * \brief The RWS client used to communicate with the robot controller.
    */
-  RWSClient2 rws_client_;
+  RWSClient rws_client_;
 };
 
 } // end namespace rws
-} // end namespace abb
-
-#endif

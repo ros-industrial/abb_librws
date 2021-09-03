@@ -33,10 +33,10 @@
  *
  ***********************************************************************************************************************
  */
-#include <abb_librws/rws_interface_2.h>
+#include <abb_librws/v2_0/rws_interface.h>
 #include <abb_librws/rws_rapid.h>
 #include <abb_librws/parsing.h>
-#include <abb_librws/rws_2.h>
+#include <abb_librws/v2_0/rws.h>
 
 #include <algorithm>
 #include <sstream>
@@ -50,15 +50,11 @@ static const char EXCEPTION_GET_CFG[]{"Failed to get configuration instances"};
 static const char EXCEPTION_PARSE_CFG[]{"Failed to parse configuration instances"};
 }
 
-namespace abb
-{
-namespace rws
+namespace abb :: rws :: v2_0
 {
 
 typedef SystemConstants::ContollerStates ContollerStates;
 typedef SystemConstants::RAPID RAPID;
-typedef RWS2::Identifiers Identifiers;
-typedef RWS2::XMLAttributes XMLAttributes;
 
 
 static bool digitalSignalToBool(std::string const& value)
@@ -71,18 +67,18 @@ static bool digitalSignalToBool(std::string const& value)
 
 
 /***********************************************************************************************************************
- * Class definitions: RWSInterface2
+ * Class definitions: RWSInterface
  */
 
  /************************************************************
  * Primary methods
  */
-RWSInterface2::RWSInterface2(ConnectionOptions const& connection_options)
+RWSInterface::RWSInterface(ConnectionOptions const& connection_options)
 : rws_client_ {connection_options}
 {
 }
 
-std::vector<cfg::moc::Arm> RWSInterface2::getCFGArms()
+std::vector<cfg::moc::Arm> RWSInterface::getCFGArms()
 {
   std::vector<cfg::moc::Arm> result;
 
@@ -125,7 +121,7 @@ std::vector<cfg::moc::Arm> RWSInterface2::getCFGArms()
   return result;
 }
 
-std::vector<cfg::moc::Joint> RWSInterface2::getCFGJoints()
+std::vector<cfg::moc::Joint> RWSInterface::getCFGJoints()
 {
   std::vector<cfg::moc::Joint> result;
 
@@ -178,7 +174,7 @@ std::vector<cfg::moc::Joint> RWSInterface2::getCFGJoints()
   return result;
 }
 
-std::vector<cfg::moc::MechanicalUnit> RWSInterface2::getCFGMechanicalUnits()
+std::vector<cfg::moc::MechanicalUnit> RWSInterface::getCFGMechanicalUnits()
 {
   std::vector<cfg::moc::MechanicalUnit> result;
 
@@ -224,7 +220,7 @@ std::vector<cfg::moc::MechanicalUnit> RWSInterface2::getCFGMechanicalUnits()
   return result;
 }
 
-std::vector<cfg::sys::MechanicalUnitGroup> RWSInterface2::getCFGMechanicalUnitGroups()
+std::vector<cfg::sys::MechanicalUnitGroup> RWSInterface::getCFGMechanicalUnitGroups()
 {
   std::vector<cfg::sys::MechanicalUnitGroup> result;
 
@@ -270,7 +266,7 @@ std::vector<cfg::sys::MechanicalUnitGroup> RWSInterface2::getCFGMechanicalUnitGr
   return result;
 }
 
-std::vector<cfg::sys::PresentOption> RWSInterface2::getCFGPresentOptions()
+std::vector<cfg::sys::PresentOption> RWSInterface::getCFGPresentOptions()
 {
   std::vector<cfg::sys::PresentOption> result;
 
@@ -306,7 +302,7 @@ std::vector<cfg::sys::PresentOption> RWSInterface2::getCFGPresentOptions()
   return result;
 }
 
-std::vector<cfg::moc::Robot> RWSInterface2::getCFGRobots()
+std::vector<cfg::moc::Robot> RWSInterface::getCFGRobots()
 {
   std::vector<cfg::moc::Robot> result;
 
@@ -403,7 +399,7 @@ std::vector<cfg::moc::Robot> RWSInterface2::getCFGRobots()
   return result;
 }
 
-std::vector<cfg::moc::Single> RWSInterface2::getCFGSingles()
+std::vector<cfg::moc::Single> RWSInterface::getCFGSingles()
 {
   std::vector<cfg::moc::Single> result;
 
@@ -495,7 +491,7 @@ std::vector<cfg::moc::Single> RWSInterface2::getCFGSingles()
   return result;
 }
 
-std::vector<cfg::moc::Transmission> RWSInterface2::getCFGTransmission()
+std::vector<cfg::moc::Transmission> RWSInterface::getCFGTransmission()
 {
   std::vector<cfg::moc::Transmission> result;
 
@@ -530,7 +526,7 @@ std::vector<cfg::moc::Transmission> RWSInterface2::getCFGTransmission()
   return result;
 }
 
-std::vector<RobotWareOptionInfo> RWSInterface2::getPresentRobotWareOptions()
+std::vector<RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
 {
   std::vector<RobotWareOptionInfo> result;
 
@@ -552,14 +548,14 @@ std::vector<RobotWareOptionInfo> RWSInterface2::getPresentRobotWareOptions()
 }
 
 
-std::string RWSInterface2::getIOSignal(const std::string& iosignal)
+std::string RWSInterface::getIOSignal(const std::string& iosignal)
 {
   RWSResult rws_result = rws_client_.getIOSignal(iosignal);
   return xmlFindTextContent(rws_result, XMLAttributes::CLASS_LVALUE);
 }
 
 
-MechanicalUnitStaticInfo RWSInterface2::getMechanicalUnitStaticInfo(const std::string& mechunit)
+MechanicalUnitStaticInfo RWSInterface::getMechanicalUnitStaticInfo(const std::string& mechunit)
 {
   RWSResult rws_result = rws_client_.getMechanicalUnitStaticInfo(mechunit);
 
@@ -604,13 +600,13 @@ MechanicalUnitStaticInfo RWSInterface2::getMechanicalUnitStaticInfo(const std::s
       static_info.type == MechanicalUnitType::UNDEFINED ||
       axes.fail() || axes_total.fail())
   {
-    throw std::logic_error("RWSInterface2::getMechanicalUnitStaticInfo(): inconsistent data");
+    throw std::logic_error("RWSInterface::getMechanicalUnitStaticInfo(): inconsistent data");
   }
 
   return static_info;
 }
 
-MechanicalUnitDynamicInfo RWSInterface2::getMechanicalUnitDynamicInfo(const std::string& mechunit)
+MechanicalUnitDynamicInfo RWSInterface::getMechanicalUnitDynamicInfo(const std::string& mechunit)
 {
   bool result = false;
 
@@ -665,13 +661,13 @@ MechanicalUnitDynamicInfo RWSInterface2::getMechanicalUnitDynamicInfo(const std:
       dynamic_info.jog_mode.empty() ||
       dynamic_info.mode == MechanicalUnitMode::UNKNOWN_MODE)
   {
-    throw std::logic_error("RWSInterface2::getMechanicalUnitDynamicInfo: inconsistent data");
+    throw std::logic_error("RWSInterface::getMechanicalUnitDynamicInfo: inconsistent data");
   }
 
   return dynamic_info;
 }
 
-JointTarget RWSInterface2::getMechanicalUnitJointTarget(const std::string& mechunit)
+JointTarget RWSInterface::getMechanicalUnitJointTarget(const std::string& mechunit)
 {
   RWSResult rws_result = rws_client_.getMechanicalUnitJointTarget(mechunit);
   std::stringstream ss;
@@ -696,7 +692,7 @@ JointTarget RWSInterface2::getMechanicalUnitJointTarget(const std::string& mechu
   return jointtarget;
 }
 
-RobTarget RWSInterface2::getMechanicalUnitRobTarget(const std::string& mechunit,
+RobTarget RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
                                               Coordinate coordinate,
                                               const std::string& tool,
                                               const std::string& wobj)
@@ -730,7 +726,7 @@ RobTarget RWSInterface2::getMechanicalUnitRobTarget(const std::string& mechunit,
   return robtarget;
 }
 
-void RWSInterface2::setRAPIDSymbolData(const std::string& task,
+void RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const std::string& module,
                                       const std::string& name,
                                       const std::string& data)
@@ -739,43 +735,43 @@ void RWSInterface2::setRAPIDSymbolData(const std::string& task,
 }
 
 
-void RWSInterface2::setRAPIDSymbolData(RAPIDResource const& resource, const RAPIDSymbolDataAbstract& data)
+void RWSInterface::setRAPIDSymbolData(RAPIDResource const& resource, const RAPIDSymbolDataAbstract& data)
 {
   rws_client_.setRAPIDSymbolData(resource, data);
 }
 
 
-void RWSInterface2::startRAPIDExecution()
+void RWSInterface::startRAPIDExecution()
 {
   rws_client_.startRAPIDExecution();
 }
 
-void RWSInterface2::stopRAPIDExecution()
+void RWSInterface::stopRAPIDExecution()
 {
   rws_client_.stopRAPIDExecution();
 }
 
-void RWSInterface2::resetRAPIDProgramPointer()
+void RWSInterface::resetRAPIDProgramPointer()
 {
   rws_client_.resetRAPIDProgramPointer();
 }
 
-void RWSInterface2::setMotorsOn()
+void RWSInterface::setMotorsOn()
 {
   rws_client_.setMotorsOn();
 }
 
-void RWSInterface2::setMotorsOff()
+void RWSInterface::setMotorsOff()
 {
   rws_client_.setMotorsOff();
 }
 
-void RWSInterface2::setSpeedRatio(unsigned int ratio)
+void RWSInterface::setSpeedRatio(unsigned int ratio)
 {
   rws_client_.setSpeedRatio(ratio);
 }
 
-std::vector<RAPIDModuleInfo> RWSInterface2::getRAPIDModulesInfo(const std::string& task)
+std::vector<RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
 {
   std::vector<RAPIDModuleInfo> result;
 
@@ -794,7 +790,7 @@ std::vector<RAPIDModuleInfo> RWSInterface2::getRAPIDModulesInfo(const std::strin
   return result;
 }
 
-std::vector<RAPIDTaskInfo> RWSInterface2::getRAPIDTasks()
+std::vector<RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
 {
   std::vector<RAPIDTaskInfo> result;
 
@@ -834,7 +830,7 @@ std::vector<RAPIDTaskInfo> RWSInterface2::getRAPIDTasks()
   return result;
 }
 
-unsigned int RWSInterface2::getSpeedRatio()
+unsigned int RWSInterface::getSpeedRatio()
 {
   unsigned int speed_ratio = 0;
 
@@ -847,7 +843,7 @@ unsigned int RWSInterface2::getSpeedRatio()
   return speed_ratio;
 }
 
-SystemInfo RWSInterface2::getSystemInfo()
+SystemInfo RWSInterface::getSystemInfo()
 {
   SystemInfo result;
 
@@ -872,33 +868,33 @@ SystemInfo RWSInterface2::getSystemInfo()
   return result;
 }
 
-bool RWSInterface2::isAutoMode()
+bool RWSInterface::isAutoMode()
 {
   return compareSingleContent(rws_client_.getPanelOperationMode(),
                               XMLAttributes::CLASS_OPMODE,
                               ContollerStates::PANEL_OPERATION_MODE_AUTO);
 }
 
-bool RWSInterface2::isMotorsOn()
+bool RWSInterface::isMotorsOn()
 {
   return compareSingleContent(rws_client_.getPanelControllerState(),
                               XMLAttributes::CLASS_CTRLSTATE,
                               ContollerStates::CONTROLLER_MOTOR_ON);
 }
 
-bool RWSInterface2::isRAPIDRunning()
+bool RWSInterface::isRAPIDRunning()
 {
   return compareSingleContent(rws_client_.getRAPIDExecution(),
                               XMLAttributes::CLASS_CTRLEXECSTATE,
                               ContollerStates::RAPID_EXECUTION_RUNNING);
 }
 
-void RWSInterface2::setIOSignal(const std::string& iosignal, const std::string& value)
+void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   rws_client_.setIOSignal(iosignal, value);
 }
 
-std::string RWSInterface2::getRAPIDSymbolData(const std::string& task,
+std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
                                              const std::string& module,
                                              const std::string& name)
 {
@@ -907,50 +903,50 @@ std::string RWSInterface2::getRAPIDSymbolData(const std::string& task,
 }
 
 
-void RWSInterface2::getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data)
+void RWSInterface::getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data)
 {
   rws_client_.getRAPIDSymbolData(resource, data);
 }
 
 
-void RWSInterface2::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
+void RWSInterface::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
 {
   rws_client_.loadModuleIntoTask(task, resource, replace);
 }
 
-void RWSInterface2::unloadModuleFromTask(const std::string& task, const FileResource& resource)
+void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResource& resource)
 {
   rws_client_.unloadModuleFromTask(task, resource);
 }
 
-std::string RWSInterface2::getFile(const FileResource& resource)
+std::string RWSInterface::getFile(const FileResource& resource)
 {
   return rws_client_.getFile(resource);
 }
 
-void RWSInterface2::uploadFile(const FileResource& resource, const std::string& file_content)
+void RWSInterface::uploadFile(const FileResource& resource, const std::string& file_content)
 {
   rws_client_.uploadFile(resource, file_content);
 }
 
-void RWSInterface2::deleteFile(const FileResource& resource)
+void RWSInterface::deleteFile(const FileResource& resource)
 {
   rws_client_.deleteFile(resource);
 }
 
-SubscriptionGroup RWSInterface2::openSubscription (const SubscriptionResources& resources)
+SubscriptionGroup RWSInterface::openSubscription (const SubscriptionResources& resources)
 {
   return SubscriptionGroup {rws_client_, resources};
 }
 
-void RWSInterface2::registerLocalUser(const std::string& username,
+void RWSInterface::registerLocalUser(const std::string& username,
                                      const std::string& application,
                                      const std::string& location)
 {
   rws_client_.registerLocalUser(username, application, location);
 }
 
-void RWSInterface2::registerRemoteUser(const std::string& username,
+void RWSInterface::registerRemoteUser(const std::string& username,
                                       const std::string& application,
                                       const std::string& location)
 {
@@ -958,13 +954,13 @@ void RWSInterface2::registerRemoteUser(const std::string& username,
 }
 
 
-void RWSInterface2::setDigitalSignal(std::string const& signal_name, bool value)
+void RWSInterface::setDigitalSignal(std::string const& signal_name, bool value)
 {
   setIOSignal(signal_name, std::string(value ? SystemConstants::IOSignals::HIGH : SystemConstants::IOSignals::LOW));
 }
 
 
-void RWSInterface2::setAnalogSignal(std::string const& signal_name, float value)
+void RWSInterface::setAnalogSignal(std::string const& signal_name, float value)
 {
   std::stringstream str;
   str << std::setprecision(SINGLE_PRECISION_DIGITS) << value;
@@ -972,19 +968,19 @@ void RWSInterface2::setAnalogSignal(std::string const& signal_name, float value)
 }
 
 
-bool RWSInterface2::getDigitalSignal(std::string const& signal_name)
+bool RWSInterface::getDigitalSignal(std::string const& signal_name)
 {
   return digitalSignalToBool(getIOSignal(signal_name));
 }
 
 
-float RWSInterface2::getAnalogSignal(std::string const& signal_name)
+float RWSInterface::getAnalogSignal(std::string const& signal_name)
 {
   return std::stof(getIOSignal(signal_name));
 }
 
 
-IOSignalInfo RWSInterface2::getIOSignals()
+IOSignalInfo RWSInterface::getIOSignals()
 {
   auto const doc = rws_client_.getIOSignals();
   IOSignalInfo signals;
@@ -1008,15 +1004,19 @@ IOSignalInfo RWSInterface2::getIOSignals()
 }
 
 
-void RWSInterface2::requestMastership(std::string const& domain)
+void RWSInterface::requestMastership(MastershipDomain domain)
 {
-  rws_client_.requestMastership(domain);
+  std::stringstream uri;
+  uri << "/rw/mastership/" << domain << "/request";
+  rws_client_.httpPost(uri.str(), "", "application/x-www-form-urlencoded;v=2.0");
 }
 
 
-void RWSInterface2::releaseMastership(std::string const& domain)
+void RWSInterface::releaseMastership(MastershipDomain domain)
 {
-  rws_client_.releaseMastership(domain);
+  std::stringstream uri;
+  uri << "/rw/mastership/" << domain << "/release";
+  rws_client_.httpPost(uri.str(), "", "application/x-www-form-urlencoded;v=2.0");
 }
 
 
@@ -1024,12 +1024,11 @@ void RWSInterface2::releaseMastership(std::string const& domain)
  * Auxiliary methods
  */
 
-bool RWSInterface2::compareSingleContent(const RWSResult& rws_result,
+bool RWSInterface::compareSingleContent(const RWSResult& rws_result,
                                            const XMLAttribute& attribute,
                                            const std::string& compare_string)
 {
   return xmlFindTextContent(rws_result, attribute) == compare_string;
 }
 
-} // end namespace rws
-} // end namespace abb
+}

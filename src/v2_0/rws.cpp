@@ -1,14 +1,13 @@
-#include <abb_librws/rws_2.h>
+#include <abb_librws/v2_0/rws.h>
+
+#include <boost/throw_exception.hpp>
+
+#include <iostream>
+#include <stdexcept>
 
 
-namespace abb :: rws
+namespace abb :: rws :: v2_0
 {
-  typedef RWS2::Identifiers   Identifiers;
-  typedef RWS2::Queries       Queries;
-  typedef RWS2::Resources     Resources;
-  typedef RWS2::Services      Services;
-  typedef RWS2::XMLAttributes XMLAttributes;
-
   const std::string Identifiers::ACTIVE                         = "active";
   const std::string Identifiers::ARM                            = "arm";
   const std::string Identifiers::CFG_DT_INSTANCE_LI             = "cfg-dt-instance-li";
@@ -98,4 +97,21 @@ namespace abb :: rws
   const XMLAttribute XMLAttributes::CLASS_TYPE(Identifiers::CLASS              , Identifiers::TYPE);
   const XMLAttribute XMLAttributes::CLASS_VALUE(Identifiers::CLASS             , Identifiers::VALUE);
   const XMLAttribute XMLAttributes::CLASS_OPTION(Identifiers::CLASS            , Identifiers::OPTION);
+
+  std::ostream& operator<<(std::ostream& os, MastershipDomain domain)
+  {
+    switch (domain)
+    {
+      case MastershipDomain::edit:
+        os << "edit";
+        break;
+      case MastershipDomain::motion:
+        os << "motion";
+        break;
+      default:
+        BOOST_THROW_EXCEPTION(std::logic_error {"Invalid v2_0::MastershipDomain value"});
+    }
+
+    return os;
+  }
 }

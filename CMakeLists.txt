@@ -38,11 +38,7 @@ endif()
 
 set(
   SRC_FILES
-    src/rws_client.cpp
-    src/rws_client_2.cpp
     src/system_constants.cpp
-    src/rws_interface.cpp
-    src/rws_interface_2.cpp
     src/rws_poco_client.cpp
     src/rws_poco_result.cpp
     src/rws_rapid.cpp
@@ -50,16 +46,25 @@ set(
     src/rws_subscription.cpp
     src/rws_websocket.cpp
     src/rws.cpp
-    src/rws_2.cpp
     src/parsing.cpp
     src/connection_options.cpp
+
+    src/v1_0/rws.cpp
+    src/v1_0/rws_client.cpp
+    src/v1_0/rws_interface.cpp
+
+    src/v2_0/rws.cpp
+    src/v2_0/rws_client.cpp
+    src/v2_0/rws_interface.cpp
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 include(GenerateExportHeader)
-generate_export_header(${PROJECT_NAME})
+generate_export_header(${PROJECT_NAME}
+  EXPORT_FILE_NAME ${PROJECT_NAME}/${PROJECT_NAME}_export.h
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}>"
@@ -86,7 +91,7 @@ install(
 
 install(
   FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}_export.h
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
 )
 
