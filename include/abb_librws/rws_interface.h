@@ -540,7 +540,7 @@ public:
    *
    * \param domain domain for which mastership is requested. If empty, mastership for all domains will be requested.
    */
-  void requestMastership(std::string const& domain);
+  void requestMastership(MastershipDomain domain);
 
 
   /**
@@ -548,7 +548,7 @@ public:
    *
    * \param domain domain for which mastership is to be requested. If empty, mastership for all domains will be released.
    */
-  void releaseMastership(std::string const& domain);
+  void releaseMastership(MastershipDomain domain);
 
   /**
    * \brief Activate all tasks.

@@ -516,4 +516,17 @@ namespace abb :: rws
 
 
   std::ostream& operator<<(std::ostream& os, UseTsp usetsp);
+
+
+  /// @brief RWS mastership domains.
+  ///
+  enum class MastershipDomain
+  {
+    cfg,
+    motion,
+    rapid
+  };
+
+
+  std::ostream& operator<<(std::ostream& os, MastershipDomain domain);
 }

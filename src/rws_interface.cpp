@@ -1028,7 +1028,7 @@ void RWSInterface::requestMastership()
 }
 
 
-void RWSInterface::requestMastership(std::string const& domain)
+void RWSInterface::requestMastership(MastershipDomain domain)
 {
   std::stringstream uri;
   uri << "/rw/mastership/" << domain << "?action=request";
@@ -1043,14 +1043,10 @@ void RWSInterface::releaseMastership()
 }
 
 
-void RWSInterface::releaseMastership(std::string const& domain)
+void RWSInterface::releaseMastership(MastershipDomain domain)
 {
   std::stringstream uri;
-  uri << "/rw/mastership";
-
-  if (!domain.empty())
-    uri << "/" << domain;
-  uri << "?action=release";
+  uri << "/rw/mastership/" << domain << "?action=release";
 
   rws_client_.httpPost(uri.str());
 }

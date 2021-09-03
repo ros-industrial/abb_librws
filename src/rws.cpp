@@ -123,7 +123,7 @@ namespace abb :: rws
         os << "qstop";
         break;
       default:
-        BOOST_THROW_EXCEPTION(std::logic_error {"Unknown StopMode value"});
+        BOOST_THROW_EXCEPTION(std::logic_error {"Invalid StopMode value"});
     }
 
     return os;
@@ -141,7 +141,28 @@ namespace abb :: rws
         os << "alltsk";
         break;
       default:
-        BOOST_THROW_EXCEPTION(std::logic_error {"Unknown UseTsp value"});
+        BOOST_THROW_EXCEPTION(std::logic_error {"Invalid UseTsp value"});
+    }
+
+    return os;
+  }
+
+
+  std::ostream& operator<<(std::ostream& os, MastershipDomain domain)
+  {
+    switch (domain)
+    {
+      case MastershipDomain::cfg:
+        os << "cfg";
+        break;
+      case MastershipDomain::motion:
+        os << "motion";
+        break;
+      case MastershipDomain::rapid:
+        os << "rapid";
+        break;
+      default:
+        BOOST_THROW_EXCEPTION(std::logic_error {"Invalid MastershipDomain value"});
     }
 
     return os;
