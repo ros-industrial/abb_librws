@@ -59,7 +59,7 @@ namespace rws
  * See https://developercenter.robotstudio.com/api/rwsApi/ for details about RWS 1.0
  */
 class RWSInterface
-: private MastershipManager
+: public MastershipManager
 {
 public:
   /**
@@ -528,18 +528,42 @@ public:
                           const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
   /**
-   * \brief Get RWS mastership
-   *
-   * \param type requested mastership type
+   * \brief Request mastership of all domains.
    */
-  Mastership getMastership(std::string const& type);
+  void requestMastership();
+
+  /**
+   * \brief Release mastership of all domains.
+   */
+  void releaseMastership();
+
+  /**
+   * \brief Request mastership of a given domain.
+   *
+   * \param domain domain for which mastership is requested. If empty, mastership for all domains will be requested.
+   */
+  void requestMastership(std::string const& domain) override;
+
+
+  /**
+   * \brief Release mastership of a given domain.
+   *
+   * \param domain domain for which mastership is to be requested. If empty, mastership for all domains will be released.
+   */
+  void releaseMastership(std::string const& domain) override;
+
+  /**
+   * \brief Activate all tasks.
+   */
+  void activateAllTasks();
+
+  /**
+   * \brief Deactivate all tasks.
+   */
+  void deactivateAllTasks();
 
 private:
   using RWSResult = RWSClient::RWSResult;
-
-  // Implementation of MastershipManager
-  void requestMastership(std::string const& type) override;
-  void releaseMastership(std::string const& type) override;
 
 
   /**

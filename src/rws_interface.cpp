@@ -1022,21 +1022,49 @@ IOSignalInfo RWSInterface::getIOSignals()
 }
 
 
-Mastership RWSInterface::getMastership(std::string const& type)
+void RWSInterface::requestMastership()
 {
-  return Mastership {*this, type};
+  rws_client_.httpPost("/rw/mastership?action=request");
 }
 
 
-void RWSInterface::requestMastership(std::string const& type)
+void RWSInterface::requestMastership(std::string const& domain)
 {
-  // Empty mastership implementation for RWS 1.0.
+  std::stringstream uri;
+  uri << "/rw/mastership/" << domain << "?action=request";
+
+  rws_client_.httpPost(uri.str());
 }
 
 
-void RWSInterface::releaseMastership(std::string const& type)
+void RWSInterface::releaseMastership()
 {
-  // Empty mastership implementation for RWS 1.0.
+  rws_client_.httpPost("/rw/mastership?action=release");
+}
+
+
+void RWSInterface::releaseMastership(std::string const& domain)
+{
+  std::stringstream uri;
+  uri << "/rw/mastership";
+
+  if (!domain.empty())
+    uri << "/" << domain;
+  uri << "?action=release";
+
+  rws_client_.httpPost(uri.str());
+}
+
+
+void RWSInterface::activateAllTasks()
+{
+  rws_client_.httpPost("/rw/rapid/tasks?action=activate");
+}
+
+
+void RWSInterface::deactivateAllTasks()
+{
+  rws_client_.httpPost("/rw/rapid/tasks?action=deactivate");
 }
 
 
