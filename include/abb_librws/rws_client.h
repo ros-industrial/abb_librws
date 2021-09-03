@@ -48,6 +48,8 @@
 #include "coordinate.h"
 #include "connection_options.h"
 
+#include <set>
+
 
 namespace abb
 {
@@ -449,10 +451,12 @@ public:
    *
    * \param uri for the URI (path and query).
    * \param content for the request's content.
+   * \param accepted_status accepted status values.
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpPost(const std::string& uri, const std::string& content = "");
+  POCOResult httpPost(const std::string& uri, const std::string& content = "",
+    std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status = {Poco::Net::HTTPResponse::HTTP_NO_CONTENT});
 
   /**
    * \brief A method for sending a HTTP PUT request and checking response status.

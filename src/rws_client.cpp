@@ -488,11 +488,12 @@ POCOResult RWSClient::httpGet(const std::string& uri)
 }
 
 
-POCOResult RWSClient::httpPost(const std::string& uri, const std::string& content)
+POCOResult RWSClient::httpPost(const std::string& uri, const std::string& content,
+  std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status)
 {
   POCOResult const result = http_client_.httpPost(uri, content);
 
-  if (result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT)
+  if (accepted_status.find(result.httpStatus()) == accepted_status.end())
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"POST"}
       << UriErrorInfo {uri}
