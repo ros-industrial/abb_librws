@@ -42,7 +42,6 @@
 #include "rws_subscription.h"
 #include "rws_info.h"
 #include "xml_attribute.h"
-#include "mastership.h"
 
 #include <chrono>
 
@@ -58,7 +57,6 @@ namespace rws
  * See https://developercenter.robotstudio.com/api/RWS for details about RWS 2.0
  */
 class RWSInterface2
-: private MastershipManager
 {
 public:
   /**
@@ -515,18 +513,21 @@ public:
                           const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
   /**
-   * \brief Get RWS mastership
+   * \brief Request RWS mastership
    *
-   * \param type requested mastership type
+   * \param domain requested mastership domain
    */
-  Mastership getMastership(std::string const& type);
+  void requestMastership(std::string const& domain);
+
+  /**
+   * \brief Release RWS mastership
+   *
+   * \param domain mastership domain to be released
+   */
+  void releaseMastership(std::string const& domain);
 
 private:
   using RWSResult = RWSClient2::RWSResult;
-
-  // Implementation of MastershipManager
-  void requestMastership(std::string const& type) override;
-  void releaseMastership(std::string const& type) override;
 
 
   /**

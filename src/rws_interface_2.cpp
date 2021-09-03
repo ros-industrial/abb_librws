@@ -1008,21 +1008,15 @@ IOSignalInfo RWSInterface2::getIOSignals()
 }
 
 
-Mastership RWSInterface2::getMastership(std::string const& type)
+void RWSInterface2::requestMastership(std::string const& domain)
 {
-  return Mastership {*this, type};
+  rws_client_.requestMastership(domain);
 }
 
 
-void RWSInterface2::requestMastership(std::string const& type)
+void RWSInterface2::releaseMastership(std::string const& domain)
 {
-  rws_client_.requestMastership(type);
-}
-
-
-void RWSInterface2::releaseMastership(std::string const& type)
-{
-  rws_client_.releaseMastership(type);
+  rws_client_.releaseMastership(domain);
 }
 
 

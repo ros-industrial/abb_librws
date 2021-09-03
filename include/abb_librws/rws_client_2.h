@@ -45,7 +45,6 @@
 #include "rws_resource.h"
 #include "rws_subscription.h"
 #include "coordinate.h"
-#include "mastership.h"
 #include "connection_options.h"
 
 #include <map>

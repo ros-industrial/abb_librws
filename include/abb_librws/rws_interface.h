@@ -42,7 +42,6 @@
 #include "rws_subscription.h"
 #include "rws_info.h"
 #include "xml_attribute.h"
-#include "mastership.h"
 #include "rws.h"
 
 #include <chrono>
@@ -59,7 +58,6 @@ namespace rws
  * See https://developercenter.robotstudio.com/api/rwsApi/ for details about RWS 1.0
  */
 class RWSInterface
-: public MastershipManager
 {
 public:
   /**
@@ -542,7 +540,7 @@ public:
    *
    * \param domain domain for which mastership is requested. If empty, mastership for all domains will be requested.
    */
-  void requestMastership(std::string const& domain) override;
+  void requestMastership(std::string const& domain);
 
 
   /**
@@ -550,7 +548,7 @@ public:
    *
    * \param domain domain for which mastership is to be requested. If empty, mastership for all domains will be released.
    */
-  void releaseMastership(std::string const& domain) override;
+  void releaseMastership(std::string const& domain);
 
   /**
    * \brief Activate all tasks.

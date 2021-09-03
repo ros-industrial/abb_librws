@@ -52,7 +52,6 @@ set(
     src/rws.cpp
     src/rws_2.cpp
     src/parsing.cpp
-    src/mastership.cpp
     src/connection_options.cpp
 )
 
