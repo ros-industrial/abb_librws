@@ -743,12 +743,20 @@ void RWSInterface::setRAPIDSymbolData(RAPIDResource const& resource, const RAPID
 
 void RWSInterface::startRAPIDExecution()
 {
-  rws_client_.startRAPIDExecution();
+  std::string uri = "/rw/rapid/execution/start";
+  std::string content = "regain=continue&execmode=continue&cycle=forever&condition=none&stopatbp=disabled&alltaskbytsp=false";
+  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
+
+  rws_client_.httpPost(uri, content, content_type);
 }
 
 void RWSInterface::stopRAPIDExecution()
 {
-  rws_client_.stopRAPIDExecution();
+  std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_STOP;
+  std::string content = "stopmode=stop";
+  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
+
+  rws_client_.httpPost(uri, content, content_type);
 }
 
 void RWSInterface::resetRAPIDProgramPointer()

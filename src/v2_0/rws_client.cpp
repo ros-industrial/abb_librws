@@ -301,24 +301,6 @@ void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSym
   setRAPIDSymbolData(resource, data.constructString());
 }
 
-void RWSClient::startRAPIDExecution()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_START;
-  std::string content = "regain=continue&execmode=continue&cycle=forever&condition=none&stopatbp=disabled&alltaskbytsp=false";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, content, content_type);
-}
-
-void RWSClient::stopRAPIDExecution()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_STOP;
-  std::string content = "stopmode=stop";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, content, content_type);
-}
-
 void RWSClient::resetRAPIDProgramPointer()
 {
   std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_RESETPP;
