@@ -33,19 +33,23 @@ namespace abb :: rws
 
   SubscriptionGroup::~SubscriptionGroup()
   {
-    try
+    close();
+  }
+
+
+  void SubscriptionGroup::close()
+  {
+    if (!subscription_group_id_.empty())
     {
-      // The subscription_group_id_ will be empty if the SubscriptionGroup has been moved from.
-      // In this case, we don't have to close the subscription.
-      if (!subscription_group_id_.empty())
-        subscription_manager_.closeSubscription(subscription_group_id_);
+      subscription_manager_.closeSubscription(subscription_group_id_);
+      subscription_group_id_.clear();
     }
-    catch (...)
-    {
-      // Catch potential exceptions, s.t. the destructor does not throw.
-      std::cerr << "Exception in ~SubscriptionGroup(): " << boost::current_exception_diagnostic_information() << std::endl;
-      throw;
-    }
+  }
+
+
+  void SubscriptionGroup::detach() noexcept
+  {
+    subscription_group_id_.clear();
   }
 
 

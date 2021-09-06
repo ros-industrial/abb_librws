@@ -340,6 +340,29 @@ namespace abb :: rws
     SubscriptionReceiver receive() const;
 
 
+    /**
+     * \brief Close the subscription.
+     *
+     * Closes the subscription as if the destructor was called.
+     * The \a id() will become empty and the subsequent calls to \a receive() will fail.
+     * This function can be used to close the subscription before destroying the object,
+     * and to catch possible errors, which would be problematic with the destructor.
+     *
+     * \throw \a RWSError if something goes wrong.
+     */
+    void close();
+
+
+    /**
+     * \brief Detach the object from the subscription group.
+     *
+     * Detaches the object from the actual subscription group, without attempting to close it.
+     * The \a id() will become empty and the subsequent calls to \a receive() will fail.
+     * This is useful if closing the subscription group fails, but you want to continue.
+     */
+    void detach() noexcept;
+
+
   private:
     static std::vector<std::pair<std::string, SubscriptionPriority>> getURI(
       SubscriptionManager& subscription_manager, SubscriptionResources const& resources);
