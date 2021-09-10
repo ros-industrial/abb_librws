@@ -40,6 +40,7 @@
 #include <abb_librws/parsing.h>
 
 #include <Poco/Net/HTTPRequest.h>
+#include <Poco/DOM/NodeList.h>
 
 #include <sstream>
 #include <stdexcept>
@@ -483,42 +484,48 @@ std::string RWSClient::getResourceURI(OperationModeResource const&) const
 
 void RWSClient::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, SubscriptionCallback& callback) const
 {
-  // IMPORTANT: don't use AutoPtr<XML::Node> here! Otherwise you will get memory corruption.
-  Poco::XML::Node const * li_node = doc->getNodeByPath("html/body/div/ul/li");
-  if (!li_node)
-    BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: can't find XML path html/body/div/ul/li"});
+  // IMPORTANT: don't use AutoPtr<XML::Element> here! Otherwise you will get memory corruption.
+  Poco::XML::Element const * ul_element = dynamic_cast<Poco::XML::Element const *>(doc->getNodeByPath("html/body/div/ul"));
+  if (!ul_element)
+    BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: can't find XML element at path html/body/div/ul"});
 
-  auto const * a_node = li_node->getNodeByPath("a");
-  if (!a_node)
-    BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: can't find XML path html/body/div/ul/li/a"});
-
-  std::string uri;
-  uri = xmlNodeGetAttributeValue(a_node, "href");
-
-  std::string const class_attribute_value = xmlNodeGetAttributeValue(li_node, "class");
-
-  if (class_attribute_value == "ios-signalstate-ev")
+  Poco::AutoPtr<Poco::XML::NodeList> li_elements = ul_element->getElementsByTagName("li");
+  for (unsigned long index = 0; index < li_elements->length(); ++index)
   {
-    IOSignalStateEvent event;
-    std::string const prefix = "/rw/iosystem/signals/";
+    Poco::XML::Element const * li_element = dynamic_cast<Poco::XML::Element const *>(li_elements->item(index));
+    if (!li_element)
+      BOOST_THROW_EXCEPTION(std::logic_error {"An item of the list returned by getElementsByTagName() is not an XML::Element"});
 
-    if (uri.find(prefix) != 0)
-      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: invalid resource URI"} << UriErrorInfo {uri});
+    Poco::XML::Element const * a_element = li_element->getChildElement("a");
+    if (!a_element)
+      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: `li` element has no `a` element"});
 
-    event.signal = uri.substr(prefix.length(), uri.find(";") - prefix.length());
-    event.value = xmlFindTextContent(li_node, XMLAttribute {"class", "lvalue"});
-    callback.processEvent(event);
+    auto const& uri = a_element->getAttribute("href");
+    auto const& class_attribute_value = li_element->getAttribute("class");
+
+    if (class_attribute_value == "ios-signalstate-ev")
+    {
+      IOSignalStateEvent event;
+      std::string const prefix = "/rw/iosystem/signals/";
+
+      if (uri.find(prefix) != 0)
+        BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: invalid resource URI"} << UriErrorInfo {uri});
+
+      event.signal = uri.substr(prefix.length(), uri.find(";") - prefix.length());
+      event.value = xmlFindTextContent(li_element, XMLAttribute {"class", "lvalue"});
+      callback.processEvent(event);
+    }
+    else if (class_attribute_value == "rap-ctrlexecstate-ev")
+    {
+      RAPIDExecutionStateEvent event;
+
+      std::string const state_string = xmlFindTextContent(li_element, XMLAttribute {"class", "ctrlexecstate"});
+      event.state = rw::makeRAPIDExecutionState(state_string);
+
+      callback.processEvent(event);
+    }
+    else
+      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: unrecognized class " + class_attribute_value});
   }
-  else if (class_attribute_value == "rap-ctrlexecstate-ev")
-  {
-    RAPIDExecutionStateEvent event;
-
-    std::string const state_string = xmlFindTextContent(li_node, XMLAttribute {"class", "ctrlexecstate"});
-    event.state = rw::makeRAPIDExecutionState(state_string);
-
-    callback.processEvent(event);
-  }
-  else
-    BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: unrecognized class " + class_attribute_value});
 }
 }
