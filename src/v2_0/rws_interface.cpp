@@ -964,7 +964,7 @@ void RWSInterface::registerRemoteUser(const std::string& username,
 
 void RWSInterface::setDigitalSignal(std::string const& signal_name, bool value)
 {
-  setIOSignal(signal_name, std::string(value ? SystemConstants::IOSignals::HIGH : SystemConstants::IOSignals::LOW));
+  setIOSignal(signal_name, value ? SystemConstants::IOSignals::HIGH : SystemConstants::IOSignals::LOW);
 }
 
 
@@ -973,6 +973,12 @@ void RWSInterface::setAnalogSignal(std::string const& signal_name, float value)
   std::stringstream str;
   str << std::setprecision(SINGLE_PRECISION_DIGITS) << value;
   setIOSignal(signal_name, str.str());
+}
+
+
+void RWSInterface::setGroupSignal(std::string const& signal_name, std::uint32_t value)
+{
+  setIOSignal(signal_name, std::to_string(value));
 }
 
 
@@ -985,6 +991,12 @@ bool RWSInterface::getDigitalSignal(std::string const& signal_name)
 float RWSInterface::getAnalogSignal(std::string const& signal_name)
 {
   return std::stof(getIOSignal(signal_name));
+}
+
+
+std::uint32_t RWSInterface::getGroupSignal(std::string const& signal_name)
+{
+  return std::stoul(getIOSignal(signal_name));
 }
 
 

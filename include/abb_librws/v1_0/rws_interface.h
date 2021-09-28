@@ -45,6 +45,7 @@
 #include <abb_librws/xml_attribute.h>
 
 #include <chrono>
+#include <cstdint>
 
 
 namespace abb :: rws :: v1_0
@@ -168,6 +169,14 @@ public:
   /// @return Value of the requested analog signal
   ///
   float getAnalogSignal(std::string const& signal_name);
+
+
+  /// @brief Get value of a group signal
+  ///
+  /// @param signal_name Name of the signal
+  /// @return Value of the requested group signal
+  ///
+  std::uint32_t getGroupSignal(std::string const& signal_name);
 
 
   /**
@@ -333,6 +342,14 @@ public:
   /// @param value New value of the signal
   ///
   void setAnalogSignal(std::string const& signal_name, float value);
+
+
+  /// @brief Set value of a group signal
+  ///
+  /// @param signal_name Name of the signal
+  /// @param value New value of the signal
+  ///
+  void setGroupSignal(std::string const& signal_name, std::uint32_t value);
 
 
   /**
