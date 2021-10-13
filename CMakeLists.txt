@@ -81,6 +81,27 @@ if(NOT BUILD_SHARED_LIBS)
   target_compile_definitions(${PROJECT_NAME} PUBLIC "ABB_LIBRWS_STATIC_DEFINE")
 endif()
 
+##########
+## Test ##
+##########
+
+enable_testing()
+
+find_package(GTest REQUIRED)
+
+add_executable(${PROJECT_NAME}-test
+    test/rws_rapid_test.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}-test
+    ${PROJECT_NAME}
+    GTest::GTest
+    GTest::Main
+)
+
+gtest_discover_tests(${PROJECT_NAME}-test)
+
+
 #############
 ## Install ##
 #############
