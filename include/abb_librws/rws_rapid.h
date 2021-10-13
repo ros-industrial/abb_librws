@@ -40,6 +40,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <stdexcept>
 
 
 namespace abb
@@ -369,6 +370,243 @@ protected:
    * \brief Container for the record's components. I.e. other RAPID records or atomic RAPID data.
    */
   std::vector<RAPIDSymbolDataAbstract*> components_;
+};
+
+/**
+ * \brief A struct, for representing the data of a RAPID array of atomic type.
+ */
+template<typename T>
+struct RAPIDArray : public RAPIDSymbolDataAbstract
+{
+public:
+  using value_type = T;
+
+  /**
+   * \brief A constructor.
+   *
+   * \param array_type_name specifying the name of the RAPID type of the contained items
+   * \param array_size specifying the size of the array to allocate
+   * \param value initiale value of all the item of the array
+   */
+  RAPIDArray(
+    const std::string& array_type_name, 
+    const size_t array_size,
+    const value_type& value = value_type()
+  )
+  :   array_type_name_ { array_type_name }
+  ,   container_ {std::vector<value_type>(array_size, value)}
+  {}
+
+  /**
+   * \brief A constructor that takes an array to initialize the underlying container
+   * 
+   * \param array_type_name specifying the name of the RAPID type of the contained items
+   * \param array Array that will be used to initialize the container
+   */
+  RAPIDArray(const std::string& array_type_name, const std::vector<value_type>&& array)
+  :   array_type_name_ {array_type_name}
+  ,   container_ {array}
+  {}
+
+  /**
+   * \brief A method for constructing a RAPID symbol data value string.
+   *
+   * \return std::string containing the constructed string.
+   */
+  std::string constructString() const override
+  {
+    std::stringstream ss;
+
+    ss << "[";
+
+    for (size_t i = 0; i < container_.size(); ++i)
+    {
+      ss << container_.at(i).constructString();
+
+      if (i != container_.size() - 1)
+      {
+        ss << ",";
+      }
+    }
+
+    ss << "]";
+
+    return ss.str();
+  }
+
+  /**
+   * \brief A method for parsing a RAPID symbol data value string.
+   *
+   * \param value_string containing the string to parse.
+   */
+  void parseString(const std::string& value_string) override
+  {
+    std::vector<std::string> substrings = extractDelimitedSubstrings(value_string);
+
+    if(container_.size() == substrings.size())
+    {
+      for (size_t i = 0; i < substrings.size(); ++i)
+      {
+        container_.at(i).parseString(substrings.at(i));
+      }
+    }
+  }
+
+  /**
+   * \brief A method for getting the type of item stored in the RAPID array.
+   *
+   * \return std::string containing the type.
+   */
+  std::string getType() const override
+  {
+    return array_type_name_;
+  }
+
+  /**
+   * \brief Operator for copying the RAPID array to another RAPID array.
+   *
+   * \param other containing the RAPID array to copy.
+   *
+   * \return RAPIDArray& containing the copy.
+   */
+  RAPIDArray<value_type>& operator=(const RAPIDArray<value_type>& other)
+  {
+    if (this != &other)
+    {
+      if (array_type_name_ == other.array_type_name_)
+      {
+        if (container_.size() == other.container_.size())
+        {
+          for (size_t i = 0; i < container_.size(); ++i)
+          {
+            container_.at(i).parseString(other.container_.at(i).constructString());
+          }
+        }
+      }
+    }
+
+    return *this;
+  }
+
+  value_type& operator[](const size_t index) {
+    ensureIndexIsValid(index);
+    return container_[index];
+  }
+
+  value_type const& at(const size_t index) const {
+    ensureIndexIsValid(index);
+    return container_.at(index);
+  }
+
+private:
+  /**
+   * \brief A method to remove a character from a string and count the number of times it occurred.
+   *
+   * \param input for the string to search.
+   * \param character specifying the character to search for.
+   *
+   * \return unsigned int containing the number of times the character occurs.
+   */
+  unsigned int countCharInString(std::string input, const char character)
+  {
+    bool done = false;
+    unsigned int count = 0;
+    size_t position = 0;
+
+    do
+    {
+      position = input.find_first_of(character);
+
+      if (position != std::string::npos)
+      {
+        ++count;
+        input.erase(position, 1);
+      }
+      else
+      {
+        done = true;
+      }
+    } while (!done);
+
+    return count;
+  }
+
+  /**
+   * \brief A method to extract delimited substrings in a string.
+   *
+   * \param input containing the string with delimited substrings.
+   *
+   * \return std::vector<std::string> containing the extracted substrings.
+   */
+  std::vector<std::string> extractDelimitedSubstrings(const std::string& input)
+  {
+    // Prepare the input by removing any starting and ending '[' respective ']'
+    std::string temp_0(input);
+    size_t position_1 = 0;
+    size_t position_2 = 0;
+
+    position_1 = temp_0.find_first_of('[');
+    position_2 = temp_0.find_last_of(']');
+
+    if (position_1 != std::string::npos && position_2 != std::string::npos)
+    {
+      temp_0.erase(position_1, 1);
+      temp_0.erase(position_2 - 1, 1);
+    }
+
+    // Extract and merge the delimited substrings in the prepared input string.
+    std::stringstream ss(temp_0);
+    std::vector<std::string> values;
+    std::string temp_1;
+    std::string temp_2;
+    int counter = 0;
+
+    while (std::getline(ss, temp_1, ','))
+    {
+      if (!temp_1.empty())
+      {
+        counter += countCharInString(temp_1, '[');
+        counter -= countCharInString(temp_1, ']');
+
+        if (counter == 0)
+        {
+          if (!temp_2.empty())
+          {
+            values.push_back(temp_2 + temp_1);
+            temp_2 = "";
+          }
+          else
+          {
+            values.push_back(temp_1);
+          }
+        }
+        else
+        {
+          temp_2 += temp_1 + ",";
+        }
+      }
+    }
+
+    return values;
+  }
+
+  void ensureIndexIsValid(const size_t index) const
+  {
+    if(index >= container_.size())
+    {
+      throw std::invalid_argument("index value is out of bound");
+    }
+  }
+
+  /**
+   * \brief The type of object contained in the array.
+   */
+  std::string array_type_name_;
+
+  /**
+   * \brief Container for the record's components. I.e. RAPID records or atomic RAPID data.
+   */
+  std::vector<value_type> container_;
 };
 
 /**
