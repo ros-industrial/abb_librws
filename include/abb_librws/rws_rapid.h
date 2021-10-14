@@ -43,6 +43,8 @@
 #include <sstream>
 #include <stdexcept>
 
+#include <abb_librws/parsing.h>
+
 
 namespace abb
 {
@@ -344,25 +346,6 @@ public:
 
 protected:
   /**
-   * \brief A method to remove a character from a string and count the number of times it occurred.
-   *
-   * \param input for the string to search.
-   * \param character specifying the character to search for.
-   *
-   * \return unsigned int containing the number of times the character occurs.
-   */
-  unsigned int countCharInString(std::string input, const char character);
-
-  /**
-   * \brief A method to extract delimited substrings in a string.
-   *
-   * \param input containing the string with delimited substrings.
-   *
-   * \return std::vector<std::string> containing the extracted substrings.
-   */
-  std::vector<std::string> extractDelimitedSubstrings(const std::string& input);
-
-  /**
    * \brief The record's type name.
    */
   std::string record_type_name_;
@@ -381,6 +364,8 @@ struct RAPIDArray : public RAPIDSymbolDataAbstract
 {
 public:
   using value_type = T;
+
+  static_assert(N > 0, "Size template parameter should be greate than 0");
   static const std::size_t array_size = N;
 
   /**
@@ -402,7 +387,15 @@ public:
   {
     if(initializer.size() != array_size)
     {
-      throw std::invalid_argument ("test");
+      std::stringstream ss;
+      ss << "The size=";
+      ss << initializer.size();
+      ss << " of the list of initial values passed does not match the array_size=";
+      ss << array_size;
+
+      std::string exception_message = ss.str();
+
+      throw std::invalid_argument {exception_message};
     }
     container_ = initializer;
   }
@@ -437,17 +430,31 @@ public:
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
+   * 
+   * \throws invalid_argument when value_string represent an array of a different size
    */
   void parseString(const std::string& value_string) override
   {
-    std::vector<std::string> substrings = extractDelimitedSubstrings(value_string);
+    std::vector<std::string> substrings = extractDelimitedSubstrings(value_string, '[', ']', ',');
 
-    if(array_size == substrings.size())
+    if(array_size != substrings.size())
     {
-      for (size_t i = 0; i < substrings.size(); ++i)
-      {
-        container_.at(i).parseString(substrings.at(i));
-      }
+      std::stringstream ss;
+      ss << "Cannot parse: The passed value_string=\"";
+      ss << value_string;
+      ss << "\" represents an array with size=";
+      ss << substrings.size();
+      ss << " different from the array size=";
+      ss << array_size;
+    
+      std::string exception_message = ss.str();
+
+      throw std::invalid_argument {exception_message};
+    }
+
+    for (size_t i = 0; i < substrings.size(); ++i)
+    {
+      container_.at(i).parseString(substrings.at(i));
     }
   }
 
@@ -458,7 +465,7 @@ public:
    */
   std::string getType() const override
   {
-    return "array";
+    return value_type().getType();
   }
 
   /**
@@ -474,7 +481,7 @@ public:
     {
       for (size_t i = 0; i < array_size; ++i)
       {
-        container_.at(i).parseString(other.container_.at(i).constructString());
+        container_ = other.container_;
       }
     }
 
@@ -508,96 +515,6 @@ public:
   }
 
 private:
-  /**
-   * \brief A method to remove a character from a string and count the number of times it occurred.
-   *
-   * \param input for the string to search.
-   * \param character specifying the character to search for.
-   *
-   * \return unsigned int containing the number of times the character occurs.
-   */
-  unsigned int countCharInString(std::string input, const char character)
-  {
-    bool done = false;
-    unsigned int count = 0;
-    size_t position = 0;
-
-    do
-    {
-      position = input.find_first_of(character);
-
-      if (position != std::string::npos)
-      {
-        ++count;
-        input.erase(position, 1);
-      }
-      else
-      {
-        done = true;
-      }
-    } while (!done);
-
-    return count;
-  }
-
-  /**
-   * \brief A method to extract delimited substrings in a string.
-   *
-   * \param input containing the string with delimited substrings.
-   *
-   * \return std::vector<std::string> containing the extracted substrings.
-   */
-  std::vector<std::string> extractDelimitedSubstrings(const std::string& input)
-  {
-    // Prepare the input by removing any starting and ending '[' respective ']'
-    std::string temp_0(input);
-    size_t position_1 = 0;
-    size_t position_2 = 0;
-
-    position_1 = temp_0.find_first_of('[');
-    position_2 = temp_0.find_last_of(']');
-
-    if (position_1 != std::string::npos && position_2 != std::string::npos)
-    {
-      temp_0.erase(position_1, 1);
-      temp_0.erase(position_2 - 1, 1);
-    }
-
-    // Extract and merge the delimited substrings in the prepared input string.
-    std::stringstream ss(temp_0);
-    std::vector<std::string> values;
-    std::string temp_1;
-    std::string temp_2;
-    int counter = 0;
-
-    while (std::getline(ss, temp_1, ','))
-    {
-      if (!temp_1.empty())
-      {
-        counter += countCharInString(temp_1, '[');
-        counter -= countCharInString(temp_1, ']');
-
-        if (counter == 0)
-        {
-          if (!temp_2.empty())
-          {
-            values.push_back(temp_2 + temp_1);
-            temp_2 = "";
-          }
-          else
-          {
-            values.push_back(temp_1);
-          }
-        }
-        else
-        {
-          temp_2 += temp_1 + ",";
-        }
-      }
-    }
-
-    return values;
-  }
 
   void ensureIndexIsValid(const size_t index) const
   {

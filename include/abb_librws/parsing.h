@@ -97,4 +97,28 @@ namespace abb :: rws
                                   const std::string& substring_start,
                                   const std::string& substring_end);
 
+  /**
+   * \brief A method to count the number of occurrence of a given character in a string.
+   *
+   * \param input for the string to search.
+   * \param character specifying the character to search for.
+   *
+   * \return unsigned int containing the number of times the character occurs.
+   */
+  unsigned int countCharInString(std::string input, const char character);
+
+  /**
+   * \brief A method to extract delimited substrings in a string.
+   *
+   * \param input containing the string with delimited substrings.
+   * \param start_delimiter delimiter of the start of the string from which to extract the substrings
+   * \param end_delimiter delimiter of the end of the string from which to extract the substrings
+   * \param separator seperator that is found between 2 substrings that should be extracted
+   *
+   * \return std::vector<std::string> containing the extracted substrings.
+   */
+  std::vector<std::string> extractDelimitedSubstrings(const std::string& input, 
+                                                     const char start_delimiter,
+                                                     const char end_delimiter,
+                                                     const char separator);
 }
