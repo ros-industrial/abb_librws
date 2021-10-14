@@ -7,13 +7,11 @@ namespace abb :: rws
 
     TEST(RAPIDArrayTest, testSimpleArrayStringConstruction)
     {
-        RAPIDArray<MockRAPIDAtomic> test_array {
-            "mock_data",
-            std::vector<MockRAPIDAtomic> {
-                MockRAPIDAtomic {"data_1"},
-                MockRAPIDAtomic {"data_2"},
-                MockRAPIDAtomic {"data_3"}
-            }
+        RAPIDArray<MockRAPIDAtomic, 3> test_array =
+        {
+            MockRAPIDAtomic {"data_1"},
+            MockRAPIDAtomic {"data_2"},
+            MockRAPIDAtomic {"data_3"}
         };
 
         std::string expected_constructed_string = "[data_1,data_2,data_3]";
@@ -23,15 +21,18 @@ namespace abb :: rws
 
     TEST(RAPIDArrayTest, testDoubleArrayStringConstruction)
     {
-        RAPIDArray<RAPIDArray<MockRAPIDAtomic>> test_double_array {
-            "array",
-            2,
-            RAPIDArray<MockRAPIDAtomic> {"bool",
-            std::vector<MockRAPIDAtomic> {
+        RAPIDArray<RAPIDArray<MockRAPIDAtomic, 3>, 2> test_double_array = {
+            RAPIDArray<MockRAPIDAtomic, 3> 
+            {
                 MockRAPIDAtomic {"data_1"},
                 MockRAPIDAtomic {"data_2"},
                 MockRAPIDAtomic {"data_3"}
-            }
+            },
+            RAPIDArray<MockRAPIDAtomic, 3> 
+            {
+                MockRAPIDAtomic {"data_1"},
+                MockRAPIDAtomic {"data_2"},
+                MockRAPIDAtomic {"data_3"}
             }
         };
         std::string expected_constructed_string =
@@ -45,7 +46,7 @@ namespace abb :: rws
 
     TEST(RAPIDArrayTest, testParseStringSimple)
     {
-        RAPIDArray<MockRAPIDAtomic> test_simple_array {"mock_data", 4};
+        RAPIDArray<MockRAPIDAtomic, 4> test_simple_array;
         const std::vector<std::string> test_data = 
         {
             "I", "am", "your", "father"
@@ -63,11 +64,12 @@ namespace abb :: rws
 
     TEST(RAPIDArrayTest, testParseStringDoubleArray)
     {
-        RAPIDArray<RAPIDArray<MockRAPIDAtomic>> test_double_array {
-            "array",
-            2,
-            RAPIDArray<MockRAPIDAtomic> {"mock_data", 5}
+        RAPIDArray<RAPIDArray<MockRAPIDAtomic, 5>, 2> test_double_array
+        {
+            RAPIDArray<MockRAPIDAtomic, 5>(),
+            RAPIDArray<MockRAPIDAtomic, 5>()
         };
+
         const std::vector<std::vector<std::string>> test_data =
         {
             {"No","I", "am", "your", "father"},

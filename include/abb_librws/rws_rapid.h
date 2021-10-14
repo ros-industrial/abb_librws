@@ -38,6 +38,7 @@
 #define RWS_RAPID_H
 
 #include <string>
+#include <array>
 #include <vector>
 #include <sstream>
 #include <stdexcept>
@@ -375,38 +376,36 @@ protected:
 /**
  * \brief A struct, for representing the data of a RAPID array of atomic type.
  */
-template<typename T>
+template<class T, std::size_t N>
 struct RAPIDArray : public RAPIDSymbolDataAbstract
 {
 public:
   using value_type = T;
+  static const std::size_t array_size = N;
 
   /**
-   * \brief A constructor.
-   *
-   * \param array_type_name specifying the name of the RAPID type of the contained items
-   * \param array_size specifying the size of the array to allocate
-   * \param value initiale value of all the item of the array
-   */
-  RAPIDArray(
-    const std::string& array_type_name, 
-    const size_t array_size,
-    const value_type& value = value_type()
-  )
-  :   array_type_name_ { array_type_name }
-  ,   container_ {std::vector<value_type>(array_size, value)}
-  {}
-
-  /**
-   * \brief A constructor that takes an array to initialize the underlying container
+   * \brief Default constructor of a new RAPIDArray object
    * 
-   * \param array_type_name specifying the name of the RAPID type of the contained items
-   * \param array Array that will be used to initialize the container
    */
-  RAPIDArray(const std::string& array_type_name, const std::vector<value_type>&& array)
-  :   array_type_name_ {array_type_name}
-  ,   container_ {array}
+  RAPIDArray()
+  :   container_ {std::vector<value_type>(array_size, value_type())}
   {}
+
+  /**
+   * \brief Construct a new RAPIDArray object
+   * 
+   * \param initializer List initializer to intialize the content of the underlying container
+   * 
+   * \throws invalid_argument when the size of the initializer list is different from the array size
+   */
+  RAPIDArray(std::initializer_list<value_type> initializer)
+  {
+    if(initializer.size() != array_size)
+    {
+      throw std::invalid_argument ("test");
+    }
+    container_ = initializer;
+  }
 
   /**
    * \brief A method for constructing a RAPID symbol data value string.
@@ -443,7 +442,7 @@ public:
   {
     std::vector<std::string> substrings = extractDelimitedSubstrings(value_string);
 
-    if(container_.size() == substrings.size())
+    if(array_size == substrings.size())
     {
       for (size_t i = 0; i < substrings.size(); ++i)
       {
@@ -459,7 +458,7 @@ public:
    */
   std::string getType() const override
   {
-    return array_type_name_;
+    return "array";
   }
 
   /**
@@ -469,30 +468,40 @@ public:
    *
    * \return RAPIDArray& containing the copy.
    */
-  RAPIDArray<value_type>& operator=(const RAPIDArray<value_type>& other)
+  RAPIDArray<value_type, array_size>& operator=(const RAPIDArray<value_type, array_size>& other)
   {
     if (this != &other)
     {
-      if (array_type_name_ == other.array_type_name_)
+      for (size_t i = 0; i < array_size; ++i)
       {
-        if (container_.size() == other.container_.size())
-        {
-          for (size_t i = 0; i < container_.size(); ++i)
-          {
-            container_.at(i).parseString(other.container_.at(i).constructString());
-          }
-        }
+        container_.at(i).parseString(other.container_.at(i).constructString());
       }
     }
 
     return *this;
   }
 
+  /**
+   * \brief Mutably access an element of the underlying using its index
+   * 
+   * \param index The index of the item to access in the underlying container
+   * \return value_type& The value at the given index
+   * 
+   * \throws invalid_argument when the index is larger or equal than the array size
+   */
   value_type& operator[](const size_t index) {
     ensureIndexIsValid(index);
     return container_[index];
   }
 
+  /**
+   * \brief Immutably access an element of the underlying using its index
+   * 
+   * \param index The index of the item to access in the underlying container
+   * \return value_type& The value at the given index
+   * 
+   * \throws invalid_argument when the index is larger or equal than the array size
+   */
   value_type const& at(const size_t index) const {
     ensureIndexIsValid(index);
     return container_.at(index);
@@ -592,16 +601,11 @@ private:
 
   void ensureIndexIsValid(const size_t index) const
   {
-    if(index >= container_.size())
+    if(index >= array_size)
     {
       throw std::invalid_argument("index value is out of bound");
     }
   }
-
-  /**
-   * \brief The type of object contained in the array.
-   */
-  std::string array_type_name_;
 
   /**
    * \brief Container for the record's components. I.e. RAPID records or atomic RAPID data.
