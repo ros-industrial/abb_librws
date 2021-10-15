@@ -39,7 +39,7 @@ namespace abb :: rws
 
     TEST(RAPIDArrayTest, testConstructStringOneDimensionArray)
     {
-        RAPIDArray<MockRAPIDAtomic, 3> test_array =
+        RAPIDArray<MockRAPIDAtomic, 3> test_array
         {
             MockRAPIDAtomic {"data_1"},
             MockRAPIDAtomic {"data_2"},
@@ -53,14 +53,15 @@ namespace abb :: rws
 
     TEST(RAPIDArrayTest, testConstructStringNestedArray)
     {
-        RAPIDArray<RAPIDArray<MockRAPIDAtomic, 3>, 2> test_nested_array = {
-            RAPIDArray<MockRAPIDAtomic, 3> 
+        RAPIDArray<RAPIDArray<MockRAPIDAtomic, 3>, 2> test_nested_array 
+        {
+            RAPIDArray<MockRAPIDAtomic, 3>
             {
                 MockRAPIDAtomic {"data_1"},
                 MockRAPIDAtomic {"data_2"},
                 MockRAPIDAtomic {"data_3"}
             },
-            RAPIDArray<MockRAPIDAtomic, 3> 
+            RAPIDArray<MockRAPIDAtomic, 3>
             {
                 MockRAPIDAtomic {"data_1"},
                 MockRAPIDAtomic {"data_2"},
@@ -146,36 +147,6 @@ namespace abb :: rws
         RAPIDArray<RAPIDArray<MockRAPIDAtomic, 1>, 1> test_nested_array;
         EXPECT_EQ(test_nested_array.getType(), MockRAPIDAtomic().getType());
 
-    }
-
-    TEST(RAPIDArrayTest, testAtThrowsWhenPassingIndexGreaterThanArraySize)
-    {
-        RAPIDArray<MockRAPIDAtomic, 3> test_array;
-        EXPECT_THROW(
-            {
-                test_array.at(3);
-            }
-            , std::invalid_argument);
-        EXPECT_THROW(
-            {
-                test_array.at(4);
-            }
-            , std::invalid_argument);
-    }
-    
-    TEST(RAPIDArrayTest, testSquareBracketOperatorThrowsWhenPassingIndexGreaterThanArraySize)
-    {
-        RAPIDArray<MockRAPIDAtomic, 3> test_array;
-        EXPECT_THROW(
-            {
-                test_array[3];
-            }
-            , std::invalid_argument);
-        EXPECT_THROW(
-            {
-                test_array[4];
-            }
-            , std::invalid_argument);
     }
 }
 

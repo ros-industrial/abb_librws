@@ -43,6 +43,8 @@
 #include <sstream>
 #include <stdexcept>
 
+#include <boost/exception/diagnostic_information.hpp>
+
 #include <abb_librws/parsing.h>
 
 
@@ -365,7 +367,7 @@ struct RAPIDArray : public RAPIDSymbolDataAbstract
 public:
   using value_type = T;
 
-  static_assert(N > 0, "Size template parameter should be greate than 0");
+  static_assert(N > 0, "Size template parameter should be greater than 0");
   static const std::size_t array_size = N;
 
   /**
@@ -395,7 +397,7 @@ public:
 
       std::string exception_message = ss.str();
 
-      throw std::invalid_argument {exception_message};
+      BOOST_THROW_EXCEPTION(std::invalid_argument {exception_message});
     }
     container_ = initializer;
   }
@@ -449,7 +451,7 @@ public:
     
       std::string exception_message = ss.str();
 
-      throw std::invalid_argument {exception_message};
+      BOOST_THROW_EXCEPTION(std::invalid_argument {exception_message});
     }
 
     for (size_t i = 0; i < substrings.size(); ++i)
@@ -479,13 +481,23 @@ public:
   {
     if (this != &other)
     {
-      for (size_t i = 0; i < array_size; ++i)
-      {
-        container_ = other.container_;
-      }
+      container_ = other.container_;
     }
 
     return *this;
+  }
+
+  /**
+   * \brief Immutably access an element of the underlying using its index
+   * 
+   * \param index The index of the item to access in the underlying container
+   * \return value_type const& The value at the given index
+   * 
+   * \throws out_of_range when the index is larger or equal than the array size
+   */
+  value_type const& at(const size_t index) const
+  {
+    return container_.at(index);
   }
 
   /**
@@ -494,35 +506,14 @@ public:
    * \param index The index of the item to access in the underlying container
    * \return value_type& The value at the given index
    * 
-   * \throws invalid_argument when the index is larger or equal than the array size
+   * \throws out_of_range when the index is larger or equal than the array size
    */
-  value_type& operator[](const size_t index) {
-    ensureIndexIsValid(index);
-    return container_[index];
-  }
-
-  /**
-   * \brief Immutably access an element of the underlying using its index
-   * 
-   * \param index The index of the item to access in the underlying container
-   * \return value_type& The value at the given index
-   * 
-   * \throws invalid_argument when the index is larger or equal than the array size
-   */
-  value_type const& at(const size_t index) const {
-    ensureIndexIsValid(index);
+  value_type& at(const size_t index)
+  {
     return container_.at(index);
   }
 
 private:
-
-  void ensureIndexIsValid(const size_t index) const
-  {
-    if(index >= array_size)
-    {
-      throw std::invalid_argument("index value is out of bound");
-    }
-  }
 
   /**
    * \brief Container for the record's components. I.e. RAPID records or atomic RAPID data.
