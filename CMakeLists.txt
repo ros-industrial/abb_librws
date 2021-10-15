@@ -85,21 +85,26 @@ endif()
 ## Test ##
 ##########
 
-enable_testing()
+option(MYPROJECT_BUILD_TESTING "Build the testing tree when building as a dependency" OFF)
 
-find_package(GTest REQUIRED)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MYPROJECT_BUILD_TESTING)
 
-add_executable(${PROJECT_NAME}-test
-    test/rws_rapid_test.cpp
-)
+  enable_testing()
 
-target_link_libraries(${PROJECT_NAME}-test
-    ${PROJECT_NAME}
-    GTest::GTest
-    GTest::Main
-)
+  find_package(GTest REQUIRED)
 
-gtest_discover_tests(${PROJECT_NAME}-test)
+  add_executable(${PROJECT_NAME}-test
+      test/rws_rapid_test.cpp
+  )
+
+  target_link_libraries(${PROJECT_NAME}-test
+      ${PROJECT_NAME}
+      GTest::GTest
+      GTest::Main
+  )
+
+  gtest_discover_tests(${PROJECT_NAME}-test)
+endif()
 
 
 #############
