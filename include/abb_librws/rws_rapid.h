@@ -375,31 +375,18 @@ public:
    * 
    */
   RAPIDArray()
-  :   container_ {std::vector<value_type>(array_size, value_type())}
   {}
 
   /**
-   * \brief Construct a new RAPIDArray object
+   * \brief Variadic constructor for a new RAPIDArray object
    * 
-   * \param initializer List initializer to intialize the content of the underlying container
+   * \param values initiale values to fill up the array
    * 
-   * \throws invalid_argument when the size of the initializer list is different from the array size
    */
-  RAPIDArray(std::initializer_list<value_type> initializer)
+  template<typename... value_type>
+  RAPIDArray(value_type... values)
+  :   container_ {values...}
   {
-    if(initializer.size() != array_size)
-    {
-      std::stringstream ss;
-      ss << "The size=";
-      ss << initializer.size();
-      ss << " of the list of initial values passed does not match the array_size=";
-      ss << array_size;
-
-      std::string exception_message = ss.str();
-
-      BOOST_THROW_EXCEPTION(std::invalid_argument {exception_message});
-    }
-    container_ = initializer;
   }
 
   /**
@@ -471,23 +458,6 @@ public:
   }
 
   /**
-   * \brief Operator for copying the RAPID array to another RAPID array.
-   *
-   * \param other containing the RAPID array to copy.
-   *
-   * \return RAPIDArray& containing the copy.
-   */
-  RAPIDArray<value_type, array_size>& operator=(const RAPIDArray<value_type, array_size>& other)
-  {
-    if (this != &other)
-    {
-      container_ = other.container_;
-    }
-
-    return *this;
-  }
-
-  /**
    * \brief Immutably access an element of the underlying using its index
    * 
    * \param index The index of the item to access in the underlying container
@@ -518,7 +488,7 @@ private:
   /**
    * \brief Container for the record's components. I.e. RAPID records or atomic RAPID data.
    */
-  std::vector<value_type> container_;
+  std::array<value_type, array_size> container_;
 };
 
 /**

@@ -4,39 +4,6 @@
 
 namespace abb :: rws
 {
-    TEST(RAPIDArrayTest, testCtorThrowsWhenInitialiserListHasDifferentSize)
-    {
-        bool has_thrown = false;
-        try {
-            RAPIDArray<MockRAPIDAtomic, 1> test_array
-            {
-                MockRAPIDAtomic {"data_1"},
-                MockRAPIDAtomic {"data_2"}
-            };
-        }
-        catch (std::invalid_argument)
-        {
-            has_thrown = true;
-        }
-
-        EXPECT_TRUE(has_thrown);
-        has_thrown = false;
-
-        try {
-            RAPIDArray<MockRAPIDAtomic, 2> test_array
-            {
-                MockRAPIDAtomic {"data_1"}
-            };
-        }
-        catch (std::invalid_argument)
-        {
-            has_thrown = true;
-        }
-
-        EXPECT_TRUE(has_thrown);
-    }
-
-
     TEST(RAPIDArrayTest, testConstructStringOneDimensionArray)
     {
         RAPIDArray<MockRAPIDAtomic, 3> test_array
