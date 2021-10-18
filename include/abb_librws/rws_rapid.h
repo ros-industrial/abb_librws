@@ -359,7 +359,7 @@ protected:
 };
 
 /**
- * \brief A struct, for representing the data of a RAPID array of atomic type.
+ * \brief A struct, for representing the data of a RAPID array.
  */
 template<class T, std::size_t N>
 struct RAPIDArray : public RAPIDSymbolDataAbstract
