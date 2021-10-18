@@ -384,8 +384,8 @@ public:
    * 
    */
   template<typename... value_type>
-  RAPIDArray(value_type... values)
-  :   container_ {values...}
+  RAPIDArray(value_type&&... values)
+  :   container_ {std::forward<value_type>(values)...}
   {
   }
 
@@ -454,7 +454,8 @@ public:
    */
   std::string getType() const override
   {
-    return value_type().getType();
+    static std::string const type_string = value_type().getType();
+    return type_string;
   }
 
   /**
@@ -485,9 +486,6 @@ public:
 
 private:
 
-  /**
-   * \brief Container for the record's components. I.e. RAPID records or atomic RAPID data.
-   */
   std::array<value_type, array_size> container_;
 };
 
