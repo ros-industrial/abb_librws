@@ -38,6 +38,7 @@
 
 #include <abb_librws/v1_0/rws_client.h>
 #include <abb_librws/v1_0/rws.h>
+#include <abb_librws/v1_0/rw/rapid.h>
 #include <abb_librws/rws.h>
 #include <abb_librws/rws_cfg.h>
 #include <abb_librws/rws_subscription.h>
@@ -62,9 +63,9 @@ public:
   /**
    * \brief A constructor.
    *
-   * \param connection_options RWS connection options.
+   * \param client RWS client.
    */
-  explicit RWSInterface(ConnectionOptions const& connection_options);
+  explicit RWSInterface(RWSClient& client_);
 
   /**
    * \brief A method for collecting static information (at least during runtime) of the robot controller.
@@ -271,7 +272,7 @@ public:
    *
    * \throw \a std::runtime_error if something goes wrong.
    */
-  std::vector<RAPIDModuleInfo> getRAPIDModulesInfo(const std::string& task);
+  std::vector<rw::RAPIDModuleInfo> getRAPIDModulesInfo(const std::string& task);
 
   /**
    * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
@@ -280,7 +281,7 @@ public:
    *
    * \throw \a std::runtime_error if something goes wrong.
    */
-  std::vector<RAPIDTaskInfo> getRAPIDTasks();
+  std::vector<rw::RAPIDTaskInfo> getRAPIDTasks();
 
   /**
    * \brief A method for retrieving the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
@@ -576,9 +577,6 @@ public:
   void deactivateAllTasks();
 
 private:
-  using RWSResult = RWSClient::RWSResult;
-
-
   /**
    * \brief A method for comparing a single text content (from a XML document node) with a specific string value.
    *
@@ -616,7 +614,8 @@ private:
   /**
    * \brief The RWS client used to communicate with the robot controller.
    */
-  RWSClient rws_client_;
+  RWSClient& rws_client_;
+  rw::RAPIDService rapid_;
 };
 
 } // end namespace rws

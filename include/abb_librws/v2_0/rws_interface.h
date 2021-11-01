@@ -263,7 +263,7 @@ public:
    *
    * \throw \a std::runtime_error if something goes wrong.
    */
-  std::vector<RAPIDModuleInfo> getRAPIDModulesInfo(const std::string& task);
+  std::vector<rw::RAPIDModuleInfo> getRAPIDModulesInfo(const std::string& task);
 
   /**
    * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
@@ -272,7 +272,7 @@ public:
    *
    * \throw \a std::runtime_error if something goes wrong.
    */
-  std::vector<RAPIDTaskInfo> getRAPIDTasks();
+  std::vector<rw::RAPIDTaskInfo> getRAPIDTasks();
 
   /**
    * \brief A method for retrieving the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).

@@ -2,8 +2,9 @@
 
 #include "rws_resource.h"
 #include "rws_websocket.h"
-#include "rapid_execution_state.h"
 #include "rws_error.h"
+
+#include <abb_librws/common/rw/rapid.h>
 
 #include <Poco/DOM/DOMParser.h>
 #include <Poco/Net/WebSocket.h>
@@ -191,7 +192,7 @@ namespace abb :: rws
     /**
      * \brief RAPID execution state
      */
-    RAPIDExecutionState state;
+    rw::RAPIDExecutionState state;
   };
 
 

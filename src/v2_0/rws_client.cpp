@@ -670,12 +670,7 @@ void RWSClient::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, Subscriptio
     RAPIDExecutionStateEvent event;
 
     std::string const state_string = xmlFindTextContent(li_node, XMLAttribute {"class", "ctrlexecstate"});
-    if (state_string == "running")
-      event.state = RAPIDExecutionState::running;
-    else if (state_string == "stopped")
-      event.state = RAPIDExecutionState::stopped;
-    else
-      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: invalid RAPID execution state string"});
+    event.state = rw::makeRAPIDExecutionState(state_string);
 
     callback.processEvent(event);
   }

@@ -74,8 +74,9 @@ static bool digitalSignalToBool(std::string const& value)
  * Primary methods
  */
 
-RWSInterface::RWSInterface(ConnectionOptions const& connection_options)
-: rws_client_ {connection_options}
+RWSInterface::RWSInterface(RWSClient& client)
+: rws_client_ {client}
+, rapid_ {rws_client_}
 {
 }
 
@@ -742,32 +743,29 @@ void RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const std::string& name,
                                       const std::string& data)
 {
-  rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data);
+  rapid_.setRAPIDSymbolData(RAPIDResource(task, module, name), data);
 }
 
 
 void RWSInterface::setRAPIDSymbolData(RAPIDResource const& resource, const RAPIDSymbolDataAbstract& data)
 {
-  rws_client_.setRAPIDSymbolData(resource, data);
+  rapid_.setRAPIDSymbolData(resource, data);
 }
 
 
 void RWSInterface::startRAPIDExecution()
 {
-  rws_client_.startRAPIDExecution();
+  rapid_.startRAPIDExecution();
 }
 
 void RWSInterface::stopRAPIDExecution(StopMode stopmode, UseTsp usetsp)
 {
-  std::stringstream content;
-  content << "stopmode=" << stopmode << "&usetsp=" << usetsp;
-
-  rws_client_.httpPost("/rw/rapid/execution?action=stop", content.str());
+  rapid_.stopRAPIDExecution(stopmode, usetsp);
 }
 
 void RWSInterface::resetRAPIDProgramPointer()
 {
-  rws_client_.resetRAPIDProgramPointer();
+  rapid_.resetRAPIDProgramPointer();
 }
 
 void RWSInterface::setMotorsOn()
@@ -785,63 +783,14 @@ void RWSInterface::setSpeedRatio(unsigned int ratio)
   rws_client_.setSpeedRatio(ratio);
 }
 
-std::vector<RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
+std::vector<rw::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
 {
-  std::vector<RAPIDModuleInfo> result;
-
-  RWSResult rws_result = rws_client_.getRAPIDModulesInfo(task);
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result,
-                                                         XMLAttributes::CLASS_RAP_MODULE_INFO_LI);
-
-  for (size_t i = 0; i < node_list.size(); ++i)
-  {
-    std::string name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
-    std::string type = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_TYPE);
-
-    result.push_back(RAPIDModuleInfo(name, type));
-  }
-
-  return result;
+  return rapid_.getRAPIDModulesInfo(task);
 }
 
-std::vector<RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
+std::vector<rw::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
 {
-  std::vector<RAPIDTaskInfo> result;
-
-  RWSResult rws_result = rws_client_.getRAPIDTasks();
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_RAP_TASK_LI);
-
-  for (size_t i = 0; i < node_list.size(); ++i)
-  {
-    std::string name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
-    bool is_motion_task = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_MOTIONTASK) == RAPID::RAPID_TRUE;
-    bool is_active = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_ACTIVE) == "On";
-    std::string temp = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_EXCSTATE);
-
-    // Assume task state is unknown, update based on contents of 'temp'.
-    RAPIDTaskExecutionState execution_state = RAPIDTaskExecutionState::UNKNOWN;
-
-    if(temp == "read")
-    {
-      execution_state = RAPIDTaskExecutionState::READY;
-    }
-    else if(temp == "stop")
-    {
-      execution_state = RAPIDTaskExecutionState::STOPPED;
-    }
-    else if(temp == "star")
-    {
-      execution_state = RAPIDTaskExecutionState::STARTED;
-    }
-    else if(temp == "unin")
-    {
-      execution_state = RAPIDTaskExecutionState::UNINITIALIZED;
-    }
-
-    result.push_back(RAPIDTaskInfo(name, is_motion_task, is_active, execution_state));
-  }
-
-  return result;
+  return rapid_.getRAPIDTasks();
 }
 
 unsigned int RWSInterface::getSpeedRatio()
@@ -898,9 +847,7 @@ bool RWSInterface::isMotorsOn()
 
 bool RWSInterface::isRAPIDRunning()
 {
-  return compareSingleContent(rws_client_.getRAPIDExecution(),
-                              XMLAttributes::CLASS_CTRLEXECSTATE,
-                              ContollerStates::RAPID_EXECUTION_RUNNING);
+  return rapid_.getRAPIDExecution().ctrlexecstate == rw::RAPIDExecutionState::running;
 }
 
 void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
@@ -912,25 +859,24 @@ std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
                                              const std::string& module,
                                              const std::string& name)
 {
-  return xmlFindTextContent(rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name)),
-                            XMLAttributes::CLASS_VALUE);
+  return rapid_.getRAPIDSymbolData(RAPIDResource(task, module, name));
 }
 
 
 void RWSInterface::getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data)
 {
-  rws_client_.getRAPIDSymbolData(resource, data);
+  rapid_.getRAPIDSymbolData(resource, data);
 }
 
 
 void RWSInterface::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
 {
-  rws_client_.loadModuleIntoTask(task, resource, replace);
+  rapid_.loadModuleIntoTask(task, resource, replace);
 }
 
 void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResource& resource)
 {
-  rws_client_.unloadModuleFromTask(task, resource);
+  rapid_.unloadModuleFromTask(task, resource);
 }
 
 std::string RWSInterface::getFile(const FileResource& resource)

@@ -710,74 +710,11 @@ public:
   /**
    * \brief A constructor.
    *
-   * \param ip_address specifying the robot controller's IP address.
+   * \param client RWS client.
    */
-  RWSStateMachineInterface(const std::string& ip_address)
+  RWSStateMachineInterface(v1_0::RWSClient& client)
   :
-  RWSInterface {ConnectionOptions {ip_address}},
-  services_(this)
-  {}
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param username for the username to the RWS authentication process.
-   * \param password for the password to the RWS authentication process.
-   */
-  RWSStateMachineInterface(const std::string& ip_address, const std::string& username, const std::string& password)
-  :
-  RWSInterface {
-    ConnectionOptions {
-      ip_address,
-      SystemConstants::General::DEFAULT_PORT_NUMBER,
-      username,
-      password
-    }
-  },
-  services_(this)
-  {}
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param port for the port used by the RWS server.
-   */
-  RWSStateMachineInterface(const std::string& ip_address, const unsigned short port)
-  :
-  RWSInterface {
-    ConnectionOptions {
-      ip_address,
-      port,
-      SystemConstants::General::DEFAULT_USERNAME,
-      SystemConstants::General::DEFAULT_PASSWORD
-    }
-  },
-  services_(this)
-  {}
-
-  /**
-   * \brief A constructor.
-   *
-   * \param ip_address specifying the robot controller's IP address.
-   * \param port for the port used by the RWS server.
-   * \param username for the username to the RWS authentication process.
-   * \param password for the password to the RWS authentication process.
-   */
-  RWSStateMachineInterface(const std::string& ip_address,
-                           const unsigned short port,
-                           const std::string& username,
-                           const std::string& password)
-  :
-  RWSInterface {
-    ConnectionOptions {
-      ip_address,
-      port,
-      username,
-      password
-    }
-  },
+  RWSInterface {client},
   services_(this)
   {}
 

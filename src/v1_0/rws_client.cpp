@@ -95,25 +95,25 @@ RWSClient::~RWSClient()
 }
 
 
-RWSClient::RWSResult RWSClient::getContollerService()
+RWSResult RWSClient::getContollerService()
 {
   std::string uri = Services::CTRL;
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getConfigurationInstances(const std::string& topic, const std::string& type)
+RWSResult RWSClient::getConfigurationInstances(const std::string& topic, const std::string& type)
 {
   std::string uri = generateConfigurationPath(topic, type) + Resources::INSTANCES;
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getIOSignals()
+RWSResult RWSClient::getIOSignals()
 {
   std::string const & uri = Resources::RW_IOSYSTEM_SIGNALS;
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getIOSignal(const std::string& iosignal)
+RWSResult RWSClient::getIOSignal(const std::string& iosignal)
 {
   try
   {
@@ -127,25 +127,25 @@ RWSClient::RWSResult RWSClient::getIOSignal(const std::string& iosignal)
   }
 }
 
-RWSClient::RWSResult RWSClient::getMechanicalUnitStaticInfo(const std::string& mechunit)
+RWSResult RWSClient::getMechanicalUnitStaticInfo(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + "?resource=static";
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getMechanicalUnitDynamicInfo(const std::string& mechunit)
+RWSResult RWSClient::getMechanicalUnitDynamicInfo(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + "?resource=dynamic";
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& mechunit)
+RWSResult RWSClient::getMechanicalUnitJointTarget(const std::string& mechunit)
 {
   std::string uri = generateMechanicalUnitPath(mechunit) + Resources::JOINTTARGET;
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
+RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& mechunit,
                                                            Coordinate coordinate,
                                                            const std::string& tool,
                                                            const std::string& wobj)
@@ -186,83 +186,27 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& me
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getRAPIDExecution()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION;
-  return parseContent(httpGet(uri));
-}
-
-RWSClient::RWSResult RWSClient::getRAPIDModulesInfo(const std::string& task)
-{
-  std::string uri = Resources::RW_RAPID_MODULES + "?" + Queries::TASK + task;
-  return parseContent(httpGet(uri));
-}
-
-RWSClient::RWSResult RWSClient::getRAPIDTasks()
-{
-  std::string uri = Resources::RW_RAPID_TASKS;
-  return parseContent(httpGet(uri));
-}
-
-RWSClient::RWSResult RWSClient::getRobotWareSystem()
+RWSResult RWSClient::getRobotWareSystem()
 {
   std::string uri = Resources::RW_SYSTEM;
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getSpeedRatio()
+RWSResult RWSClient::getSpeedRatio()
 {
   std::string uri = "/rw/panel/speedratio";
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getPanelControllerState()
+RWSResult RWSClient::getPanelControllerState()
 {
   std::string uri = Resources::RW_PANEL_CTRLSTATE;
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getPanelOperationMode()
+RWSResult RWSClient::getPanelOperationMode()
 {
   std::string uri = Resources::RW_PANEL_OPMODE;
-  return parseContent(httpGet(uri));
-}
-
-RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource)
-{
-  std::string uri = generateRAPIDDataPath(resource);
-  return parseContent(httpGet(uri));
-}
-
-void RWSClient::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract& data)
-{
-  RWSResult result;
-  std::string data_type;
-
-  RWSResult const temp_result = getRAPIDSymbolProperties(resource);
-
-  data_type = xmlFindTextContent(temp_result, XMLAttributes::CLASS_DATTYP);
-
-  if (data.getType().compare(data_type) == 0)
-  {
-    result = getRAPIDSymbolData(resource);
-
-    std::string value = xmlFindTextContent(result, XMLAttributes::CLASS_VALUE);
-
-    if (!value.empty())
-    {
-      data.parseString(value);
-    }
-    else
-    {
-      throw std::logic_error("getRAPIDSymbolData(...): RAPID value string was empty");
-    }
-  }
-}
-
-RWSClient::RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource& resource)
-{
-  std::string uri = generateRAPIDPropertiesPath(resource);
   return parseContent(httpGet(uri));
 }
 
@@ -280,34 +224,6 @@ void RWSClient::setIOSignal(const std::string& iosignal, const std::string& valu
     e << IoSignalErrorInfo {iosignal};
     throw;
   }
-}
-
-void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data)
-{
-  std::string uri = generateRAPIDDataPath(resource) + "?" + Queries::ACTION_SET;
-  std::string content = Identifiers::VALUE + "=" + data;
-
-  httpPost(uri, content);
-}
-
-void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
-{
-  setRAPIDSymbolData(resource, data.constructString());
-}
-
-void RWSClient::startRAPIDExecution()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_START;
-  std::string content = "regain=continue&execmode=continue&cycle=forever&condition=none&stopatbp=disabled&alltaskbytsp=false";
-
-  httpPost(uri, content);
-}
-
-void RWSClient::resetRAPIDProgramPointer()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_RESETPP;
-
-  httpPost(uri);
 }
 
 void RWSClient::setMotorsOn()
@@ -340,27 +256,6 @@ void RWSClient::setSpeedRatio(unsigned int ratio)
   httpPost(uri, content);
 }
 
-
-void RWSClient::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
-{
-  std::string uri = generateRAPIDTasksPath(task) + "?" + Queries::ACTION_LOAD_MODULE;
-
-  // Path to file should be a direct path, i.e. without "/fileservice/"
-  std::string content =
-      Identifiers::MODULEPATH + "=" + resource.directory + "/" + resource.filename +
-      "&replace=" + ((replace) ? "true" : "false");
-
-  httpPost(uri, content);
-}
-
-
-void RWSClient::unloadModuleFromTask(const std::string& task, const FileResource& resource)
-{
-  std::string uri = generateRAPIDTasksPath(task) + "?" + Queries::ACTION_UNLOAD_MODULE;
-  std::string content = Identifiers::MODULE + "=" + resource.filename;
-
-  httpPost(uri, content);
-}
 
 std::string RWSClient::getFile(const FileResource& resource)
 {
@@ -421,7 +316,7 @@ void RWSClient::registerRemoteUser(const std::string& username,
  * Auxiliary methods
  */
 
-RWSClient::RWSResult RWSClient::parseContent(const POCOResult& poco_result)
+RWSResult RWSClient::parseContent(const POCOResult& poco_result)
 {
   return parser_.parseString(poco_result.content());
 }
@@ -442,24 +337,9 @@ std::string RWSClient::generateMechanicalUnitPath(const std::string& mechunit)
   return Resources::RW_MOTIONSYSTEM_MECHUNITS + "/" + mechunit;
 }
 
-std::string RWSClient::generateRAPIDDataPath(const RAPIDResource& resource)
-{
-  return Resources::RW_RAPID_SYMBOL_DATA_RAPID + "/" + resource.task + "/" + resource.module + "/" + resource.name;
-}
-
-std::string RWSClient::generateRAPIDPropertiesPath(const RAPIDResource& resource)
-{
-  return Resources::RW_RAPID_SYMBOL_PROPERTIES_RAPID + "/" + resource.task + "/" + resource.module + "/"+ resource.name;
-}
-
 std::string RWSClient::generateFilePath(const FileResource& resource)
 {
   return Services::FILESERVICE + "/" + resource.directory + "/" + resource.filename;
-}
-
-std::string RWSClient::generateRAPIDTasksPath(const std::string& task)
-{
-  return Resources::RW_RAPID_TASKS + "/" + task;
 }
 
 
@@ -662,15 +542,7 @@ void RWSClient::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, Subscriptio
   else if (class_attribute_value == "rap-ctrlexecstate-ev")
   {
     RAPIDExecutionStateEvent event;
-
-    std::string const state_string = xmlFindTextContent(li_node, XMLAttribute {"class", "ctrlexecstate"});
-    if (state_string == "running")
-      event.state = RAPIDExecutionState::running;
-    else if (state_string == "stopped")
-      event.state = RAPIDExecutionState::stopped;
-    else
-      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: invalid RAPID execution state string"});
-
+    event.state = rw::makeRAPIDExecutionState(xmlFindTextContent(li_node, XMLAttribute {"class", "ctrlexecstate"}));
     callback.processEvent(event);
   }
   else

@@ -779,9 +779,9 @@ void RWSInterface::setSpeedRatio(unsigned int ratio)
   rws_client_.setSpeedRatio(ratio);
 }
 
-std::vector<RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
+std::vector<rw::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
 {
-  std::vector<RAPIDModuleInfo> result;
+  std::vector<rw::RAPIDModuleInfo> result;
 
   RWSResult rws_result = rws_client_.getRAPIDModulesInfo(task);
   std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result,
@@ -792,15 +792,15 @@ std::vector<RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string
     std::string name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
     std::string type = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_TYPE);
 
-    result.push_back(RAPIDModuleInfo(name, type));
+    result.emplace_back(name, type);
   }
 
   return result;
 }
 
-std::vector<RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
+std::vector<rw::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
 {
-  std::vector<RAPIDTaskInfo> result;
+  std::vector<rw::RAPIDTaskInfo> result;
 
   RWSResult rws_result = rws_client_.getRAPIDTasks();
   std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_RAP_TASK_LI);
@@ -813,26 +813,26 @@ std::vector<RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
     std::string temp = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_EXCSTATE);
 
     // Assume task state is unknown, update based on contents of 'temp'.
-    RAPIDTaskExecutionState execution_state = RAPIDTaskExecutionState::UNKNOWN;
+    rw::RAPIDTaskExecutionState execution_state = rw::RAPIDTaskExecutionState::UNKNOWN;
 
     if(temp == "read")
     {
-      execution_state = RAPIDTaskExecutionState::READY;
+      execution_state = rw::RAPIDTaskExecutionState::READY;
     }
     else if(temp == "stop")
     {
-      execution_state = RAPIDTaskExecutionState::STOPPED;
+      execution_state = rw::RAPIDTaskExecutionState::STOPPED;
     }
     else if(temp == "star")
     {
-      execution_state = RAPIDTaskExecutionState::STARTED;
+      execution_state = rw::RAPIDTaskExecutionState::STARTED;
     }
     else if(temp == "unin")
     {
-      execution_state = RAPIDTaskExecutionState::UNINITIALIZED;
+      execution_state = rw::RAPIDTaskExecutionState::UNINITIALIZED;
     }
 
-    result.push_back(RAPIDTaskInfo(name, is_motion_task, is_active, execution_state));
+    result.emplace_back(name, is_motion_task, is_active, execution_state);
   }
 
   return result;

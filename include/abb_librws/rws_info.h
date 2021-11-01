@@ -2,6 +2,8 @@
 
 #include "coordinate.h"
 
+#include <abb_librws/common/rw/rapid.h>
+
 #include <string>
 #include <vector>
 #include <map>
@@ -10,18 +12,6 @@
 
 namespace abb :: rws
 {
-  /**
-  * \brief Execution state of a RAPID task.
-  */
-  enum class RAPIDTaskExecutionState
-  {
-    UNKNOWN,      ///< The task state is unknown.
-    READY,        ///< The task is ready.
-    STOPPED,      ///< The task has been stopped.
-    STARTED,      ///< The task has been started.
-    UNINITIALIZED ///< The task has not been initialized.
-  };
-
   /**
    * \brief Type of a mechanical unit.
    */
@@ -184,79 +174,6 @@ namespace abb :: rws
     std::string description;
   };
 
-  /**
-   * \brief A struct for containing information about a RAPID module.
-   */
-  struct RAPIDModuleInfo
-  {
-    /**
-     * \brief A constructor.
-     *
-     * \param name for the name of the module.
-     * \param type for the type of the module.
-     */
-    RAPIDModuleInfo(const std::string& name, const std::string& type)
-    :
-    name(name),
-    type(type)
-    {}
-
-    /**
-     * \brief The module's name.
-     */
-    std::string name;
-
-    /**
-     * \brief The module's type.
-     */
-    std::string type;
-  };
-
-  /**
-   * \brief A struct for containing information about a RAPID task.
-   */
-  struct RAPIDTaskInfo
-  {
-    /**
-     * \brief A constructor.
-     *
-     * \param name for the name of the task.
-     * \param is_motion_task indicating if the task is a motion task or not.
-     * \param is_active indicating if the task is active or not.
-     * \param execution_state indicating the task's current execution state.
-     */
-    RAPIDTaskInfo(const std::string& name,
-                  const bool is_motion_task,
-                  const bool is_active,
-                  const RAPIDTaskExecutionState execution_state)
-    :
-    name(name),
-    is_motion_task(is_motion_task),
-    is_active(is_active),
-    execution_state(execution_state)
-    {}
-
-    /**
-     * \brief The task's name.
-     */
-    std::string name;
-
-    /**
-     * \brief Flag indicating if the task is a motion task.
-     */
-    bool is_motion_task;
-
-    /**
-     * \brief Flag indicating if the task is active or not.
-     */
-    bool is_active;
-
-    /**
-     * \brief The current execution state of the task.
-     */
-    RAPIDTaskExecutionState execution_state;
-  };
-
 
   /**
    * \brief A struct for containing static information (at least during runtime) about the robot controller.
@@ -266,7 +183,7 @@ namespace abb :: rws
     /**
      * \brief Information about the defined RAPID tasks.
      */
-    std::vector<RAPIDTaskInfo> rapid_tasks;
+    std::vector<rw::RAPIDTaskInfo> rapid_tasks;
 
     /**
      * \brief System information.
