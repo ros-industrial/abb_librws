@@ -50,11 +50,13 @@ set(
     src/connection_options.cpp
 
     src/common/rw/rapid.cpp
+    src/common/rw/panel.cpp
 
     src/v1_0/rws.cpp
     src/v1_0/rws_client.cpp
     src/v1_0/rws_interface.cpp
     src/v1_0/rw/rapid.cpp
+    src/v1_0/rw/panel.cpp
 
     src/v2_0/rws.cpp
     src/v2_0/rws_client.cpp

@@ -108,9 +108,25 @@ namespace abb :: rws
 
 
   /**
-   * \brief RAPID execution state as a resource
+   * \brief RAPID execution state subscription resource
    */
   struct RAPIDExecutionStateResource
+  {
+  };
+
+
+  /**
+   * \brief Controller operation mode subscription resource
+   */
+  struct OperationModeResource
+  {
+  };
+
+
+  /**
+   * \brief Controller state subscription resource
+   */
+  struct ControllerStateResource
   {
   };
 

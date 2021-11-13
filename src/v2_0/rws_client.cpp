@@ -631,9 +631,21 @@ std::string RWSClient::getResourceURI(RAPIDResource const& resource) const
 }
 
 
+std::string RWSClient::getResourceURI(ControllerStateResource const& resource) const
+{
+  return "/rw/panel/ctrl-state";
+}
+
+
 std::string RWSClient::getResourceURI(RAPIDExecutionStateResource const&) const
 {
   return "/rw/rapid/execution;ctrlexecstate";
+}
+
+
+std::string RWSClient::getResourceURI(OperationModeResource const&) const
+{
+  return "/rw/panel/opmode";
 }
 
 

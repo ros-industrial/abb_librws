@@ -3,6 +3,7 @@
 #include <abb_librws/rws.h>
 
 #include <string>
+#include <iosfwd>
 
 
 namespace abb :: rws :: rw
@@ -39,6 +40,9 @@ namespace abb :: rws :: rw
         stopped = false,
         running = true
     };
+
+
+    std::ostream& operator<<(std::ostream& os, RAPIDExecutionState const& state);
 
 
     /**

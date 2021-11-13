@@ -39,6 +39,7 @@
 #include <abb_librws/v1_0/rws_client.h>
 #include <abb_librws/v1_0/rws.h>
 #include <abb_librws/v1_0/rw/rapid.h>
+#include <abb_librws/v1_0/rw/panel.h>
 #include <abb_librws/rws.h>
 #include <abb_librws/rws_cfg.h>
 #include <abb_librws/rws_subscription.h>
@@ -616,6 +617,7 @@ private:
    */
   RWSClient& rws_client_;
   rw::RAPIDService rapid_;
+  rw::PanelService panel_;
 };
 
 } // end namespace rws

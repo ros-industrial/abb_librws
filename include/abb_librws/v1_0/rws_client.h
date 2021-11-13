@@ -184,33 +184,6 @@ public:
   RWSResult getRobotWareSystem();
 
   /**
-   * \brief A method for retrieving the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
-   *
-   * \return RWSResult containing the result.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSResult getSpeedRatio();
-
-  /**
-   * \brief A method for retrieving the controller state.
-   *
-   * \return RWSResult containing the result.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSResult getPanelControllerState();
-
-  /**
-   * \brief A method for retrieving the operation mode of the controller.
-   *
-   * \return RWSResult containing the result.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSResult getPanelOperationMode();
-
-  /**
    * \brief A method for setting the value of an IO signal.
    *
    * \param iosignal for the IO signal's name.
@@ -219,36 +192,6 @@ public:
    * \throw \a RWSError if something goes wrong.
    */
   void setIOSignal(const std::string& iosignal, const std::string& value);
-
-  /**
-   * \brief A method for turning on the robot controller's motors.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  void setMotorsOn();
-
-  /**
-   * \brief A method for turning off the robot controller's motors.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  void setMotorsOff();
-
-  /**
-   * \brief A method for setting the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
-   *
-   * Note: The ratio must be an integer in the range [0, 100] (ie: inclusive).
-   *
-   * \param ratio specifying the new ratio.
-   *
-   * \return RWSResult containing the result.
-   *
-   * \throw std::out_of_range if argument is out of range.
-   * \throw std::runtime_error if failed to create a string from the argument.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  void setSpeedRatio(unsigned int ratio);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -316,6 +259,8 @@ public:
   std::string getResourceURI(IOSignalResource const& io_signal) const override;
   std::string getResourceURI(RAPIDResource const& resource) const override;
   std::string getResourceURI(RAPIDExecutionStateResource const&) const override;
+  std::string getResourceURI(ControllerStateResource const&) const override;
+  std::string getResourceURI(OperationModeResource const&) const override;
   void processEvent(Poco::AutoPtr<Poco::XML::Document> content, SubscriptionCallback& callback) const override;
 
 
