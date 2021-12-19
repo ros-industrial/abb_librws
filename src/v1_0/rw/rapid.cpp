@@ -3,21 +3,55 @@
 #include <abb_librws/parsing.h>
 #include <abb_librws/system_constants.h>
 
+#include "../../parser.h"
 
-namespace abb :: rws :: v1_0 :: rw
+namespace abb :: rws :: v1_0 :: rw :: rapid
 {
-    RAPIDService::RAPIDService(RWSClient& client)
-    :   client_ {client}
-    {
-    }
+    /**
+     * \brief A method for retrieving the properties of a RAPID symbol.
+     *
+     * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
+     *
+     * \return RWSResult containing the result.
+     *
+     * \throw \a RWSError if something goes wrong.
+     */
+    static RWSResult getRAPIDSymbolProperties(RWSClient& client, RAPIDResource const& resource);
+
+    /**
+     * \brief Method for generating a RAPID data resource URI path.
+     *
+     * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
+     *
+     * \return std::string containing the path.
+     */
+    static std::string generateRAPIDDataPath(const RAPIDResource& resource);
+
+    /**
+     * \brief Method for generating a RAPID properties resource URI path.
+     *
+     * \param resource specifying the RAPID task, module and symbol names for the RAPID resource.
+     *
+     * \return std::string containing the path.
+     */
+    static std::string generateRAPIDPropertiesPath(const RAPIDResource& resource);
+
+    /**
+     * \brief Method for generating a task resource URI path.
+     *
+     * \param task for the task name.
+     *
+     * \return std::string containing the path.
+     */
+    static std::string generateRAPIDTasksPath(const std::string& task);
 
 
-    RAPIDExecutionInfo RAPIDService::getRAPIDExecution()
+    RAPIDExecutionInfo getRAPIDExecution(RWSClient& client)
     {
         RAPIDExecutionInfo result;
 
         std::string const uri = Resources::RW_RAPID_EXECUTION;
-        RWSResult xml_content = parser_.parseString(client_.httpGet(uri).content());
+        RWSResult xml_content = parser.parseString(client.httpGet(uri).content());
 
         Poco::XML::Node const * li_node = xml_content->getNodeByPath("html/body/div/ul/li");
         if (!li_node)
@@ -38,50 +72,50 @@ namespace abb :: rws :: v1_0 :: rw
     }
 
 
-    void RAPIDService::startRAPIDExecution()
+    void startRAPIDExecution(RWSClient& client)
     {
         std::string const uri = Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_START;
         std::string const content = "regain=continue&execmode=continue&cycle=forever&condition=none&stopatbp=disabled&alltaskbytsp=false";
-        client_.httpPost(uri, content);
+        client.httpPost(uri, content);
     }
 
 
-    void RAPIDService::stopRAPIDExecution(StopMode stopmode, UseTsp usetsp)
+    void stopRAPIDExecution(RWSClient& client, StopMode stopmode, UseTsp usetsp)
     {
         std::stringstream content;
         content << "stopmode=" << stopmode << "&usetsp=" << usetsp;
-        client_.httpPost("/rw/rapid/execution?action=stop", content.str());
+        client.httpPost("/rw/rapid/execution?action=stop", content.str());
     }
 
 
-    void RAPIDService::resetRAPIDProgramPointer()
+    void resetRAPIDProgramPointer(RWSClient& client)
     {
-        client_.httpPost(Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_RESETPP);
+        client.httpPost(Resources::RW_RAPID_EXECUTION + "?" + Queries::ACTION_RESETPP);
     }
 
 
-    void RAPIDService::getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data)
+    void getRAPIDSymbolData(RWSClient& client, RAPIDResource const& resource, RAPIDSymbolDataAbstract& data)
     {
-        RWSResult const temp_result = getRAPIDSymbolProperties(resource);
+        RWSResult const temp_result = getRAPIDSymbolProperties(client, resource);
         std::string const data_type = xmlFindTextContent(temp_result, XMLAttributes::CLASS_DATTYP);
 
         if (data.getType() == data_type)
-            data.parseString(getRAPIDSymbolData(resource));
+            data.parseString(getRAPIDSymbolData(client, resource));
         else
             BOOST_THROW_EXCEPTION(std::invalid_argument {"Argument type does not match the RAPID variable type"});
     }
 
 
-    void RAPIDService::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
+    void setRAPIDSymbolData(RWSClient& client, const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
     {
-        setRAPIDSymbolData(resource, data.constructString());
+        setRAPIDSymbolData(client, resource, data.constructString());
     }
 
 
-    std::string RAPIDService::getRAPIDSymbolData(RAPIDResource const& resource)
+    std::string getRAPIDSymbolData(RWSClient& client, RAPIDResource const& resource)
     {
         std::string const uri = generateRAPIDDataPath(resource);
-        RWSResult xml_content = parser_.parseString(client_.httpGet(uri).content());
+        RWSResult xml_content = parser.parseString(client.httpGet(uri).content());
         std::string value = xmlFindTextContent(xml_content, XMLAttributes::CLASS_VALUE);
 
         if (value.empty())
@@ -91,40 +125,40 @@ namespace abb :: rws :: v1_0 :: rw
     }
 
 
-    void RAPIDService::setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data)
+    void setRAPIDSymbolData(RWSClient& client, const RAPIDResource& resource, const std::string& data)
     {
         std::string uri = generateRAPIDDataPath(resource) + "?" + Queries::ACTION_SET;
         std::string content = Identifiers::VALUE + "=" + data;
 
-        client_.httpPost(uri, content);
+        client.httpPost(uri, content);
     }
 
 
-    RWSResult RAPIDService::getRAPIDSymbolProperties(RAPIDResource const& resource)
+    static RWSResult getRAPIDSymbolProperties(RWSClient& client, RAPIDResource const& resource)
     {
         std::string const uri = generateRAPIDPropertiesPath(resource);
-        return parser_.parseString(client_.httpGet(uri).content());
+        return parser.parseString(client.httpGet(uri).content());
     }
 
 
-    std::string RAPIDService::generateRAPIDDataPath(const RAPIDResource& resource)
+    static std::string generateRAPIDDataPath(const RAPIDResource& resource)
     {
         return "/rw/rapid/symbol/data/RAPID/" + resource.task + "/" + resource.module + "/" + resource.name;
     }
 
 
-    std::string RAPIDService::generateRAPIDPropertiesPath(const RAPIDResource& resource)
+    static std::string generateRAPIDPropertiesPath(const RAPIDResource& resource)
     {
         return "/rw/rapid/symbol/properties/RAPID/" + resource.task + "/" + resource.module + "/"+ resource.name;
     }
 
 
-    std::vector<RAPIDModuleInfo> RAPIDService::getRAPIDModulesInfo(const std::string& task)
+    std::vector<RAPIDModuleInfo> getRAPIDModulesInfo(RWSClient& client, const std::string& task)
     {
         std::vector<RAPIDModuleInfo> result;
 
         std::string const uri = Resources::RW_RAPID_MODULES + "?" + Queries::TASK + task;
-        RWSResult const rws_result = parser_.parseString(client_.httpGet(uri).content());
+        RWSResult const rws_result = parser.parseString(client.httpGet(uri).content());
         std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result,
                                                                 XMLAttributes::CLASS_RAP_MODULE_INFO_LI);
 
@@ -139,11 +173,11 @@ namespace abb :: rws :: v1_0 :: rw
         return result;
     }
 
-    std::vector<RAPIDTaskInfo> RAPIDService::getRAPIDTasks()
+    std::vector<RAPIDTaskInfo> getRAPIDTasks(RWSClient& client)
     {
         std::vector<RAPIDTaskInfo> result;
 
-        RWSResult const rws_result = parser_.parseString(client_.httpGet(Resources::RW_RAPID_TASKS).content());
+        RWSResult const rws_result = parser.parseString(client.httpGet(Resources::RW_RAPID_TASKS).content());
         std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_RAP_TASK_LI);
 
         for (size_t i = 0; i < node_list.size(); ++i)
@@ -180,7 +214,7 @@ namespace abb :: rws :: v1_0 :: rw
     }
 
 
-    void RAPIDService::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
+    void loadModuleIntoTask(RWSClient& client, const std::string& task, const FileResource& resource, const bool replace)
     {
         std::string uri = generateRAPIDTasksPath(task) + "?" + Queries::ACTION_LOAD_MODULE;
 
@@ -189,20 +223,20 @@ namespace abb :: rws :: v1_0 :: rw
             Identifiers::MODULEPATH + "=" + resource.directory + "/" + resource.filename +
             "&replace=" + ((replace) ? "true" : "false");
 
-        client_.httpPost(uri, content);
+        client.httpPost(uri, content);
     }
 
 
-    void RAPIDService::unloadModuleFromTask(const std::string& task, const FileResource& resource)
+    void unloadModuleFromTask(RWSClient& client, const std::string& task, const FileResource& resource)
     {
         std::string uri = generateRAPIDTasksPath(task) + "?" + Queries::ACTION_UNLOAD_MODULE;
         std::string content = Identifiers::MODULE + "=" + resource.filename;
 
-        client_.httpPost(uri, content);
+        client.httpPost(uri, content);
     }
 
 
-    std::string RAPIDService::generateRAPIDTasksPath(const std::string& task)
+    static std::string generateRAPIDTasksPath(const std::string& task)
     {
         return Resources::RW_RAPID_TASKS + "/" + task;
     }

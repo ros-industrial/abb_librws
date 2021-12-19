@@ -34,6 +34,7 @@
  ***********************************************************************************************************************
  */
 #include <abb_librws/v1_0/rws_interface.h>
+#include <abb_librws/v1_0/rw/rapid.h>
 #include <abb_librws/rws_rapid.h>
 #include <abb_librws/parsing.h>
 #include <abb_librws/rws.h>
@@ -76,7 +77,6 @@ static bool digitalSignalToBool(std::string const& value)
 
 RWSInterface::RWSInterface(RWSClient& client)
 : rws_client_ {client}
-, rapid_ {rws_client_}
 , panel_ {rws_client_}
 {
 }
@@ -744,29 +744,29 @@ void RWSInterface::setRAPIDSymbolData(const std::string& task,
                                       const std::string& name,
                                       const std::string& data)
 {
-  rapid_.setRAPIDSymbolData(RAPIDResource(task, module, name), data);
+  rw::rapid::setRAPIDSymbolData(rws_client_, RAPIDResource(task, module, name), data);
 }
 
 
 void RWSInterface::setRAPIDSymbolData(RAPIDResource const& resource, const RAPIDSymbolDataAbstract& data)
 {
-  rapid_.setRAPIDSymbolData(resource, data);
+  rw::rapid::setRAPIDSymbolData(rws_client_, resource, data);
 }
 
 
 void RWSInterface::startRAPIDExecution()
 {
-  rapid_.startRAPIDExecution();
+  rw::rapid::startRAPIDExecution(rws_client_);
 }
 
 void RWSInterface::stopRAPIDExecution(StopMode stopmode, UseTsp usetsp)
 {
-  rapid_.stopRAPIDExecution(stopmode, usetsp);
+  rw::rapid::stopRAPIDExecution(rws_client_, stopmode, usetsp);
 }
 
 void RWSInterface::resetRAPIDProgramPointer()
 {
-  rapid_.resetRAPIDProgramPointer();
+  rw::rapid::resetRAPIDProgramPointer(rws_client_);
 }
 
 void RWSInterface::setMotorsOn()
@@ -786,12 +786,12 @@ void RWSInterface::setSpeedRatio(unsigned int ratio)
 
 std::vector<rw::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
 {
-  return rapid_.getRAPIDModulesInfo(task);
+  return rw::rapid::getRAPIDModulesInfo(rws_client_, task);
 }
 
 std::vector<rw::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
 {
-  return rapid_.getRAPIDTasks();
+  return rw::rapid::getRAPIDTasks(rws_client_);
 }
 
 unsigned int RWSInterface::getSpeedRatio()
@@ -836,7 +836,7 @@ bool RWSInterface::isMotorsOn()
 
 bool RWSInterface::isRAPIDRunning()
 {
-  return rapid_.getRAPIDExecution().ctrlexecstate == rw::RAPIDExecutionState::running;
+  return rw::rapid::getRAPIDExecution(rws_client_).ctrlexecstate == rw::RAPIDExecutionState::running;
 }
 
 void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
@@ -848,24 +848,24 @@ std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
                                              const std::string& module,
                                              const std::string& name)
 {
-  return rapid_.getRAPIDSymbolData(RAPIDResource(task, module, name));
+  return rw::rapid::getRAPIDSymbolData(rws_client_, RAPIDResource(task, module, name));
 }
 
 
 void RWSInterface::getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data)
 {
-  rapid_.getRAPIDSymbolData(resource, data);
+  rw::rapid::getRAPIDSymbolData(rws_client_, resource, data);
 }
 
 
 void RWSInterface::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
 {
-  rapid_.loadModuleIntoTask(task, resource, replace);
+  rw::rapid::loadModuleIntoTask(rws_client_, task, resource, replace);
 }
 
 void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResource& resource)
 {
-  rapid_.unloadModuleFromTask(task, resource);
+  rw::rapid::unloadModuleFromTask(rws_client_, task, resource);
 }
 
 std::string RWSInterface::getFile(const FileResource& resource)
