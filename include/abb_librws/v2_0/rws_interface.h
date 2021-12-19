@@ -39,6 +39,7 @@
 #include <abb_librws/rws_cfg.h>
 #include <abb_librws/v2_0/rws_client.h>
 #include <abb_librws/v2_0/rws.h>
+#include <abb_librws/common/rw/io.h>
 #include <abb_librws/rws_subscription.h>
 #include <abb_librws/rws_info.h>
 #include <abb_librws/xml_attribute.h>
@@ -176,7 +177,7 @@ public:
    *
    * \return Mapping from IO signal names to values.
    */
-  IOSignalInfo getIOSignals();
+  rw::io::IOSignalInfo getIOSignals();
 
 
   /**

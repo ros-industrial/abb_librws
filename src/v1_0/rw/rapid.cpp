@@ -3,7 +3,6 @@
 #include <abb_librws/parsing.h>
 #include <abb_librws/system_constants.h>
 
-#include "../../parser.h"
 
 namespace abb :: rws :: v1_0 :: rw :: rapid
 {
@@ -51,7 +50,7 @@ namespace abb :: rws :: v1_0 :: rw :: rapid
         RAPIDExecutionInfo result;
 
         std::string const uri = Resources::RW_RAPID_EXECUTION;
-        RWSResult xml_content = parser.parseString(client.httpGet(uri).content());
+        RWSResult xml_content = parseXml(client.httpGet(uri).content());
 
         Poco::XML::Node const * li_node = xml_content->getNodeByPath("html/body/div/ul/li");
         if (!li_node)
@@ -115,7 +114,7 @@ namespace abb :: rws :: v1_0 :: rw :: rapid
     std::string getRAPIDSymbolData(RWSClient& client, RAPIDResource const& resource)
     {
         std::string const uri = generateRAPIDDataPath(resource);
-        RWSResult xml_content = parser.parseString(client.httpGet(uri).content());
+        RWSResult xml_content = parseXml(client.httpGet(uri).content());
         std::string value = xmlFindTextContent(xml_content, XMLAttributes::CLASS_VALUE);
 
         if (value.empty())
@@ -137,7 +136,7 @@ namespace abb :: rws :: v1_0 :: rw :: rapid
     static RWSResult getRAPIDSymbolProperties(RWSClient& client, RAPIDResource const& resource)
     {
         std::string const uri = generateRAPIDPropertiesPath(resource);
-        return parser.parseString(client.httpGet(uri).content());
+        return parseXml(client.httpGet(uri).content());
     }
 
 
@@ -158,7 +157,7 @@ namespace abb :: rws :: v1_0 :: rw :: rapid
         std::vector<RAPIDModuleInfo> result;
 
         std::string const uri = Resources::RW_RAPID_MODULES + "?" + Queries::TASK + task;
-        RWSResult const rws_result = parser.parseString(client.httpGet(uri).content());
+        RWSResult const rws_result = parseXml(client.httpGet(uri).content());
         std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result,
                                                                 XMLAttributes::CLASS_RAP_MODULE_INFO_LI);
 
@@ -177,7 +176,7 @@ namespace abb :: rws :: v1_0 :: rw :: rapid
     {
         std::vector<RAPIDTaskInfo> result;
 
-        RWSResult const rws_result = parser.parseString(client.httpGet(Resources::RW_RAPID_TASKS).content());
+        RWSResult const rws_result = parseXml(client.httpGet(Resources::RW_RAPID_TASKS).content());
         std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_RAP_TASK_LI);
 
         for (size_t i = 0; i < node_list.size(); ++i)

@@ -102,25 +102,6 @@ RWSResult RWSClient::getConfigurationInstances(const std::string& topic, const s
   return parseContent(httpGet(uri));
 }
 
-RWSResult RWSClient::getIOSignals()
-{
-  std::string const & uri = Resources::RW_IOSYSTEM_SIGNALS;
-  return parseContent(httpGet(uri));
-}
-
-RWSResult RWSClient::getIOSignal(const std::string& iosignal)
-{
-  try
-  {
-    std::string uri = generateIOSignalPath(iosignal);
-    return parseContent(httpGet(uri));
-  }
-  catch (boost::exception& e)
-  {
-    e << IoSignalErrorInfo {iosignal};
-    throw;
-  }
-}
 
 RWSResult RWSClient::getMechanicalUnitStaticInfo(const std::string& mechunit)
 {
@@ -186,24 +167,6 @@ RWSResult RWSClient::getRobotWareSystem()
   std::string uri = Resources::RW_SYSTEM;
   return parseContent(httpGet(uri));
 }
-
-
-void RWSClient::setIOSignal(const std::string& iosignal, const std::string& value)
-{
-  try
-  {
-    std::string uri = generateIOSignalPath(iosignal) + "?" + Queries::ACTION_SET;
-    std::string content = Identifiers::LVALUE + "=" + value;
-
-    httpPost(uri, content);
-  }
-  catch (boost::exception& e)
-  {
-    e << IoSignalErrorInfo {iosignal};
-    throw;
-  }
-}
-
 
 std::string RWSClient::getFile(const FileResource& resource)
 {
@@ -275,10 +238,6 @@ std::string RWSClient::generateConfigurationPath(const std::string& topic, const
   return Resources::RW_CFG + "/" + topic + "/" + type;
 }
 
-std::string RWSClient::generateIOSignalPath(const std::string& iosignal)
-{
-  return Resources::RW_IOSYSTEM_SIGNALS + "/" + iosignal;
-}
 
 std::string RWSClient::generateMechanicalUnitPath(const std::string& mechunit)
 {

@@ -6,8 +6,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
-#include <variant>
 
 
 namespace abb :: rws
@@ -190,12 +188,4 @@ namespace abb :: rws
      */
     SystemInfo system_info;
   };
-
-
-  /**
-   * \brief Mapping from IO signal name to a value.
-   *
-   * The value of a digital signal is a \a bool, the value of an analog signal is a \a float.
-   */
-  using IOSignalInfo = std::map<std::string, std::variant<bool, float>>;
 }

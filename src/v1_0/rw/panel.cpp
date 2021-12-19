@@ -3,15 +3,13 @@
 #include <abb_librws/parsing.h>
 #include <abb_librws/system_constants.h>
 
-#include "../../parser.h"
-
 
 namespace abb :: rws :: v1_0 :: rw :: panel
 {
     ControllerState getControllerState(RWSClient& client)
     {
         std::string uri = Resources::RW_PANEL_CTRLSTATE;
-        RWSResult xml_content = parser.parseString(client.httpGet(uri).content());
+        RWSResult xml_content = parseXml(client.httpGet(uri).content());
 
         Poco::XML::Node const * li_node = xml_content->getNodeByPath("html/body/div/ul/li");
         if (!li_node)
@@ -28,7 +26,7 @@ namespace abb :: rws :: v1_0 :: rw :: panel
     OperationMode getOperationMode(RWSClient& client)
     {
         std::string uri = Resources::RW_PANEL_OPMODE;
-        RWSResult xml_content = parser.parseString(client.httpGet(uri).content());
+        RWSResult xml_content = parseXml(client.httpGet(uri).content());
 
         Poco::XML::Node const * li_node = xml_content->getNodeByPath("html/body/div/ul/li");
         if (!li_node)
@@ -55,7 +53,7 @@ namespace abb :: rws :: v1_0 :: rw :: panel
     unsigned getSpeedRatio(RWSClient& client)
     {
         std::string uri = "/rw/panel/speedratio";
-        RWSResult rws_result = parser.parseString(client.httpGet(uri).content());
+        RWSResult rws_result = parseXml(client.httpGet(uri).content());
 
         return std::stoul(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "speedratio")));
     }

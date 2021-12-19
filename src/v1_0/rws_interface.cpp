@@ -36,6 +36,7 @@
 #include <abb_librws/v1_0/rws_interface.h>
 #include <abb_librws/v1_0/rw/rapid.h>
 #include <abb_librws/v1_0/rw/panel.h>
+#include <abb_librws/v1_0/rw/io.h>
 #include <abb_librws/rws_rapid.h>
 #include <abb_librws/parsing.h>
 #include <abb_librws/rws.h>
@@ -57,15 +58,6 @@ namespace abb :: rws :: v1_0
 
 typedef SystemConstants::ContollerStates ContollerStates;
 typedef SystemConstants::RAPID RAPID;
-
-
-static bool digitalSignalToBool(std::string const& value)
-{
-  if (value != SystemConstants::IOSignals::HIGH && value != SystemConstants::IOSignals::LOW)
-    throw std::logic_error("Unexpected value \"" + value + "\" of a digital signal");
-
-  return value == SystemConstants::IOSignals::HIGH;
-}
 
 
 /***********************************************************************************************************************
@@ -563,8 +555,7 @@ std::vector<RobotWareOptionInfo> RWSInterface::getPresentRobotWareOptions()
 
 std::string RWSInterface::getIOSignal(const std::string& iosignal)
 {
-  RWSResult rws_result = rws_client_.getIOSignal(iosignal);
-  return xmlFindTextContent(rws_result, XMLAttributes::CLASS_LVALUE);
+  return rw::io::getIOSignal(rws_client_, iosignal);
 }
 
 
@@ -841,7 +832,7 @@ bool RWSInterface::isRAPIDRunning()
 
 void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
 {
-  rws_client_.setIOSignal(iosignal, value);
+  rw::io::setIOSignal(rws_client_, iosignal, value);
 }
 
 std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
@@ -905,63 +896,43 @@ void RWSInterface::registerRemoteUser(const std::string& username,
 
 void RWSInterface::setDigitalSignal(std::string const& signal_name, bool value)
 {
-  setIOSignal(signal_name, value ? SystemConstants::IOSignals::HIGH : SystemConstants::IOSignals::LOW);
+  rw::io::setDigitalSignal(rws_client_, signal_name, value);
 }
 
 
 void RWSInterface::setAnalogSignal(std::string const& signal_name, float value)
 {
-  std::stringstream str;
-  str << std::setprecision(SINGLE_PRECISION_DIGITS) << value;
-  setIOSignal(signal_name, str.str());
+  rw::io::setAnalogSignal(rws_client_, signal_name, value);
 }
 
 
 void RWSInterface::setGroupSignal(std::string const& signal_name, std::uint32_t value)
 {
-  setIOSignal(signal_name, std::to_string(value));
+  rw::io::setGroupSignal(rws_client_, signal_name, value);
 }
 
 
 bool RWSInterface::getDigitalSignal(std::string const& signal_name)
 {
-  return digitalSignalToBool(getIOSignal(signal_name));
+  return rw::io::getDigitalSignal(rws_client_, signal_name);
 }
 
 
 float RWSInterface::getAnalogSignal(std::string const& signal_name)
 {
-  return std::stof(getIOSignal(signal_name));
+  return rw::io::getAnalogSignal(rws_client_, signal_name);
 }
 
 
 std::uint32_t RWSInterface::getGroupSignal(std::string const& signal_name)
 {
-  return std::stoul(getIOSignal(signal_name));
+  return rw::io::getGroupSignal(rws_client_, signal_name);
 }
 
 
-IOSignalInfo RWSInterface::getIOSignals()
+rw::io::IOSignalInfo RWSInterface::getIOSignals()
 {
-  auto const doc = rws_client_.getIOSignals();
-  IOSignalInfo signals;
-
-  for (auto&& node : xmlFindNodes(doc, {"class", "ios-signal-li"}))
-  {
-    std::string const name = xmlFindTextContent(node, {"class", "name"});
-    std::string const value = xmlFindTextContent(node, {"class", "lvalue"});
-    std::string const type = xmlFindTextContent(node, {"class", "type"});
-
-    if (!name.empty() && !value.empty())
-    {
-      if (type == "DI" || type == "DO")
-        signals[name] = digitalSignalToBool(value);
-      else if (type == "AI" || type == "AO")
-        signals[name] = std::stof(value);
-    }
-  }
-
-  return signals;
+  return rw::io::getIOSignals(rws_client_);
 }
 
 

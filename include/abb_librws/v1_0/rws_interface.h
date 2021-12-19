@@ -38,6 +38,7 @@
 
 #include <abb_librws/v1_0/rws_client.h>
 #include <abb_librws/v1_0/rws.h>
+#include <abb_librws/common/rw/io.h>
 #include <abb_librws/rws.h>
 #include <abb_librws/rws_cfg.h>
 #include <abb_librws/rws_subscription.h>
@@ -184,7 +185,7 @@ public:
    *
    * \return Mapping from IO signal names to values.
    */
-  IOSignalInfo getIOSignals();
+  rw::io::IOSignalInfo getIOSignals();
 
 
   /**
@@ -590,7 +591,7 @@ private:
                                const std::string& compare_string);
 
   /**
-   * \brief A method for retrieving the value if an IO signal.
+   * \brief A method for retrieving the value of an IO signal.
    *
    * \param iosignal for the name of the IO signal.
    *

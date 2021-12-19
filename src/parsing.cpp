@@ -6,10 +6,18 @@
 #include <Poco/DOM/NodeFilter.h>
 #include <Poco/DOM/NodeIterator.h>
 #include <Poco/DOM/NodeList.h>
+#include <Poco/DOM/DOMParser.h>
 
 
 namespace abb :: rws
 {
+  Poco::AutoPtr<Poco::XML::Document> parseXml(std::string const& xml_string)
+  {
+    static thread_local Poco::XML::DOMParser parser;
+    return parser.parseString(xml_string);
+  }
+
+
   std::vector<Poco::XML::Node*> xmlFindNodes(Poco::XML::Node* p_root, const XMLAttribute& attribute)
   {
     std::vector<Poco::XML::Node*> result;

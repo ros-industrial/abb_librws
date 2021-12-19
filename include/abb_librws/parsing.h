@@ -12,6 +12,17 @@
 namespace abb :: rws
 {
   /**
+   * \brief Method for parsing a communication result into an XML document.
+   *
+   * \param xml_string XML document as a string.
+   *
+   * \return parsed content of \a xml_string.
+   *
+   * \throw \a RWSError if something goes wrong.
+   */
+  Poco::AutoPtr<Poco::XML::Document> parseXml(std::string const& xml_string);
+
+  /**
    * \brief Returns all children of the given node that have the specifed attribute (name and value).
    *
    * \param p_root for the root node to search.
@@ -117,7 +128,7 @@ namespace abb :: rws
    *
    * \return std::vector<std::string> containing the extracted substrings.
    */
-  std::vector<std::string> extractDelimitedSubstrings(const std::string& input, 
+  std::vector<std::string> extractDelimitedSubstrings(const std::string& input,
                                                      const char start_delimiter,
                                                      const char end_delimiter,
                                                      const char separator);

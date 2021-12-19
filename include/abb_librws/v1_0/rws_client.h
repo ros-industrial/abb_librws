@@ -105,26 +105,6 @@ public:
   RWSResult getConfigurationInstances(const std::string& topic, const std::string& type);
 
   /**
-   * \brief A method for retrieving all available IO signals on the controller.
-   *
-   * \return RWSResult containing the result.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSResult getIOSignals();
-
-  /**
-   * \brief A method for retrieving the value of an IO signal.
-   *
-   * \param iosignal for the IO signal's name.
-   *
-   * \return RWSResult containing the result.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  RWSResult getIOSignal(const std::string& iosignal);
-
-  /**
    * \brief A method for retrieving static information about a mechanical unit.
    *
    * \param mechunit for the mechanical unit's name.
@@ -182,16 +162,6 @@ public:
    * \throw \a RWSError if something goes wrong.
    */
   RWSResult getRobotWareSystem();
-
-  /**
-   * \brief A method for setting the value of an IO signal.
-   *
-   * \param iosignal for the IO signal's name.
-   * \param value for the IO signal's new value.
-   *
-   * \throw \a RWSError if something goes wrong.
-   */
-  void setIOSignal(const std::string& iosignal, const std::string& value);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -332,15 +302,6 @@ private:
    * \return std::string containing the path.
    */
   static std::string generateConfigurationPath(const std::string& topic, const std::string& type);
-
-  /**
-   * \brief Method for generating an IO signal URI path.
-   *
-   * \param iosignal for the signal's name.
-   *
-   * \return std::string containing the path.
-   */
-  static std::string generateIOSignalPath(const std::string& iosignal);
 
   /**
    * \brief Method for generating a mechanical unit resource URI path.

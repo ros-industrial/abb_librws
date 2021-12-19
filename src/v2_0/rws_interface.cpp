@@ -1000,10 +1000,10 @@ std::uint32_t RWSInterface::getGroupSignal(std::string const& signal_name)
 }
 
 
-IOSignalInfo RWSInterface::getIOSignals()
+rw::io::IOSignalInfo RWSInterface::getIOSignals()
 {
   auto const doc = rws_client_.getIOSignals();
-  IOSignalInfo signals;
+  rw::io::IOSignalInfo signals;
 
   for (auto&& node : xmlFindNodes(doc, {"class", "ios-signal-li"}))
   {
