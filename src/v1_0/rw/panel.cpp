@@ -3,19 +3,15 @@
 #include <abb_librws/parsing.h>
 #include <abb_librws/system_constants.h>
 
+#include "../../parser.h"
 
-namespace abb :: rws :: v1_0 :: rw
+
+namespace abb :: rws :: v1_0 :: rw :: panel
 {
-    PanelService::PanelService(RWSClient& client)
-    :   client_ {client}
-    {
-    }
-
-
-    ControllerState PanelService::getControllerState()
+    ControllerState getControllerState(RWSClient& client)
     {
         std::string uri = Resources::RW_PANEL_CTRLSTATE;
-        RWSResult xml_content = parser_.parseString(client_.httpGet(uri).content());
+        RWSResult xml_content = parser.parseString(client.httpGet(uri).content());
 
         Poco::XML::Node const * li_node = xml_content->getNodeByPath("html/body/div/ul/li");
         if (!li_node)
@@ -29,10 +25,10 @@ namespace abb :: rws :: v1_0 :: rw
     }
 
 
-    OperationMode PanelService::getOperationMode()
+    OperationMode getOperationMode(RWSClient& client)
     {
         std::string uri = Resources::RW_PANEL_OPMODE;
-        RWSResult xml_content = parser_.parseString(client_.httpGet(uri).content());
+        RWSResult xml_content = parser.parseString(client.httpGet(uri).content());
 
         Poco::XML::Node const * li_node = xml_content->getNodeByPath("html/body/div/ul/li");
         if (!li_node)
@@ -46,26 +42,26 @@ namespace abb :: rws :: v1_0 :: rw
     }
 
 
-    void PanelService::setControllerState(ControllerState state)
+    void setControllerState(RWSClient& client, ControllerState state)
     {
         std::string uri = Resources::RW_PANEL_CTRLSTATE + "?" + Queries::ACTION_SETCTRLSTATE;
         std::stringstream content;
         content << "ctrl-state=" << state;
 
-        client_.httpPost(uri, content.str());
+        client.httpPost(uri, content.str());
     }
 
 
-    unsigned PanelService::getSpeedRatio()
+    unsigned getSpeedRatio(RWSClient& client)
     {
         std::string uri = "/rw/panel/speedratio";
-        RWSResult rws_result = parser_.parseString(client_.httpGet(uri).content());
+        RWSResult rws_result = parser.parseString(client.httpGet(uri).content());
 
         return std::stoul(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "speedratio")));
     }
 
 
-    void PanelService::setSpeedRatio(unsigned int ratio)
+    void setSpeedRatio(RWSClient& client, unsigned int ratio)
     {
         if (ratio > 100)
             BOOST_THROW_EXCEPTION(std::out_of_range {"Speed ratio argument out of range (should be 0 <= ratio <= 100)"});
@@ -74,6 +70,6 @@ namespace abb :: rws :: v1_0 :: rw
         std::stringstream content;
         content << "speed-ratio=" << ratio;
 
-        client_.httpPost(uri, content.str());
+        client.httpPost(uri, content.str());
     }
 }

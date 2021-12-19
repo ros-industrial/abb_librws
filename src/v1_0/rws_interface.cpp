@@ -35,6 +35,7 @@
  */
 #include <abb_librws/v1_0/rws_interface.h>
 #include <abb_librws/v1_0/rw/rapid.h>
+#include <abb_librws/v1_0/rw/panel.h>
 #include <abb_librws/rws_rapid.h>
 #include <abb_librws/parsing.h>
 #include <abb_librws/rws.h>
@@ -77,7 +78,6 @@ static bool digitalSignalToBool(std::string const& value)
 
 RWSInterface::RWSInterface(RWSClient& client)
 : rws_client_ {client}
-, panel_ {rws_client_}
 {
 }
 
@@ -771,17 +771,17 @@ void RWSInterface::resetRAPIDProgramPointer()
 
 void RWSInterface::setMotorsOn()
 {
-  panel_.setControllerState(rw::ControllerState::motorOn);
+  rw::panel::setControllerState(rws_client_, rw::ControllerState::motorOn);
 }
 
 void RWSInterface::setMotorsOff()
 {
-  panel_.setControllerState(rw::ControllerState::motorOff);
+  rw::panel::setControllerState(rws_client_, rw::ControllerState::motorOff);
 }
 
 void RWSInterface::setSpeedRatio(unsigned int ratio)
 {
-  panel_.setSpeedRatio(ratio);
+  rw::panel::setSpeedRatio(rws_client_, ratio);
 }
 
 std::vector<rw::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
@@ -796,7 +796,7 @@ std::vector<rw::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
 
 unsigned int RWSInterface::getSpeedRatio()
 {
-  return panel_.getSpeedRatio();
+  return rw::panel::getSpeedRatio(rws_client_);
 }
 
 SystemInfo RWSInterface::getSystemInfo()
@@ -826,12 +826,12 @@ SystemInfo RWSInterface::getSystemInfo()
 
 bool RWSInterface::isAutoMode()
 {
-  return panel_.getOperationMode() == rw::OperationMode::automatic;
+  return rw::panel::getOperationMode(rws_client_) == rw::OperationMode::automatic;
 }
 
 bool RWSInterface::isMotorsOn()
 {
-  return panel_.getControllerState() == rw::ControllerState::motorOn;
+  return rw::panel::getControllerState(rws_client_) == rw::ControllerState::motorOn;
 }
 
 bool RWSInterface::isRAPIDRunning()
