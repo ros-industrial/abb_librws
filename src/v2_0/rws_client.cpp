@@ -190,24 +190,6 @@ RWSClient::RWSResult RWSClient::getMechanicalUnitRobTarget(const std::string& me
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getRAPIDExecution()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION;
-  return parseContent(httpGet(uri));
-}
-
-RWSClient::RWSResult RWSClient::getRAPIDModulesInfo(const std::string& task)
-{
-  std::string uri = Resources::RW_RAPID_MODULES + "?" + Queries::TASK + task;
-  return parseContent(httpGet(uri));
-}
-
-RWSClient::RWSResult RWSClient::getRAPIDTasks()
-{
-  std::string uri = Resources::RW_RAPID_TASKS;
-  return parseContent(httpGet(uri));
-}
-
 RWSClient::RWSResult RWSClient::getRobotWareSystem()
 {
   std::string uri = Resources::RW_SYSTEM;
@@ -232,44 +214,6 @@ RWSClient::RWSResult RWSClient::getPanelOperationMode()
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getRAPIDSymbolData(const RAPIDResource& resource)
-{
-  std::string uri = generateRAPIDDataPath(resource);
-  return parseContent(httpGet(uri));
-}
-
-void RWSClient::getRAPIDSymbolData(const RAPIDResource& resource, RAPIDSymbolDataAbstract& data)
-{
-  RWSResult result;
-  std::string data_type;
-
-  RWSResult const temp_result = getRAPIDSymbolProperties(resource);
-
-  data_type = xmlFindTextContent(temp_result, XMLAttributes::CLASS_DATTYP);
-
-  if (data.getType().compare(data_type) == 0)
-  {
-    result = getRAPIDSymbolData(resource);
-
-    std::string value = xmlFindTextContent(result, XMLAttributes::CLASS_VALUE);
-
-    if (!value.empty())
-    {
-      data.parseString(value);
-    }
-    else
-    {
-      throw std::logic_error("getRAPIDSymbolData(...): RAPID value string was empty");
-    }
-  }
-}
-
-RWSClient::RWSResult RWSClient::getRAPIDSymbolProperties(const RAPIDResource& resource)
-{
-  std::string uri = generateRAPIDPropertiesPath(resource);
-  return parseContent(httpGet(uri));
-}
-
 void RWSClient::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   try
@@ -285,28 +229,6 @@ void RWSClient::setIOSignal(const std::string& iosignal, const std::string& valu
     e << IoSignalErrorInfo {iosignal};
     throw;
   }
-}
-
-void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const std::string& data)
-{
-  std::string uri = generateRAPIDDataPath(resource);
-  std::string content = Identifiers::VALUE + "=" + data;
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, content, content_type);
-}
-
-void RWSClient::setRAPIDSymbolData(const RAPIDResource& resource, const RAPIDSymbolDataAbstract& data)
-{
-  setRAPIDSymbolData(resource, data.constructString());
-}
-
-void RWSClient::resetRAPIDProgramPointer()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_RESETPP;
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, "", content_type);
 }
 
 void RWSClient::setMotorsOn()
@@ -339,30 +261,6 @@ void RWSClient::setSpeedRatio(unsigned int ratio)
   std::string content = "speed-ratio=" + ss.str();
 
   httpPost(uri, content);
-}
-
-
-void RWSClient::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
-{
-  std::string uri = generateRAPIDTasksPath(task) + "/" + Queries::ACTION_LOAD_MODULE;
-
-  // Path to file should be a direct path, i.e. without "/fileservice/"
-  std::string content =
-      Identifiers::MODULEPATH + "=" + resource.directory + "/" + resource.filename +
-      "&replace=" + ((replace) ? "true" : "false");
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, content, content_type);
-}
-
-
-void RWSClient::unloadModuleFromTask(const std::string& task, const FileResource& resource)
-{
-  std::string uri = generateRAPIDTasksPath(task) + "/" + Queries::ACTION_UNLOAD_MODULE;
-  std::string content = Identifiers::MODULE + "=" + resource.filename;
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, content, content_type);
 }
 
 std::string RWSClient::getFile(const FileResource& resource)
@@ -446,26 +344,10 @@ std::string RWSClient::generateMechanicalUnitPath(const std::string& mechunit)
   return Resources::RW_MOTIONSYSTEM_MECHUNITS + "/" + mechunit;
 }
 
-std::string RWSClient::generateRAPIDDataPath(const RAPIDResource& resource)
-{
-  return Resources::RW_RAPID_SYMBOL_DATA_RAPID + "/" + resource.task + "/" + resource.module + "/" + resource.name + "/data";
-}
-
-std::string RWSClient::generateRAPIDPropertiesPath(const RAPIDResource& resource)
-{
-  return Resources::RW_RAPID_SYMBOL_PROPERTIES_RAPID + "/" + resource.task + "/" + resource.module + "/"+ resource.name + "/properties";
-}
-
 std::string RWSClient::generateFilePath(const FileResource& resource)
 {
   return Services::FILESERVICE + "/" + resource.directory + "/" + resource.filename;
 }
-
-std::string RWSClient::generateRAPIDTasksPath(const std::string& task)
-{
-  return Resources::RW_RAPID_TASKS + "/" + task;
-}
-
 
 POCOResult RWSClient::httpGet(const std::string& uri)
 {

@@ -494,4 +494,16 @@ namespace abb :: rws :: v2_0
 
 
   std::ostream& operator<<(std::ostream& os, MastershipDomain domain);
+
+
+  /// @brief Defines whether the mastership should be implicitly acquired when performing a request.
+  ///
+  enum class Mastership
+  {
+    Implicit,
+    Explicit
+  };
+
+
+  std::ostream& operator<<(std::ostream& os, Mastership mastership);
 }

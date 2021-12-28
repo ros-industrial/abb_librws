@@ -62,9 +62,9 @@ public:
   /**
    * \brief A constructor.
    *
-   * \param connection_options RWS connection options
+   * \param client RWS client
    */
-  explicit RWSInterface(ConnectionOptions const& connection_options);
+  explicit RWSInterface(RWSClient& client);
 
   /**
    * \brief Retrieves the configuration instances for the arms defined in the system.
@@ -231,51 +231,6 @@ public:
                                   const std::string& wobj = "");
 
   /**
-   * \brief A method for retrieving the data of a RAPID symbol in raw text format.
-   *
-   * See the corresponding "setRAPIDSymbolData(...)" method for examples of RAPID symbols in raw text format.
-   *
-   * \param task name of the RAPID task containing the RAPID symbol.
-   * \param module name of the RAPID module containing the RAPID symbol.
-   * \param name name of the RAPID symbol.
-   *
-   * \return std::string containing the data. Empty if not found.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  std::string getRAPIDSymbolData(const std::string& task, const std::string& module, const std::string& name);
-
-
-  /**
-   * \brief Retrieves the data of a RAPID symbol (parsed into a struct representing the RAPID data).
-   *
-   * \param resource specifies the RAPID task, module and symbol name.
-   * \param data for storing the retrieved RAPID symbol data.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data);
-
-
-  /**
-   * \brief A method for retrieving information about the RAPID modules of a RAPID task defined in the robot controller.
-   *
-   * \return \a std::vector<RAPIDModuleInfo> containing the RAPID modules information.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  std::vector<rw::RAPIDModuleInfo> getRAPIDModulesInfo(const std::string& task);
-
-  /**
-   * \brief A method for retrieving information about the RAPID tasks defined in the robot controller.
-   *
-   * \return \a std::vector<RAPIDTaskInfo> containing the RAPID tasks information.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  std::vector<rw::RAPIDTaskInfo> getRAPIDTasks();
-
-  /**
    * \brief A method for retrieving the robot controller's speed ratio for RAPID motions (e.g. MoveJ and MoveL).
    *
    * \return unsigned int with the speed ratio in the range [0, 100] (ie: inclusive).
@@ -311,15 +266,6 @@ public:
    */
   bool isMotorsOn();
 
-  /**
-   * \brief A method for checking if RAPID is running.
-   *
-   * \return if RAPID is running or not.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  bool isRAPIDRunning();
-
 
   /// @brief Set value of a digital signal
   ///
@@ -343,75 +289,6 @@ public:
   /// @param value New value of the signal
   ///
   void setGroupSignal(std::string const& signal_name, std::uint32_t value);
-
-
-  /**
-   * \brief A method for setting the data of a RAPID symbol via raw text format.
-   *
-   * Examples of RAPID symbols in raw text format:
-   * - num: "1" or "-2.5".
-   * - bool: "TRUE" or "FALSE".
-   * - pos: "[1, -2, 3.3]".
-   * - jointtarget: "[[1, -2, 3.3, -4.4, 5, 6], [9E9, 9E9, 9E9, 9E9, 9E9, 9E9]]"
-   *
-   * Notes:
-   * - The absence of square brackets implies the symbol is of atomic data type.
-   * - Record data types (composed of subcomponents) are always enclosed in square brackets.
-   * - The value '9E9', in the jointtarget record, mean that the joint is not in use.
-   *
-   * Please see the "Technical reference manual - RAPID overview"
-   * (document ID: 3HAC050947-001, revision: K) for more information
-   * about basic RAPID data types and programming.
-   *
-   * \param task name of the RAPID task containing the RAPID symbol.
-   * \param module name of the RAPID module containing the RAPID symbol.
-   * \param name the name of the RAPID symbol.
-   * \param data containing the RAPID symbol's new data.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void setRAPIDSymbolData(const std::string& task,
-                          const std::string& module,
-                          const std::string& name,
-                          const std::string& data);
-
-
-  /**
-   * \brief A method for setting the data of a RAPID symbol.
-   *
-   * \param resource identifying the RAPID symbol.
-   * \param data containing the RAPID symbol's new data.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void setRAPIDSymbolData(RAPIDResource const& resource,
-                          const RAPIDSymbolDataAbstract& data);
-
-
-  /**
-   * \brief A method for starting RAPID execution in the robot controller.
-   *
-   * There can be a delay between the function returns and when the RAPID program enters the "running" state.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void startRAPIDExecution();
-
-  /**
-   * \brief A method for stopping RAPID execution in the robot controller.
-   *
-   * There can be a delay between the function returns and when the RAPID program enters the "stopped" state.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void stopRAPIDExecution();
-
-  /**
-   * \brief A method for reseting the RAPID program pointer in the robot controller.
-   *
-   * \throw \a std::runtime_error if something goes wrong.
-   */
-  void resetRAPIDProgramPointer();
 
   /**
    * \brief A method for turning on the robot controller's motors.
@@ -437,27 +314,6 @@ public:
    * \throw \a std::runtime_error if something goes wrong.
    */
   void setSpeedRatio(unsigned int ratio);
-
-  /**
-   * \brief A method for loading a module to the robot controller.
-   *
-   * \param task specifying the RAPID task.
-   * \param resource specifying the file's directory and name.
-   * \param replace indicating if the actual module into the controller must be replaced by the new one or not.
-   *
-   * \throw \a std::exception if something goes wrong.
-   */
-  void loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace = false);
-
-  /**
-   * \brief A method for unloading a module to the robot controller.
-   *
-   * \param task specifying the RAPID task.
-   * \param resource specifying the file's directory and name.
-   *
-   * \throw \a std::exception if something goes wrong.
-   */
-  void unloadModuleFromTask(const std::string& task, const FileResource& resource);
 
   /**
    * \brief A method for retrieving a file from the robot controller.
@@ -583,7 +439,7 @@ private:
   /**
    * \brief The RWS client used to communicate with the robot controller.
    */
-  RWSClient rws_client_;
+  RWSClient& rws_client_;
 };
 
 } // end namespace rws
