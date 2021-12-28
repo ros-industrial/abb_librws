@@ -114,4 +114,22 @@ namespace abb :: rws :: v2_0
 
     return os;
   }
+
+
+  std::ostream& operator<<(std::ostream& os, Mastership mastership)
+  {
+    switch (mastership)
+    {
+      case Mastership::Implicit:
+        os << "implicit";
+        break;
+      case Mastership::Explicit:
+        os << "explicit";
+        break;
+      default:
+        BOOST_THROW_EXCEPTION(std::logic_error {"Invalid v2_0::Mastership value"});
+    }
+
+    return os;
+  }
 }

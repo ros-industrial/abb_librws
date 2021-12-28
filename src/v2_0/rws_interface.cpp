@@ -34,9 +34,10 @@
  ***********************************************************************************************************************
  */
 #include <abb_librws/v2_0/rws_interface.h>
+#include <abb_librws/v2_0/rw/rapid.h>
+#include <abb_librws/v2_0/rws.h>
 #include <abb_librws/rws_rapid.h>
 #include <abb_librws/parsing.h>
-#include <abb_librws/v2_0/rws.h>
 
 #include <algorithm>
 #include <sstream>
@@ -73,8 +74,8 @@ static bool digitalSignalToBool(std::string const& value)
  /************************************************************
  * Primary methods
  */
-RWSInterface::RWSInterface(ConnectionOptions const& connection_options)
-: rws_client_ {connection_options}
+RWSInterface::RWSInterface(RWSClient& client)
+: rws_client_ {client}
 {
 }
 
@@ -726,44 +727,6 @@ RobTarget RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
   return robtarget;
 }
 
-void RWSInterface::setRAPIDSymbolData(const std::string& task,
-                                      const std::string& module,
-                                      const std::string& name,
-                                      const std::string& data)
-{
-  rws_client_.setRAPIDSymbolData(RAPIDResource(task, module, name), data);
-}
-
-
-void RWSInterface::setRAPIDSymbolData(RAPIDResource const& resource, const RAPIDSymbolDataAbstract& data)
-{
-  rws_client_.setRAPIDSymbolData(resource, data);
-}
-
-
-void RWSInterface::startRAPIDExecution()
-{
-  std::string uri = "/rw/rapid/execution/start";
-  std::string content = "regain=continue&execmode=continue&cycle=forever&condition=none&stopatbp=disabled&alltaskbytsp=false";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  rws_client_.httpPost(uri, content, content_type);
-}
-
-void RWSInterface::stopRAPIDExecution()
-{
-  std::string uri = Resources::RW_RAPID_EXECUTION + "/" + Queries::ACTION_STOP;
-  std::string content = "stopmode=stop";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  rws_client_.httpPost(uri, content, content_type);
-}
-
-void RWSInterface::resetRAPIDProgramPointer()
-{
-  rws_client_.resetRAPIDProgramPointer();
-}
-
 void RWSInterface::setMotorsOn()
 {
   rws_client_.setMotorsOn();
@@ -777,65 +740,6 @@ void RWSInterface::setMotorsOff()
 void RWSInterface::setSpeedRatio(unsigned int ratio)
 {
   rws_client_.setSpeedRatio(ratio);
-}
-
-std::vector<rw::RAPIDModuleInfo> RWSInterface::getRAPIDModulesInfo(const std::string& task)
-{
-  std::vector<rw::RAPIDModuleInfo> result;
-
-  RWSResult rws_result = rws_client_.getRAPIDModulesInfo(task);
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result,
-                                                         XMLAttributes::CLASS_RAP_MODULE_INFO_LI);
-
-  for (size_t i = 0; i < node_list.size(); ++i)
-  {
-    std::string name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
-    std::string type = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_TYPE);
-
-    result.emplace_back(name, type);
-  }
-
-  return result;
-}
-
-std::vector<rw::RAPIDTaskInfo> RWSInterface::getRAPIDTasks()
-{
-  std::vector<rw::RAPIDTaskInfo> result;
-
-  RWSResult rws_result = rws_client_.getRAPIDTasks();
-  std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result, XMLAttributes::CLASS_RAP_TASK_LI);
-
-  for (size_t i = 0; i < node_list.size(); ++i)
-  {
-    std::string name = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_NAME);
-    bool is_motion_task = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_MOTIONTASK) == RAPID::RAPID_TRUE;
-    bool is_active = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_ACTIVE) == "On";
-    std::string temp = xmlFindTextContent(node_list.at(i), XMLAttributes::CLASS_EXCSTATE);
-
-    // Assume task state is unknown, update based on contents of 'temp'.
-    rw::RAPIDTaskExecutionState execution_state = rw::RAPIDTaskExecutionState::UNKNOWN;
-
-    if(temp == "read")
-    {
-      execution_state = rw::RAPIDTaskExecutionState::READY;
-    }
-    else if(temp == "stop")
-    {
-      execution_state = rw::RAPIDTaskExecutionState::STOPPED;
-    }
-    else if(temp == "star")
-    {
-      execution_state = rw::RAPIDTaskExecutionState::STARTED;
-    }
-    else if(temp == "unin")
-    {
-      execution_state = rw::RAPIDTaskExecutionState::UNINITIALIZED;
-    }
-
-    result.emplace_back(name, is_motion_task, is_active, execution_state);
-  }
-
-  return result;
 }
 
 unsigned int RWSInterface::getSpeedRatio()
@@ -890,41 +794,9 @@ bool RWSInterface::isMotorsOn()
                               ContollerStates::CONTROLLER_MOTOR_ON);
 }
 
-bool RWSInterface::isRAPIDRunning()
-{
-  return compareSingleContent(rws_client_.getRAPIDExecution(),
-                              XMLAttributes::CLASS_CTRLEXECSTATE,
-                              ContollerStates::RAPID_EXECUTION_RUNNING);
-}
-
 void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   rws_client_.setIOSignal(iosignal, value);
-}
-
-std::string RWSInterface::getRAPIDSymbolData(const std::string& task,
-                                             const std::string& module,
-                                             const std::string& name)
-{
-  return xmlFindTextContent(rws_client_.getRAPIDSymbolData(RAPIDResource(task, module, name)),
-                            XMLAttributes::CLASS_VALUE);
-}
-
-
-void RWSInterface::getRAPIDSymbolData(RAPIDResource const& resource, RAPIDSymbolDataAbstract& data)
-{
-  rws_client_.getRAPIDSymbolData(resource, data);
-}
-
-
-void RWSInterface::loadModuleIntoTask(const std::string& task, const FileResource& resource, const bool replace)
-{
-  rws_client_.loadModuleIntoTask(task, resource, replace);
-}
-
-void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResource& resource)
-{
-  rws_client_.unloadModuleFromTask(task, resource);
 }
 
 std::string RWSInterface::getFile(const FileResource& resource)
