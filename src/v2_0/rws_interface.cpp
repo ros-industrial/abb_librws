@@ -727,34 +727,6 @@ RobTarget RWSInterface::getMechanicalUnitRobTarget(const std::string& mechunit,
   return robtarget;
 }
 
-void RWSInterface::setMotorsOn()
-{
-  rws_client_.setMotorsOn();
-}
-
-void RWSInterface::setMotorsOff()
-{
-  rws_client_.setMotorsOff();
-}
-
-void RWSInterface::setSpeedRatio(unsigned int ratio)
-{
-  rws_client_.setSpeedRatio(ratio);
-}
-
-unsigned int RWSInterface::getSpeedRatio()
-{
-  unsigned int speed_ratio = 0;
-
-  RWSResult rws_result = rws_client_.getSpeedRatio();
-
-  std::stringstream ss(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "speedratio")));
-  ss >> speed_ratio;
-  if(ss.fail()) throw std::runtime_error("Failed to parse the speed ratio");
-
-  return speed_ratio;
-}
-
 SystemInfo RWSInterface::getSystemInfo()
 {
   SystemInfo result;
@@ -778,20 +750,6 @@ SystemInfo RWSInterface::getSystemInfo()
                                           XMLAttributes::CLASS_CTRL_TYPE);
 
   return result;
-}
-
-bool RWSInterface::isAutoMode()
-{
-  return compareSingleContent(rws_client_.getPanelOperationMode(),
-                              XMLAttributes::CLASS_OPMODE,
-                              ContollerStates::PANEL_OPERATION_MODE_AUTO);
-}
-
-bool RWSInterface::isMotorsOn()
-{
-  return compareSingleContent(rws_client_.getPanelControllerState(),
-                              XMLAttributes::CLASS_CTRLSTATE,
-                              ContollerStates::CONTROLLER_MOTOR_ON);
 }
 
 void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& value)
