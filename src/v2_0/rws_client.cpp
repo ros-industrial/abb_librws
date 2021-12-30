@@ -196,24 +196,6 @@ RWSClient::RWSResult RWSClient::getRobotWareSystem()
   return parseContent(httpGet(uri));
 }
 
-RWSClient::RWSResult RWSClient::getSpeedRatio()
-{
-  std::string uri = "/rw/panel/speedratio";
-  return parseContent(httpGet(uri));
-}
-
-RWSClient::RWSResult RWSClient::getPanelControllerState()
-{
-  std::string uri = Resources::RW_PANEL_CTRLSTATE;
-  return parseContent(httpGet(uri));
-}
-
-RWSClient::RWSResult RWSClient::getPanelOperationMode()
-{
-  std::string uri = Resources::RW_PANEL_OPMODE;
-  return parseContent(httpGet(uri));
-}
-
 void RWSClient::setIOSignal(const std::string& iosignal, const std::string& value)
 {
   try
@@ -229,38 +211,6 @@ void RWSClient::setIOSignal(const std::string& iosignal, const std::string& valu
     e << IoSignalErrorInfo {iosignal};
     throw;
   }
-}
-
-void RWSClient::setMotorsOn()
-{
-  std::string uri = Resources::RW_PANEL_CTRLSTATE;
-  std::string content = "ctrl-state=motoron";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, content, content_type);
-}
-
-void RWSClient::setMotorsOff()
-{
-  std::string uri = Resources::RW_PANEL_CTRLSTATE;
-  std::string content = "ctrl-state=motoroff";
-  std::string content_type = "application/x-www-form-urlencoded;v=2.0";
-
-  httpPost(uri, content, content_type);
-}
-
-void RWSClient::setSpeedRatio(unsigned int ratio)
-{
-  if(ratio > 100) throw std::out_of_range("Speed ratio argument out of range (should be 0 <= ratio <= 100)");
-
-  std::stringstream ss;
-  ss << ratio;
-  if(ss.fail()) throw std::runtime_error(EXCEPTION_CREATE_STRING);
-
-  std::string uri = "/rw/panel/speedratio?action=setspeedratio";
-  std::string content = "speed-ratio=" + ss.str();
-
-  httpPost(uri, content);
 }
 
 std::string RWSClient::getFile(const FileResource& resource)
