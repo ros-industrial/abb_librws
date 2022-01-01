@@ -54,7 +54,6 @@ static const char EXCEPTION_PARSE_CFG[]{"Failed to parse configuration instances
 namespace abb :: rws :: v2_0
 {
 
-typedef SystemConstants::ContollerStates ContollerStates;
 typedef SystemConstants::RAPID RAPID;
 
 

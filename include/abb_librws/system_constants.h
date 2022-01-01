@@ -51,32 +51,6 @@ namespace rws
 struct SystemConstants
 {
   /**
-   * \brief Controller states related constants.
-   */
-  struct ABB_LIBRWS_EXPORT ContollerStates
-  {
-    /**
-     * \brief Robot controller motor on.
-     */
-    static const std::string CONTROLLER_MOTOR_ON;
-
-    /**
-     * \brief Robot controller motor off.
-     */
-    static const std::string CONTROLLER_MOTOR_OFF;
-
-    /**
-     * \brief Robot controller auto mode.
-     */
-    static const std::string PANEL_OPERATION_MODE_AUTO;
-
-    /**
-     * \brief RAPID running.
-     */
-    static const std::string RAPID_EXECUTION_RUNNING;
-  };
-
-  /**
    * \brief General constants.
    */
   struct ABB_LIBRWS_EXPORT General
