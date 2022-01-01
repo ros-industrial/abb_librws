@@ -47,9 +47,6 @@ namespace rws
 
 const std::string SystemConstants::General::EXTERNAL_APPLICATION   = "ExternalApplication";
 const std::string SystemConstants::General::EXTERNAL_LOCATION      = "ExternalLocation";
-const unsigned short SystemConstants::General::DEFAULT_PORT_NUMBER = 80;
-const std::string SystemConstants::General::DEFAULT_PASSWORD       = "robotics";
-const std::string SystemConstants::General::DEFAULT_USERNAME       = "Default User";
 const std::string SystemConstants::General::LOCAL                  = "local";
 const std::string SystemConstants::General::MECHANICAL_UNIT_ROB_1  = "ROB_1";
 const std::string SystemConstants::General::MECHANICAL_UNIT_ROB_2  = "ROB_2";

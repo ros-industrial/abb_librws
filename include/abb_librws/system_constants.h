@@ -66,21 +66,6 @@ struct SystemConstants
     static const std::string EXTERNAL_LOCATION;
 
     /**
-     * \brief Default port number for RWS communication.
-     */
-    static const unsigned short DEFAULT_PORT_NUMBER;
-
-    /**
-     * \brief Default password (for unconfigured robot controller systems).
-     */
-    static const std::string DEFAULT_PASSWORD;
-
-    /**
-     * \brief Default username (for unconfigured robot controller systems).
-     */
-    static const std::string DEFAULT_USERNAME;
-
-    /**
      * \brief Local user.
      */
     static const std::string LOCAL;

@@ -314,7 +314,7 @@ public:
    *
    * \throw \a std::exception if something goes wrong.
    */
-  void registerLocalUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerLocalUser(const std::string& username = DEFAULT_USERNAME,
                          const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                          const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 
@@ -327,7 +327,7 @@ public:
    *
    * \throw \a std::exception if something goes wrong.
    */
-  void registerRemoteUser(const std::string& username = SystemConstants::General::DEFAULT_USERNAME,
+  void registerRemoteUser(const std::string& username = DEFAULT_USERNAME,
                           const std::string& application = SystemConstants::General::EXTERNAL_APPLICATION,
                           const std::string& location = SystemConstants::General::EXTERNAL_LOCATION);
 

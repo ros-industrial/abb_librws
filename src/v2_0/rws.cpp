@@ -8,6 +8,10 @@
 
 namespace abb :: rws :: v2_0
 {
+  const unsigned short DEFAULT_PORT_NUMBER = 443;
+  const std::string DEFAULT_PASSWORD       = "robotics";
+  const std::string DEFAULT_USERNAME       = "Default User";
+
   const std::string Identifiers::ACTIVE                         = "active";
   const std::string Identifiers::ARM                            = "arm";
   const std::string Identifiers::CFG_DT_INSTANCE_LI             = "cfg-dt-instance-li";
