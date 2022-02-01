@@ -372,21 +372,29 @@ public:
 
   /**
    * \brief Default constructor of a new RAPIDArray object
-   * 
+   *
    */
   RAPIDArray()
   {}
 
   /**
-   * \brief Variadic constructor for a new RAPIDArray object
-   * 
-   * \param values initiale values to fill up the array
-   * 
+   * \brief Copy constructor
+   *
    */
-  template<typename... value_type>
-  RAPIDArray(value_type&&... values)
-  :   container_ {std::forward<value_type>(values)...}
+  RAPIDArray(RAPIDArray const&) = default;
+
+  /**
+   * \brief Construct from an initializer list
+   *
+   * \param values initial values to fill up the array
+   *
+   */
+  RAPIDArray(std::initializer_list<value_type> values)
   {
+    // NOTE(misha): this implementation is not optimal,
+    // because the container_ is first default-constructed before and then the values are copied to it.
+    // Make it better if you know how.
+    std::copy(values.begin(), values.end(), container_.begin());
   }
 
   /**
@@ -419,7 +427,7 @@ public:
    * \brief A method for parsing a RAPID symbol data value string.
    *
    * \param value_string containing the string to parse.
-   * 
+   *
    * \throws invalid_argument when value_string represent an array of a different size
    */
   void parseString(const std::string& value_string) override
@@ -435,7 +443,7 @@ public:
       ss << substrings.size();
       ss << " different from the array size=";
       ss << array_size;
-    
+
       std::string exception_message = ss.str();
 
       BOOST_THROW_EXCEPTION(std::invalid_argument {exception_message});
@@ -460,10 +468,10 @@ public:
 
   /**
    * \brief Immutably access an element of the underlying using its index
-   * 
+   *
    * \param index The index of the item to access in the underlying container
    * \return value_type const& The value at the given index
-   * 
+   *
    * \throws out_of_range when the index is larger or equal than the array size
    */
   value_type const& at(const size_t index) const
@@ -473,15 +481,38 @@ public:
 
   /**
    * \brief Mutably access an element of the underlying using its index
-   * 
+   *
    * \param index The index of the item to access in the underlying container
    * \return value_type& The value at the given index
-   * 
+   *
    * \throws out_of_range when the index is larger or equal than the array size
    */
   value_type& at(const size_t index)
   {
     return container_.at(index);
+  }
+
+
+  /**
+   * \brief Immutably access an element of the underlying using its index
+   *
+   * \param index The index of the item to access in the underlying container
+   * \return value_type const& The value at the given index
+   */
+  value_type const& operator[](const size_t index) const noexcept
+  {
+    return container_[index];
+  }
+
+  /**
+   * \brief Mutably access an element of the underlying using its index
+   *
+   * \param index The index of the item to access in the underlying container
+   * \return value_type& The value at the given index
+   */
+  value_type& operator[](const size_t index) noexcept
+  {
+    return container_[index];
   }
 
 private:
