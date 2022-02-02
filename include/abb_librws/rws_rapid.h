@@ -43,9 +43,9 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <boost/exception/diagnostic_information.hpp>
-
 #include <abb_librws/parsing.h>
+
+#include <boost/throw_exception.hpp>
 
 
 namespace abb
@@ -391,6 +391,10 @@ public:
    */
   RAPIDArray(std::initializer_list<value_type> values)
   {
+    // NOTE(misha): fix it if you know how to do this check at compile-time.
+    if (values.size() != N)
+      BOOST_THROW_EXCEPTION(std::invalid_argument {"Wrong size of initializier list"});
+
     // NOTE(misha): this implementation is not optimal,
     // because the container_ is first default-constructed before and then the values are copied to it.
     // Make it better if you know how.
