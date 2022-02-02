@@ -10,6 +10,7 @@ namespace abb {
 namespace rws {
 
 void init_rapid(py::module &);
+void init_common(py::module &);
 void init_cfg(py::module &);
 void init_resource(py::module &);
 void init_client(py::module &);
@@ -22,6 +23,7 @@ using RAPID = std::decay_t<std::result_of_t<decltype(&Services::rapid)(Services)
 
 PYBIND11_MODULE(_abb_librws, m) {
     init_rapid(m);
+    init_common(m);
     init_cfg(m);
     init_resource(m);
     init_client(m);
