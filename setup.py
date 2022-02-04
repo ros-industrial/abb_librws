@@ -23,9 +23,7 @@ else:
 
 # Read version from package.xml
 with open("package.xml", "r") as f:
-    __version__ = re.search(
-        "<version>([0-9]+.[0-9]+.[0-9]+)</version>", f.read()
-    ).group(1)
+    __version__ = re.search("<version>([0-9]+.[0-9]+.[0-9]+)</version>", f.read()).group(1)
 
 setup(
     name="abb_librws",
