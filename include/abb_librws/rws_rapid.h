@@ -519,6 +519,56 @@ public:
     return container_[index];
   }
 
+  /**
+   * @brief The size of the contained sequence.
+   *
+   * @return the size of the contained sequence
+   */
+  std::size_t size() const noexcept
+  {
+    return container_.size();
+  }
+
+  /**
+   * @brief Begin interator for the contained sequence.
+   *
+   * @return auto
+   */
+  auto begin() noexcept
+  {
+    return container_.begin();
+  }
+
+  /**
+   * @brief Constant begin iterator for the contained sequence.
+   *
+   * @return auto
+   */
+  auto begin() const noexcept
+  {
+    return container_.begin();
+  }
+
+  /**
+   * @brief End iterator for the contained sequence.
+   *
+   * @return auto
+   */
+  auto end() noexcept
+  {
+    return container_.end();
+  }
+
+  /**
+   * @brief Constant end iterator for the contained sequence.
+   *
+   * @return auto
+   */
+  auto end() const noexcept
+  {
+    return container_.end();
+  }
+
 private:
 
   std::array<value_type, array_size> container_;
