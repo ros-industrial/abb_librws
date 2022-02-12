@@ -23,6 +23,7 @@ void init_rapid(py::module &m){
         .def_readwrite("value", &RAPIDNum::value)
     ;
     py::implicitly_convertible<float, RAPIDNum>();
+    py::implicitly_convertible<int, RAPIDNum>();
 
     py::class_<RAPIDDnum>(m, "RAPIDDnum")
         .def(py::init<const double>(), "float"_a = 0.0)
