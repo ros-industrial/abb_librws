@@ -312,7 +312,6 @@ std::ostream& operator<<(std::ostream& os, Pose const& pose)
         << ")";
 }
 
-
 std::ostream& operator<<(std::ostream& os, ToolData const& tooldata)
 {
     return os

@@ -3,7 +3,7 @@
 #include <abb_librws/v1_0/rws.h>
 
 #include <string>
-
+#include <iosfwd>
 
 namespace abb :: rws
 {
@@ -159,4 +159,6 @@ namespace abb :: rws
      */
     std::string directory;
   };
-}
+
+  std::ostream& operator<<(std::ostream& os, RAPIDResource const& resource);
+} // end of namespace abb::rws

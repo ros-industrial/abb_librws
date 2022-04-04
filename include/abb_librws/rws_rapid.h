@@ -37,20 +37,19 @@
 #ifndef RWS_RAPID_H
 #define RWS_RAPID_H
 
-#include <string>
-#include <array>
-#include <vector>
-#include <sstream>
-#include <stdexcept>
-
 #include <abb_librws/parsing.h>
 
 #include <boost/throw_exception.hpp>
 
+#include <array>
+#include <iosfwd>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-namespace abb
-{
-namespace rws
+
+namespace abb :: rws
 {
 /**
  * \brief An enum for different RAPID atomic data types.
@@ -1284,7 +1283,26 @@ public:
   RAPIDNum zone_reax;
 };
 
-} // end namespace rws
-} // end namespace abb
+std::ostream& operator<<(std::ostream& os, ExtJoint const& extax);
+
+std::ostream& operator<<(std::ostream& os, Orient const& orient);
+
+std::ostream& operator<<(std::ostream& os, Pos const& pos);
+
+std::ostream& operator<<(std::ostream& os, ConfData const& robconf);
+
+std::ostream& operator<<(std::ostream& os, SpeedData const& speeddata);
+
+std::ostream& operator<<(std::ostream& os, ZoneData const& zonedata);
+
+std::ostream& operator<<(std::ostream& os, RobTarget const& robtarget);
+
+std::ostream& operator<<(std::ostream& os, LoadData const& loaddata);
+
+std::ostream& operator<<(std::ostream& os, Pose const& pose);
+
+std::ostream& operator<<(std::ostream& os, ToolData const& tooldata);
+
+} // end namespace abb::rws
 
 #endif

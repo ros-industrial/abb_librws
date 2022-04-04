@@ -37,7 +37,9 @@
 
 #include <iostream>
 
-namespace abb :: rws {
+
+namespace abb :: rws
+{
 
 std::ostream& operator<<(std::ostream& os, RAPIDResource const& resource)
 {
