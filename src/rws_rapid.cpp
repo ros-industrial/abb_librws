@@ -248,9 +248,10 @@ std::ostream& operator<<(std::ostream& os, ConfData const& robconf)
 {
     return os
         << "ConfData("
-        << "cf1=" << robconf.cf1.value // quadrent number for axis 1
-        << "cf4=" << robconf.cf4.value // quadrent number for axis 4
-        << "cf6=" << robconf.cf6.value // quadrent number for axis 6
+        << ".cf1=" << robconf.cf1.value // quadrant number for axis 1
+        << ", .cf4=" << robconf.cf4.value // quadrant number for axis 4
+        << ", .cf6=" << robconf.cf6.value // quadrant number for axis 6
+        << ", .cfx=" << robconf.cfx.value // Indicates one of eight possible robot configurations (numbered from 0-7).
         << ")";
 }
 
@@ -259,9 +260,9 @@ std::ostream& operator<<(std::ostream& os, SpeedData const& speeddata)
     return os
         << "SpeedData("
         << ".v_tcp=" << speeddata.v_tcp.value // [mm/s] of TCP
-        << ".v_ori=" << speeddata.v_ori.value // [deg/s] of TCP
-        << ".v_leax=" << speeddata.v_leax.value // [mm/s] of external axes
-        << ".v_reax=" << speeddata.v_reax.value // [deg/s] of external axes
+        << ", .v_ori=" << speeddata.v_ori.value // [deg/s] of TCP
+        << ", .v_leax=" << speeddata.v_leax.value // [mm/s] of external axes
+        << ", .v_reax=" << speeddata.v_reax.value // [deg/s] of external axes
         << ")";
 }
 
@@ -308,7 +309,7 @@ std::ostream& operator<<(std::ostream& os, Pose const& pose)
     return os
         << "Pose("
         << ".pos=" << pose.pos
-        << ".rot=" << pose.rot
+        << ", .rot=" << pose.rot
         << ")";
 }
 
