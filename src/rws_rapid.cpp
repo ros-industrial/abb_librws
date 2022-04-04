@@ -34,11 +34,12 @@
  ***********************************************************************************************************************
  */
 
-#include <sstream>
-#include <iomanip>
-
-#include <abb_librws/system_constants.h>
 #include <abb_librws/rws_rapid.h>
+#include <abb_librws/system_constants.h>
+
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
 namespace abb
 {
@@ -207,6 +208,119 @@ RAPIDRecord& RAPIDRecord::operator=(const RAPIDRecord& other)
   }
 
   return *this;
+}
+
+std::ostream& operator<<(std::ostream& os, ExtJoint const& extax)
+{
+    return os
+        << "ExtJoint("
+        << ".eax_a=" << extax.eax_a.value // external axis a
+        << ", .eax_b=" << extax.eax_b.value
+        << ", .eax_c=" << extax.eax_c.value
+        << ", .eax_d=" << extax.eax_d.value
+        << ", .eax_e=" << extax.eax_e.value
+        << ", .eax_f=" << extax.eax_f.value
+        << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, Orient const& orient)
+{
+    return os
+        << "Orient("
+        << ".q1=" << orient.q1.value
+        << ", .q2=" << orient.q2.value
+        << ", .q3=" << orient.q3.value
+        << ", .q4=" << orient.q4.value
+        << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, Pos const& pos)
+{
+    return os
+        << "Pos("
+        << ".x=" << pos.x.value
+        << ", .y=" << pos.y.value
+        << ", .z=" << pos.z.value
+        << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, ConfData const& robconf)
+{
+    return os
+        << "ConfData("
+        << "cf1=" << robconf.cf1.value // quadrent number for axis 1
+        << "cf4=" << robconf.cf4.value // quadrent number for axis 4
+        << "cf6=" << robconf.cf6.value // quadrent number for axis 6
+        << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, SpeedData const& speeddata)
+{
+    return os
+        << "SpeedData("
+        << ".v_tcp=" << speeddata.v_tcp.value // [mm/s] of TCP
+        << ".v_ori=" << speeddata.v_ori.value // [deg/s] of TCP
+        << ".v_leax=" << speeddata.v_leax.value // [mm/s] of external axes
+        << ".v_reax=" << speeddata.v_reax.value // [deg/s] of external axes
+        << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, ZoneData const& zonedata)
+{
+    return os
+        << "ZoneData("
+        << ".finep=" << zonedata.finep.value // if true, movement terminates at stop point
+        << ", .pzone_tcp=" << zonedata.pzone_tcp.value // [mm] radius of the TCP zone
+        << ", .pzone_ori=" << zonedata.pzone_ori.value // [mm] radius of the tool reorientation zone
+        << ", .pzone_eax=" << zonedata.pzone_eax.value // [mm] radius of the external axes zone
+        << ", .zone_ori=" << zonedata.zone_ori.value // [deg] zone for the tool reorientation
+        << ", .zone_leax=" << zonedata.zone_leax.value // [mm] zone size for linear external axes
+        << ", .zone_reax=" << zonedata.zone_reax.value // [deg] zone size for rotating external axes
+        << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, RobTarget const& robtarget)
+{
+    return os
+        << "RobTarget("
+        << ".pos=" << robtarget.pos
+        << ", .orient=" << robtarget.orient
+        << ", .robconf=" << robtarget.robconf
+        << ", .extax=" << robtarget.extax
+        << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, LoadData const& loaddata)
+{
+    return os
+        << "LoadData("
+        << ".mass=" << loaddata.mass.value // [kg]
+        << ", .cog=" << loaddata.cog // center of gravity
+        << ", .aom=" << loaddata.aom // axes of moment
+        << ", .ix=" << loaddata.ix.value // inertia around x-axis [kgm^2]
+        << ", .iy=" << loaddata.iy.value // inertia around y-axis [kgm^2]
+        << ", .iz=" << loaddata.iz.value // inertia around z-axis [kgm^2]
+        << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, Pose const& pose)
+{
+    return os
+        << "Pose("
+        << ".pos=" << pose.pos
+        << ".rot=" << pose.rot
+        << ")";
+}
+
+
+std::ostream& operator<<(std::ostream& os, ToolData const& tooldata)
+{
+    return os
+        << "ToolData("
+        << ".robhold=" << tooldata.robhold.value // is robot holding the tool
+        << ", .tframe=" << tooldata.tframe // tool's coordinate system
+        << ", .tload=" << tooldata.tload // tool's load
+        << ")";
 }
 
 } // end namespace rws
