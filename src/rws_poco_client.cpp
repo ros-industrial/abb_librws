@@ -43,6 +43,8 @@
 #include <abb_librws/rws_poco_client.h>
 #include <abb_librws/rws_error.h>
 
+#include <boost/log/trivial.hpp>
+
 
 using namespace Poco;
 using namespace Poco::Net;
@@ -118,8 +120,12 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
   // Attempt the communication.
   try
   {
+
+    BOOST_LOG_TRIVIAL(debug) << "Tyring to " << method << " from uri=" << uri << "\n";
     sendAndReceive(request, response, content, response_content);
 
+    BOOST_LOG_TRIVIAL(debug) << "Got status=" << response.getStatus() << " when " << method
+                             << "ing from uri=" << uri << "\n";
     // Check if the server has sent an update for the cookies.
     std::vector<HTTPCookie> temp_cookies;
     response.getCookies(temp_cookies);
@@ -146,6 +152,7 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
     // Check if the request was unauthorized, if so add credentials.
     if (response.getStatus() == HTTPResponse::HTTP_UNAUTHORIZED)
     {
+      BOOST_LOG_TRIVIAL(debug) << "Tyring to SECURELY " << method << " from uri=" << uri << "\n";
       authenticate(request, response, content, response_content);
     }
 
@@ -271,11 +278,19 @@ void POCOClient::authenticate(HTTPRequest& request,
   // Remove any old cookies.
   cookies_.clear();
 
+  BOOST_LOG_TRIVIAL(debug) << "Authenticating to " << request.getMethod() << " from uri=" << request.getURI() << "\n";
   // Authenticate with the provided credentials.
   http_credentials_.authenticate(request, response);
+  BOOST_LOG_TRIVIAL(debug) << "Got status=" << response.getStatus() << " when authenticating to"
+                           << request.getMethod() << " to uri=" <<  request.getURI() << "\n";
 
   // Contact the server, and extract and store the received cookies.
+
+  BOOST_LOG_TRIVIAL(debug) << "After authentication, trying to " << response.getStatus() << " when authenticating to"
+                           << request.getMethod() << " to uri=" <<  request.getURI() << "\n";
   sendAndReceive(request, response, request_content, response_content);
+  BOOST_LOG_TRIVIAL(debug) << "After authentication got status=" << response.getStatus() << " when "
+                           << request.getMethod() << "ing to uri=" <<  request.getURI() << "\n";
   std::vector<HTTPCookie> temp_cookies;
   response.getCookies(temp_cookies);
 
