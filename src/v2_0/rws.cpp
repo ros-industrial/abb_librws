@@ -12,6 +12,7 @@ namespace abb :: rws :: v2_0
   const std::string DEFAULT_PASSWORD       = "robotics";
   const std::string DEFAULT_USERNAME       = "Default User";
 
+  const std::string Identifiers::ACTION_TYPE                    = "action-type"
   const std::string Identifiers::ACTIVE                         = "active";
   const std::string Identifiers::ARM                            = "arm";
   const std::string Identifiers::CFG_DT_INSTANCE_LI             = "cfg-dt-instance-li";
@@ -21,6 +22,7 @@ namespace abb :: rws :: v2_0
   const std::string Identifiers::CTRLSTATE                      = "ctrlstate";
   const std::string Identifiers::DATTYP                         = "dattyp";
   const std::string Identifiers::EXCSTATE                       = "excstate";
+  const std::string Identifiers::FILEPATH                       = "filepath"
   const std::string Identifiers::IOS_SIGNAL                     = "ios-signal";
   const std::string Identifiers::HOME_DIRECTORY                 = "$home";
   const std::string Identifiers::LVALUE                         = "lvalue";
@@ -47,7 +49,7 @@ namespace abb :: rws :: v2_0
   const std::string Identifiers::VALUE                          = "value";
   const std::string Identifiers::CLASS                          = "class";
   const std::string Identifiers::OPTION                         = "option";
-  const std::string Queries::ACTION_LOAD_MODULE                 = "loadmod";
+  const std::string Queries::ACTION_LOAD                        = "load";
   const std::string Queries::ACTION_RELEASE                     = "action=release";
   const std::string Queries::ACTION_REQUEST                     = "action=request";
   const std::string Queries::ACTION_RESETPP                     = "resetpp";
