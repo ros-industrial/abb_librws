@@ -130,6 +130,11 @@ namespace abb :: rws :: v1_0
   struct ABB_LIBRWS_EXPORT Identifiers
   {
     /**
+     * \brief Action type.
+     */
+    static const std::string ACTION_TYPE;
+
+    /**
      * \brief Active type.
      */
     static const std::string ACTIVE;
@@ -178,6 +183,12 @@ namespace abb :: rws :: v1_0
      * \brief Execution state type.
      */
     static const std::string EXCSTATE;
+
+    /**
+     * \brief File path type.
+     */
+    static const std::string FILEPATH;
+
 
     /**
      * \brief Home directory.
@@ -310,6 +321,11 @@ namespace abb :: rws :: v1_0
    */
   struct ABB_LIBRWS_EXPORT Queries
   {
+    /**
+     * \brief Load action query.
+     */
+     static const std::string ACTION_LOAD;
+
     /**
      * \brief Load module action query.
      */

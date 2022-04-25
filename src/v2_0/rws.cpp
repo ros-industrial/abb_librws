@@ -50,6 +50,7 @@ namespace abb :: rws :: v2_0
   const std::string Identifiers::CLASS                          = "class";
   const std::string Identifiers::OPTION                         = "option";
   const std::string Queries::ACTION_LOAD                        = "load";
+  const std::string Queries::ACTION_LOAD_MODULE                 = "loadmod";
   const std::string Queries::ACTION_RELEASE                     = "action=release";
   const std::string Queries::ACTION_REQUEST                     = "action=request";
   const std::string Queries::ACTION_RESETPP                     = "resetpp";
