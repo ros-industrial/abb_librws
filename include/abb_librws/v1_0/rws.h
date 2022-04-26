@@ -250,6 +250,11 @@ namespace abb :: rws :: v1_0
     static const std::string RAP_TASK_LI;
 
     /**
+     * \brief Restart mode.
+     */
+    static const std::string RESTART_MODE;
+
+    /**
      * \brief Robot.
      */
     static const std::string ROBOT;

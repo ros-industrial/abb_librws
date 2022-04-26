@@ -250,6 +250,11 @@ namespace abb :: rws :: v2_0
     static const std::string RAP_TASK_LI;
 
     /**
+     * \brief Restart mode.
+     */
+    static const std::string RESTART_MODE;
+
+    /**
      * \brief Robot.
      */
     static const std::string ROBOT;
@@ -329,6 +334,11 @@ namespace abb :: rws :: v2_0
      * \brief Reset program pointer action query.
      */
     static const std::string ACTION_RESETPP;
+
+    /**
+     * \brief Restart controller.
+     */
+    static const std::string ACTION_RESTART ;
 
     /**
      * \brief Set action query.

@@ -35,6 +35,7 @@ namespace abb :: rws :: v2_0
   const std::string Identifiers::PRESENT_OPTIONS                = "present_options";
   const std::string Identifiers::RAP_MODULE_INFO_LI             = "rap-module-info-li";
   const std::string Identifiers::RAP_TASK_LI                    = "rap-task-li";
+  const std::string Identifiers::RESTART_MODE                     = "restart-mode";
   const std::string Identifiers::ROBOT                          = "robot";
   const std::string Identifiers::RW_VERSION_NAME                = "rwversionname";
   const std::string Identifiers::SINGLE                         = "single";
@@ -51,6 +52,7 @@ namespace abb :: rws :: v2_0
   const std::string Queries::ACTION_RELEASE                     = "action=release";
   const std::string Queries::ACTION_REQUEST                     = "action=request";
   const std::string Queries::ACTION_RESETPP                     = "resetpp";
+  const std::string Queries::ACTION_RESTART                     = "restart";
   const std::string Queries::ACTION_SET                         = "set-value";
   const std::string Queries::ACTION_SETCTRLSTATE                = "action=setctrlstate";  // TODO remove
   const std::string Queries::ACTION_SET_LOCALE                  = "action=set-locale";
