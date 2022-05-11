@@ -86,12 +86,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
   ${Poco_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
-  ${Boost_LOG_LIBRARY}
-  ${Boost_LOG_SETUP_LIBRARY}
 )
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC ${Poco_LIBRARIES}
+
+  ${Boost_LOG_LIBRARY}
+  ${Boost_LOG_SETUP_LIBRARY}
 )
 
 if(NOT BUILD_SHARED_LIBS)
