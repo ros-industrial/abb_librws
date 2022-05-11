@@ -29,8 +29,6 @@ find_package(Poco 1.4.3 REQUIRED COMPONENTS Foundation Net Util XML NetSSL)
 ## Find boost exception library
 find_package(Boost REQUIRED COMPONENTS exception log log_setup)
 
-set(CMAKE_CXX_FLAGS "-DBOOST_LOG_DYN_LINK")
-
 ###########
 ## Build ##
 ###########
@@ -86,13 +84,16 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
   ${Poco_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
-  ${Boost_LOG_LIBRARY}
-  ${Boost_LOG_SETUP_LIBRARY}
 )
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC ${Poco_LIBRARIES}
+
+  PUBLIC ${Boost_LOG_LIBRARY}
+  PUBLIC ${Boost_LOG_SETUP_LIBRARY}
 )
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC "BOOST_LOG_DYN_LINK")
 
 if(NOT BUILD_SHARED_LIBS)
   target_compile_definitions(${PROJECT_NAME} PUBLIC "ABB_LIBRWS_STATIC_DEFINE")

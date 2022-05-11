@@ -42,6 +42,8 @@
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/DOM/NodeList.h>
 
+#include <boost/log/trivial.hpp>
+
 #include <sstream>
 #include <stdexcept>
 
