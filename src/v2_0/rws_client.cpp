@@ -529,8 +529,21 @@ void RWSClient::processEvent(Poco::AutoPtr<Poco::XML::Document> doc, Subscriptio
 
       callback.processEvent(event);
     }
-    else
-      BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: unrecognized class " + class_attribute_value});
+    else if (class_attribute_value == "pnl-ctrlstate-ev")
+    {
+      ControllerStateEvent event;
+      event.state = rw::makeControllerState(xmlFindTextContent(li_element, XMLAttribute {"class", "ctrlstate"}));
+      callback.processEvent(event);
+    }
+    else if (class_attribute_value == "pnl-opmode-ev")
+    {
+      OperationModeEvent event;
+      event.mode = rw::makeOperationMode(xmlFindTextContent(li_element, XMLAttribute {"class", "opmode"}));
+      callback.processEvent(event);
+    }
+    else{
+        BOOST_THROW_EXCEPTION(ProtocolError {"Cannot parse RWS event message: unrecognized class " + class_attribute_value});
+    }
   }
 }
 }
