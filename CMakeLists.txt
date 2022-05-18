@@ -49,6 +49,7 @@ set(
     src/rws.cpp
     src/parsing.cpp
     src/connection_options.cpp
+    src/logger.cpp
 
     src/common/rw/rapid.cpp
     src/common/rw/panel.cpp
