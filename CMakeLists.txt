@@ -89,8 +89,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME}
   PUBLIC ${Poco_LIBRARIES}
 
-  PUBLIC ${Boost_LOG_LIBRARY}
-  PUBLIC ${Boost_LOG_SETUP_LIBRARY}
+  PRIVATE ${Boost_LOG_LIBRARY}
+  PRIVATE ${Boost_LOG_SETUP_LIBRARY}
 )
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC "BOOST_LOG_DYN_LINK")
