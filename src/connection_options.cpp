@@ -10,7 +10,8 @@ namespace abb :: rws
         std::string password,
         std::chrono::microseconds connection_timeout,
         std::chrono::microseconds send_timeout,
-        std::chrono::microseconds receive_timeout
+        std::chrono::microseconds receive_timeout,
+        std::list<std::chrono::milliseconds> retry_backoff
     )
     :   ip_address {ip_address}
     ,   port {port}
@@ -19,6 +20,7 @@ namespace abb :: rws
     ,   connection_timeout {connection_timeout}
     ,   send_timeout {send_timeout}
     ,   receive_timeout {receive_timeout}
+    ,   retry_backoff {retry_backoff}
     {
     }
 }

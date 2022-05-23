@@ -49,6 +49,8 @@
 
 #include <iostream>
 
+#include <unistd.h>
+
 
 namespace
 {
@@ -307,7 +309,14 @@ std::string RWSClient::generateFilePath(const FileResource& resource)
 
 POCOResult RWSClient::httpGet(const std::string& uri)
 {
-  POCOResult const result = http_client_.httpGet(uri);
+  POCOResult result = http_client_.httpGet(uri);
+  std::list<std::chrono::milliseconds>::const_iterator it=connectionOptions_.retry_backoff.begin();
+
+  while (result.httpStatus() == HTTPResponse::HTTP_SERVICE_UNAVAILABLE && it != connectionOptions_.retry_backoff.end()){
+    std::this_thread::sleep_for(*(it++));
+    BOOST_LOG_TRIVIAL(warning) << "Received status 503 for " << uri << " doing retry";
+    result = http_client_.httpGet(uri);
+  }
 
   if (result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT && result.httpStatus() != HTTPResponse::HTTP_OK)
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
@@ -324,7 +333,14 @@ POCOResult RWSClient::httpGet(const std::string& uri)
 
 POCOResult RWSClient::httpPost(const std::string& uri, const std::string& content, const std::string& content_type)
 {
-  POCOResult const result = http_client_.httpPost(uri, content, content_type);
+  POCOResult result = http_client_.httpPost(uri, content, content_type);
+  std::list<std::chrono::milliseconds>::const_iterator it=connectionOptions_.retry_backoff.begin();
+
+  while (result.httpStatus() == HTTPResponse::HTTP_SERVICE_UNAVAILABLE && it != connectionOptions_.retry_backoff.end()){
+    std::this_thread::sleep_for(*(it++));
+    BOOST_LOG_TRIVIAL(warning) << "Received status 503 for " << uri << " doing retry";
+    result = http_client_.httpPost(uri, content, content_type);
+  }
 
   if (result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT && result.httpStatus() != HTTPResponse::HTTP_OK)
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
@@ -342,7 +358,14 @@ POCOResult RWSClient::httpPost(const std::string& uri, const std::string& conten
 
 POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content, const std::string& content_type)
 {
-  POCOResult const result = http_client_.httpPut(uri, content, content_type);
+  POCOResult result = http_client_.httpPut(uri, content, content_type);
+  std::list<std::chrono::milliseconds>::const_iterator it=connectionOptions_.retry_backoff.begin();
+
+  while (result.httpStatus() == HTTPResponse::HTTP_SERVICE_UNAVAILABLE && it != connectionOptions_.retry_backoff.end()){
+    std::this_thread::sleep_for(*(it++));
+    BOOST_LOG_TRIVIAL(warning) << "Received status 503 for " << uri << " doing retry";
+    result = http_client_.httpPut(uri, content, content_type);
+  }
 
   if (result.httpStatus() != HTTPResponse::HTTP_OK && result.httpStatus() != HTTPResponse::HTTP_CREATED)
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
@@ -360,7 +383,15 @@ POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content
 
 POCOResult RWSClient::httpDelete(const std::string& uri)
 {
-  POCOResult const result = http_client_.httpDelete(uri);
+  POCOResult result = http_client_.httpDelete(uri);
+  std::list<std::chrono::milliseconds>::const_iterator it=connectionOptions_.retry_backoff.begin();
+
+  while (result.httpStatus() == HTTPResponse::HTTP_SERVICE_UNAVAILABLE && it != connectionOptions_.retry_backoff.end()){
+    std::this_thread::sleep_for(*(it++));
+    BOOST_LOG_TRIVIAL(warning) << "Received status 503 for " << uri << " doing retry";
+    result = http_client_.httpDelete(uri);
+  }
+
   if (result.httpStatus() != HTTPResponse::HTTP_OK && result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT)
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"DELETE"}
@@ -391,7 +422,14 @@ std::string RWSClient::openSubscription(std::vector<std::pair<std::string, Subsc
   std::string content_type = "application/x-www-form-urlencoded;v=2.0";
 
   // Make a subscription request.
-  POCOResult const poco_result = http_client_.httpPost(Services::SUBSCRIPTION, subscription_content.str(), content_type);
+  POCOResult poco_result = http_client_.httpPost(Services::SUBSCRIPTION, subscription_content.str(), content_type);
+  std::list<std::chrono::milliseconds>::const_iterator it=connectionOptions_.retry_backoff.begin();
+
+  while (poco_result.httpStatus() == HTTPResponse::HTTP_SERVICE_UNAVAILABLE && it != connectionOptions_.retry_backoff.end()){
+    std::this_thread::sleep_for(*(it++));
+    BOOST_LOG_TRIVIAL(warning) << "Received status 503 for subscription doing retry";
+    poco_result = http_client_.httpPost(Services::SUBSCRIPTION, subscription_content.str(), content_type);
+  }
 
   if (poco_result.httpStatus() != HTTPResponse::HTTP_CREATED)
     BOOST_THROW_EXCEPTION(

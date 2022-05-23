@@ -121,11 +121,11 @@ POCOResult POCOClient::makeHTTPRequest(const std::string& method,
   try
   {
 
-    BOOST_LOG_TRIVIAL(debug) << "Tyring to " << method << " from uri=" << uri << "\n";
+    BOOST_LOG_TRIVIAL(debug) << "Tyring to " << method << " from uri=" << uri << " request_content=" << content << "\n";
     sendAndReceive(request, response, content, response_content);
 
     BOOST_LOG_TRIVIAL(debug) << "Got status=" << response.getStatus() << " when " << method
-                             << "ing from uri=" << uri << "\n";
+                             << "ing from uri=" << uri << " response_content=" << response_content << "\n";
     // Check if the server has sent an update for the cookies.
     std::vector<HTTPCookie> temp_cookies;
     response.getCookies(temp_cookies);

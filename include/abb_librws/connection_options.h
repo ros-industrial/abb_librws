@@ -4,6 +4,7 @@
 
 #include <string>
 #include <chrono>
+#include <list>
 
 
 namespace abb :: rws
@@ -16,7 +17,8 @@ namespace abb :: rws
             std::string password,
             std::chrono::microseconds connection_timeout = std::chrono::milliseconds {400},
             std::chrono::microseconds send_timeout = std::chrono::milliseconds {400},
-            std::chrono::microseconds receive_timeout = std::chrono::milliseconds {400});
+            std::chrono::microseconds receive_timeout = std::chrono::milliseconds {400},
+            std::list<std::chrono::milliseconds> retry_backoff = std::list<std::chrono::milliseconds> {});
 
         /// \brief Robot controller's IP address.
         std::string ip_address;
@@ -38,5 +40,8 @@ namespace abb :: rws
 
         /// \brief HTTP receive timeout
         std::chrono::microseconds receive_timeout;
+
+        /// \brief HTTP backoff time between retry
+        std::list<std::chrono::milliseconds> retry_backoff;
     };
 }
