@@ -99,10 +99,7 @@ RWSClient::~RWSClient()
   catch (std::exception const& e)
   {
     // Catch all exceptions in dtor.
-    std::string const ex_info = boost::diagnostic_information(e);
-
-    BOOST_LOG_TRIVIAL(error) << "Exception in RWSClient::~RWSClient(): " << ex_info;
-    std::cerr << "Exception in RWSClient::~RWSClient(): " << ex_info << std::endl;
+    std::cerr << "Exception in RWSClient::~RWSClient(): " << e.what() << std::endl;
   }
 }
 
