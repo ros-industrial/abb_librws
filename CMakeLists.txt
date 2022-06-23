@@ -53,6 +53,7 @@ set(
 
     src/common/rw/rapid.cpp
     src/common/rw/panel.cpp
+    src/common/rw/ctrl.cpp
 
     src/v1_0/rws.cpp
     src/v1_0/rws_client.cpp
