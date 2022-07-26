@@ -333,9 +333,10 @@ POCOResult RWSClient::httpPost(const std::string& uri, const std::string& conten
   POCOResult result = http_client_.httpPost(uri, content, content_type);
   std::list<std::chrono::milliseconds>::const_iterator it=connectionOptions_.retry_backoff.begin();
 
-  while (result.httpStatus() == HTTPResponse::HTTP_SERVICE_UNAVAILABLE && it != connectionOptions_.retry_backoff.end()){
+  while (shouldRetryPost(result.httpStatus()) && it != connectionOptions_.retry_backoff.end()){
     std::this_thread::sleep_for(*(it++));
-    BOOST_LOG_TRIVIAL(warning) << "Received status 503 for " << uri << " doing retry";
+    BOOST_LOG_TRIVIAL(warning) << "Received status " << result.httpStatus()
+    << " for " << uri << " doing retry. Response is: " << result.content();
     result = http_client_.httpPost(uri, content, content_type);
   }
 
@@ -351,7 +352,6 @@ POCOResult RWSClient::httpPost(const std::string& uri, const std::string& conten
 
   return result;
 }
-
 
 POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content, const std::string& content_type)
 {
@@ -519,6 +519,14 @@ std::string RWSClient::getResourceURI(RAPIDExecutionStateResource const&) const
 std::string RWSClient::getResourceURI(OperationModeResource const&) const
 {
   return "/rw/panel/opmode";
+}
+
+
+bool RWSClient::shouldRetryPost(Poco::Net::HTTPResponse::HTTPStatus status)
+{
+  return status == HTTPResponse::HTTP_SERVICE_UNAVAILABLE //Received when robot server is busy and not able to respond now
+    || status == HTTPResponse::HTTP_FORBIDDEN; //Received e.g. when robot is updating rapid data and the resource is held by robot
+                                 //or when rapid execution is stopping and we try to reset PP
 }
 
 
