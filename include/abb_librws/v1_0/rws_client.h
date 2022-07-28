@@ -239,10 +239,12 @@ public:
    * \brief A method for sending a HTTP GET request and checking response status.
    *
    * \param uri for the URI (path and query).
+   * \param accepted_status accepted status values.
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpGet(const std::string& uri);
+  POCOResult httpGet(const std::string& uri,
+    std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status = {Poco::Net::HTTPResponse::HTTP_OK});
 
   /**
    * \brief A method for sending a HTTP POST request and checking response status.
@@ -261,19 +263,23 @@ public:
    *
    * \param uri for the URI (path and query).
    * \param content for the request's content.
+   * \param accepted_status accepted status values.
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpPut(const std::string& uri, const std::string& content = "");
+  POCOResult httpPut(const std::string& uri, const std::string& content = "",
+    std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status = {Poco::Net::HTTPResponse::HTTP_OK, Poco::Net::HTTPResponse::HTTP_CREATED});
 
   /**
    * \brief A method for sending a HTTP DELETE request and checking response status.
    *
    * \param uri for the URI (path and query).
+   * \param accepted_status accepted status values.
    *
    * \return POCOResult containing the result.
    */
-  POCOResult httpDelete(const std::string& uri);
+  POCOResult httpDelete(const std::string& uri,
+    std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status = {Poco::Net::HTTPResponse::HTTP_OK, Poco::Net::HTTPResponse::HTTP_NO_CONTENT});
 
 
 private:

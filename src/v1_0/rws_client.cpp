@@ -251,11 +251,12 @@ std::string RWSClient::generateFilePath(const FileResource& resource)
 }
 
 
-POCOResult RWSClient::httpGet(const std::string& uri)
+POCOResult RWSClient::httpGet(const std::string& uri,
+  std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status)
 {
   POCOResult const result = http_client_.httpGet(uri);
 
-  if (result.httpStatus() != HTTPResponse::HTTP_OK)
+  if (accepted_status.find(result.httpStatus()) == accepted_status.end())
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"GET"}
       << UriErrorInfo {uri}
@@ -287,10 +288,11 @@ POCOResult RWSClient::httpPost(const std::string& uri, const std::string& conten
 }
 
 
-POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content)
+POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content,
+  std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status)
 {
   POCOResult const result = http_client_.httpPut(uri, content);
-  if (result.httpStatus() != HTTPResponse::HTTP_OK && result.httpStatus() != HTTPResponse::HTTP_CREATED)
+  if (accepted_status.find(result.httpStatus()) == accepted_status.end())
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"PUT"}
       << UriErrorInfo {uri}
@@ -304,10 +306,11 @@ POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content
 }
 
 
-POCOResult RWSClient::httpDelete(const std::string& uri)
+POCOResult RWSClient::httpDelete(const std::string& uri,
+  std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status)
 {
   POCOResult const result = http_client_.httpDelete(uri);
-  if (result.httpStatus() != HTTPResponse::HTTP_OK && result.httpStatus() != HTTPResponse::HTTP_NO_CONTENT)
+  if (accepted_status.find(result.httpStatus()) == accepted_status.end())
     BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"DELETE"}
       << HttpStatusErrorInfo {result.httpStatus()}
