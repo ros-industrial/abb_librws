@@ -282,4 +282,26 @@ namespace abb :: rws
 
     return values;
   }
+
+  std::optional<std::string> xmlNodeTextByTagAndAttribute(Poco::AutoPtr<Poco::XML::Document> p_xml_document,
+                                          const std::string & tag,
+                                          const XMLAttribute & xml_attribute)
+  {
+    if (!p_xml_document.isNull())
+    {
+      Poco::XML::NodeIterator node_iterator(p_xml_document, Poco::XML::NodeFilter::SHOW_ELEMENT);
+      Poco::XML::Node* p_node = node_iterator.nextNode();
+
+      while (p_node)
+      {
+        if (p_node->nodeName() == tag && xmlNodeHasAttribute(p_node, xml_attribute))
+        {
+          return p_node->innerText();
+        }
+
+        p_node = node_iterator.nextNode();
+      }
+    }
+    return {};
+  }
 }

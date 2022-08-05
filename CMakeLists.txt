@@ -58,6 +58,7 @@ set(
     src/v1_0/rws.cpp
     src/v1_0/rws_client.cpp
     src/v1_0/rws_interface.cpp
+    src/v1_0/rws_progress.cpp
     src/v1_0/rw/rapid.cpp
     src/v1_0/rw/panel.cpp
     src/v1_0/rw/io.cpp
@@ -67,6 +68,7 @@ set(
     src/v2_0/rws.cpp
     src/v2_0/rws_client.cpp
     src/v2_0/rws_interface.cpp
+    src/v2_0/rws_progress.cpp
     src/v2_0/rw/rapid.cpp
     src/v2_0/rw/panel.cpp
     src/v2_0/rw/cfg.cpp

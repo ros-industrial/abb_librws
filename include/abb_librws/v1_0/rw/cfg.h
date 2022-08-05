@@ -20,9 +20,11 @@ namespace abb :: rws :: v1_0 :: rw :: cfg
      *
      * \param client RWS client
      * \param resource specifying the file's directory and name.
+     * 
+     * \return Id of progress resource.
      *
      * \throw \a RWSError if something goes wrong.
      */
-    void loadCFGFile(RWSClient& client, const FileResource& resource);
+    std::string loadCFGFile(RWSClient& client, const FileResource& resource);
 
 }
