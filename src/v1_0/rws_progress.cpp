@@ -12,4 +12,7 @@ namespace abb :: rws :: v1_0 :: progress
         progress_info.state = xmlNodeTextByTagAndAttribute(rws_result, "span", abb::rws::XMLAttribute("class","state")).value();
         return progress_info;
     }
+
+    const std::string ProgressState::READY = "ready";
+    const std::string ProgressState::PENDING = "pending";
 }
