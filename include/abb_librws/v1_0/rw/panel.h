@@ -17,6 +17,27 @@ namespace abb :: rws :: v1_0 :: rw
 namespace abb :: rws :: v1_0 :: rw :: panel
 {
     /**
+     * \brief Controller operation mode subscription resource
+     */
+    struct OperationModeSubscribableResource: public SubscribableResource
+    {
+        std::string getURI() const override;
+
+        void processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const override;
+    };
+
+
+    /**
+     * \brief Controller state subscription resource
+     */
+    struct ControllerStateSubscribableResource: public SubscribableResource
+    {
+        std::string getURI() const override;
+
+        void processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const override;
+    };
+
+    /**
      * \brief A function for retrieving the controller state.
      *
      * \param client RWS client

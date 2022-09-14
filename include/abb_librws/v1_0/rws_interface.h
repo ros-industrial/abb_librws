@@ -38,10 +38,11 @@
 
 #include <abb_librws/v1_0/rws_client.h>
 #include <abb_librws/v1_0/rws.h>
+#include <abb_librws/v1_0/rw/rapid.h>
+#include <abb_librws/v1_0/subscription.h>
 #include <abb_librws/common/rw/io.h>
 #include <abb_librws/rws.h>
 #include <abb_librws/rws_cfg.h>
-#include <abb_librws/rws_subscription.h>
 #include <abb_librws/rws_info.h>
 #include <abb_librws/xml_attribute.h>
 
@@ -513,7 +514,7 @@ public:
    *
    * \throw \a std::exception if something goes wrong
    */
-  SubscriptionGroup openSubscription(const SubscriptionResources& resources);
+  std::unique_ptr<subscription::SubscriptionGroup> openSubscription(const SubscriptionResources& resources);
 
   /**
    * \brief A method for registering a user as local.

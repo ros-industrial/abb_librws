@@ -72,4 +72,41 @@ namespace abb :: rws :: v2_0 :: rw :: panel
 
         client.httpPost(uri, content.str());
     }
+
+    std::string ControllerStateSubscribableResource::getURI() const
+    {
+      return "/rw/panel/ctrl-state";
+    }
+
+
+    std::string OperationModeSubscribableResource::getURI() const
+    {
+      return "/rw/panel/opmode";
+    }
+
+
+    void ControllerStateSubscribableResource::processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const
+    {
+        if (li_element.getAttribute("class") == "pnl-ctrlstate-ev")
+        {
+            ControllerStateEvent event;
+            event.state = rw::makeControllerState(xmlFindTextContent(&li_element, XMLAttribute {"class", "ctrlstate"}));
+            event.resource = std::make_shared<ControllerStateSubscribableResource>();
+
+            callback.processEvent(event);
+        }
+    }
+
+
+    void OperationModeSubscribableResource::processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const
+    {
+        if (li_element.getAttribute("class") == "pnl-opmode-ev")
+        {
+            OperationModeEvent event;
+            event.mode = rw::makeOperationMode(xmlFindTextContent(&li_element, XMLAttribute {"class", "opmode"}));
+            event.resource = std::make_shared<OperationModeSubscribableResource>();
+
+            callback.processEvent(event);
+        }
+    }
 }

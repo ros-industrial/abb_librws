@@ -65,6 +65,7 @@ set(
     src/v1_0/rw/cfg.cpp
     src/v1_0/rw/ctrl.cpp
     src/v1_0/rw/retcode.cpp
+    src/v1_0/subscription.cpp
 
     src/v2_0/rws.cpp
     src/v2_0/rws_client.cpp
@@ -75,6 +76,7 @@ set(
     src/v2_0/rw/cfg.cpp
     src/v2_0/rw/ctrl.cpp
     src/v2_0/rw/retcode.cpp
+    src/v2_0/subscription.cpp
 )
 
 add_library(${PROJECT_NAME} ${SRC_FILES})
