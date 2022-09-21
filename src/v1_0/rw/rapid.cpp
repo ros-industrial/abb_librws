@@ -246,16 +246,17 @@ namespace abb :: rws :: v1_0 :: rw :: rapid
       return "/rw/rapid/execution;ctrlexecstate";
     }
 
+    bool RAPIDExecutionStateSubscribableResource::canProcessEvent(Poco::XML::Element const& li_element) const
+    {
+        return li_element.getAttribute("class") == "rap-ctrlexecstate-ev";
+    }
 
     void RAPIDExecutionStateSubscribableResource::processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const
     {
-        if (li_element.getAttribute("class") == "rap-ctrlexecstate-ev")
-        {
-            RAPIDExecutionStateEvent event;
-            event.state = rw::makeRAPIDExecutionState(xmlFindTextContent(&li_element, XMLAttribute {"class", "ctrlexecstate"}));
-            event.resource = std::make_shared<RAPIDExecutionStateSubscribableResource>();
+        RAPIDExecutionStateEvent event;
+        event.state = rw::makeRAPIDExecutionState(xmlFindTextContent(&li_element, XMLAttribute {"class", "ctrlexecstate"}));
+        event.resource = std::make_shared<RAPIDExecutionStateSubscribableResource>();
 
-            callback.processEvent(event);
-        }
+        callback.processEvent(event);
     }
 }

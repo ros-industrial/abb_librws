@@ -42,6 +42,7 @@ namespace abb :: rws
   {
     public:
         virtual std::string getURI() const = 0;
+        virtual bool canProcessEvent(Poco::XML::Element const& li_element) const = 0;
         virtual void processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const = 0;
 
         bool equals(const SubscribableResource& rhs) const
@@ -94,6 +95,11 @@ namespace abb :: rws
     SubscriptionPriority getPriority() const noexcept
     {
       return priority_;
+    }
+
+    bool canProcessEvent(Poco::XML::Element const& li_element) const
+    {
+      return resource_ptr_ -> canProcessEvent(li_element);
     }
 
     void processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const

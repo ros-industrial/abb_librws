@@ -23,6 +23,8 @@ namespace abb :: rws :: v2_0 :: rw :: panel
     {
         std::string getURI() const override;
 
+        bool canProcessEvent(Poco::XML::Element const& li_element) const override;
+
         void processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const override;
     };
 
@@ -33,6 +35,8 @@ namespace abb :: rws :: v2_0 :: rw :: panel
     struct ControllerStateSubscribableResource: public SubscribableResource
     {
         std::string getURI() const override;
+
+        bool canProcessEvent(Poco::XML::Element const& li_element) const override;
 
         void processEvent(Poco::XML::Element const& li_element, SubscriptionCallback& callback) const override;
     };

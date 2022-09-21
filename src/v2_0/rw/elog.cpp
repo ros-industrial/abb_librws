@@ -26,11 +26,13 @@ namespace abb ::rws ::v2_0 ::rw ::elog
         return ss.str();
     }
 
+    bool ElogSubscribableResource::canProcessEvent(Poco::XML::Element const &li_element) const
+    {
+        return li_element.getAttribute("class") == "elog-message-ev";
+    }
+
     void ElogSubscribableResource::processEvent(Poco::XML::Element const &li_element, SubscriptionCallback &callback) const
     {
-        if (li_element.getAttribute("class") != "elog-message-ev")
-            return;
-
         std::string uri;
 
         auto nodes = li_element.childNodes();

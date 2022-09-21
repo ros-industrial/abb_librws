@@ -129,7 +129,11 @@ namespace abb :: rws
 
       // Cycle throught all subscription resources
       for (auto const& resource : resources)
-        resource.processEvent(*li_element, callback);
+      {
+        if (resource.canProcessEvent(*li_element))
+          resource.processEvent(*li_element, callback);
+      }
+        
     }
   }
 }

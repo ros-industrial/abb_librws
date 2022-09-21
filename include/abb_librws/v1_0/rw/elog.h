@@ -18,6 +18,8 @@ namespace abb ::rws ::v1_0 ::rw ::elog
 
         std::string getURI() const override;
 
+        bool canProcessEvent(Poco::XML::Element const &li_element) const override;
+
         void processEvent(Poco::XML::Element const &li_element, SubscriptionCallback &callback) const override;
 
     private:
