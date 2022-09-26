@@ -98,6 +98,8 @@ namespace abb :: rws :: v1_0 :: subscription
     if (subscription_group_id.empty())
       BOOST_THROW_EXCEPTION(ProtocolError {"Cannot get subscription group from HTTP response"});
 
+    // TODO: Handle poco_result.content()
+
     return subscription_group_id;
   }
 
@@ -107,7 +109,7 @@ namespace abb :: rws :: v1_0 :: subscription
     POCOResult result = client_.httpPut(Services::SUBSCRIPTION + "/" + subscription_group_id_, resourcesString(client_, res));
     resources_ = res;
 
-    std::clog << "Content:\n" << result.content();
+    // TODO: parse content on diff(resources_, res)
   }
 
 

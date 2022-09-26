@@ -170,6 +170,15 @@ namespace abb :: rws
     rw::OperationMode mode;
   };
 
+  /**
+   * \brief Event recieved when new event is added to elog.
+   */
+  struct ElogEvent: public SubscriptionEvent
+  {
+    int domain; // domain number
+    int seqnum; // seqnence numver of message in domain
+  };
+
 
   /**
    * \brief Defines callbacks for different types of RWS subscription events.
