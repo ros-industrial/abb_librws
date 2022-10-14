@@ -83,10 +83,12 @@ RWSClient::~RWSClient()
   {
     logout();
   }
-  catch (std::exception const& e)
+
+  catch (std::exception const& ex)
   {
     // Catch all exceptions in dtor.
-    std::cerr << "Exception in RWSClient::~RWSClient(): " << e.what() << std::endl;
+    std::string info = boost::diagnostic_information(ex);
+    std::clog << "Exception in RWSClient::~RWSClient(): " << info;
   }
 }
 
@@ -194,7 +196,7 @@ void RWSClient::deleteFile(const FileResource& resource)
 void RWSClient::logout()
 {
   std::string uri = Resources::LOGOUT;
-  httpGet(uri);
+  httpGet(uri, {Poco::Net::HTTPResponse::HTTP_NO_CONTENT});
 }
 
 
