@@ -106,6 +106,11 @@ namespace abb :: rws :: v2_0 :: subscription
 
   void SubscriptionGroup::updateResources(SubscriptionResources const& res)
   {
+    //We skip updating resources to the controller if there are no changes
+    if (res == resources_)
+    {
+      return;
+    }
     client_.httpPut(Services::SUBSCRIPTION + "/" + subscription_group_id_, resourcesString(client_, res), "application/x-www-form-urlencoded;v=2.0");
     resources_ = res;
   }

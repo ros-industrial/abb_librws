@@ -101,6 +101,11 @@ namespace abb :: rws
       resource_ptr_ -> processEvent(li_element, callback);
     }
 
+    bool operator == ( SubscriptionResource const& other ) const noexcept
+    {
+      return getURI() == other.getURI() && getPriority() == other.getPriority();
+    }
+
   private:
 
     std::shared_ptr<SubscribableResource> resource_ptr_;

@@ -196,7 +196,8 @@ void RWSClient::deleteFile(const FileResource& resource)
 void RWSClient::logout()
 {
   std::string uri = Resources::LOGOUT;
-  httpGet(uri, {Poco::Net::HTTPResponse::HTTP_NO_CONTENT});
+  //ABB controller sometimes gives HTTP_OK in response, although according to the documentation it should be HTTP_NO_CONTENT
+  httpGet(uri, {Poco::Net::HTTPResponse::HTTP_OK, Poco::Net::HTTPResponse::HTTP_NO_CONTENT});
 }
 
 
