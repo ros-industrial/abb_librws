@@ -41,6 +41,7 @@
 
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/DOM/NodeList.h>
+#include <Poco/DOM/DOMException.h>
 
 #include <sstream>
 #include <stdexcept>
@@ -253,6 +254,22 @@ std::string RWSClient::generateFilePath(const FileResource& resource)
   return Services::FILESERVICE + "/" + resource.directory + "/" + resource.filename;
 }
 
+// Try finding xml tag with class="code" attribute containing retcode. Does not throw.
+std::optional<int> tryParseRetcode(std::string const& content) noexcept
+{
+  std::optional<int> result;
+  try
+  {
+    auto xml = parseXml(content);
+    std::string code_str = xmlFindTextContent(xml, XMLAttribute{"class", "code"});
+    if (!code_str.empty())
+        result = std::stoi(code_str);
+  } 
+  catch (Poco::XML::XMLException const&) {}
+  catch (std::invalid_argument const&) {}
+  catch (std::out_of_range const&) {}
+  return result;
+}
 
 POCOResult RWSClient::httpGet(const std::string& uri,
   std::set<Poco::Net::HTTPResponse::HTTPStatus> const& accepted_status)
@@ -260,13 +277,17 @@ POCOResult RWSClient::httpGet(const std::string& uri,
   POCOResult const result = http_client_.httpGet(uri);
 
   if (accepted_status.find(result.httpStatus()) == accepted_status.end())
-    BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
+  {
+    auto exception = ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"GET"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
       << HttpResponseContentErrorInfo {result.content()}
-      << HttpReasonErrorInfo {result.reason()}
-    );
+      << HttpReasonErrorInfo {result.reason()};
+    if (auto retcode = tryParseRetcode(result.content()))
+      exception << RetcodeErrorInfo {retcode.value()};
+    BOOST_THROW_EXCEPTION(exception);
+  }
 
   return result;
 }
@@ -278,14 +299,17 @@ POCOResult RWSClient::httpPost(const std::string& uri, const std::string& conten
   POCOResult const result = http_client_.httpPost(uri, content);
 
   if (accepted_status.find(result.httpStatus()) == accepted_status.end())
-    BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
+  {
+    auto exception = ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"POST"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
       << HttpResponseContentErrorInfo {result.content()}
-      << HttpRequestContentErrorInfo {content}
-      << HttpReasonErrorInfo {result.reason()}
-    );
+      << HttpReasonErrorInfo {result.reason()};
+    if (auto retcode = tryParseRetcode(result.content()))
+      exception << RetcodeErrorInfo {retcode.value()};
+    BOOST_THROW_EXCEPTION(exception);
+  }
 
   return result;
 }
@@ -296,14 +320,17 @@ POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content
 {
   POCOResult const result = http_client_.httpPut(uri, content);
   if (accepted_status.find(result.httpStatus()) == accepted_status.end())
-    BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
+  {
+    auto exception = ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"PUT"}
       << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
       << HttpResponseContentErrorInfo {result.content()}
-      << HttpRequestContentErrorInfo {content}
-      << HttpReasonErrorInfo {result.reason()}
-    );
+      << HttpReasonErrorInfo {result.reason()};
+    if (auto retcode = tryParseRetcode(result.content()))
+      exception << RetcodeErrorInfo {retcode.value()};
+    BOOST_THROW_EXCEPTION(exception);
+  }
 
   return result;
 }
@@ -314,13 +341,17 @@ POCOResult RWSClient::httpDelete(const std::string& uri,
 {
   POCOResult const result = http_client_.httpDelete(uri);
   if (accepted_status.find(result.httpStatus()) == accepted_status.end())
-    BOOST_THROW_EXCEPTION(ProtocolError {"HTTP response status not accepted"}
+  {
+    auto exception = ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"DELETE"}
+      << UriErrorInfo {uri}
       << HttpStatusErrorInfo {result.httpStatus()}
       << HttpResponseContentErrorInfo {result.content()}
-      << UriErrorInfo {uri}
-      << HttpReasonErrorInfo {result.reason()}
-    );
+      << HttpReasonErrorInfo {result.reason()};
+    if (auto retcode = tryParseRetcode(result.content()))
+      exception << RetcodeErrorInfo {retcode.value()};
+    BOOST_THROW_EXCEPTION(exception);
+  }
 
   return result;
 }

@@ -1,40 +1,40 @@
+#pragma once
+
 #include <abb_librws/rws.h>
+#include <abb_librws/common/rw/retcode.h>
 #include <abb_librws/v1_0/rws_client.h>
 
 #include <string>
+#include <map>
 
-
-namespace abb :: rws :: v1_0 :: rw
+namespace abb::rws::v1_0::rw::retcode
 {
-    using namespace rws::rw;
-}
-
-
-namespace abb :: rws :: v1_0 :: rw :: retcode
-{
-    /**
-     * \brief A structure for containing response of recode resource.
-     */
-    struct RetcodeInfo
-    {
-        int code;                   /** \brief The error code or success code as number */
-        std::string name;           /** \brief The name of error code or success code */
-        std::string severity;       /** \brief Success, Warning or Error */
-        std::string description;    /** \brief Short description of the error code */
-    };
-
+    using namespace abb::rws::rw::retcode;
 
     /**
-     * \brief A function for checking description of diagnostic code.
+     * \brief Get description of diagnostic code.
      *
      * https://developercenter.robotstudio.com/api/rwsApi/rwretcode_get_return_codes.html
      *
      * \param client RWS client
      * \param code code to be checked.
-     * 
+     *
      * \return \a RetcodeInfo containing the result.
      *
      * \throw \a RWSError if something goes wrong.
      */
-    RetcodeInfo getRetcodeInfo(RWSClient& client, int code);
+    RetcodeInfo getRetcodeInfo(RWSClient &client, int code);
+
+    /**
+     * @brief Get descriptions of all diagnostic codes.
+     *
+     * https://developercenter.robotstudio.com/api/rwsApi/rwretcode_get_return_codes.html
+     *
+     * \param client RWS client
+     *
+     * \return \a map<int,RetcodeInfo> with error code as key and RetcodeInfo structure as value.
+     *
+     * \throw \a RWSError if something goes wrong.
+     */
+    std::map<int, RetcodeInfo> getRetcodes(RWSClient &client);
 }

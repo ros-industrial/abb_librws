@@ -55,6 +55,7 @@ set(
     src/common/rw/panel.cpp
     src/common/rw/ctrl.cpp
     src/common/rw/elog.cpp
+    src/common/rw/retcode.cpp
 
     src/v1_0/rws.cpp
     src/v1_0/rws_client.cpp

@@ -113,4 +113,9 @@ namespace abb :: rws
    * \brief Error info containing an URI.
    */
   using UriErrorInfo = boost::error_info<struct UriErrorInfoTag, std::string>;
+
+  /**
+   * \brief Error info containing return code.
+   */
+  using RetcodeErrorInfo = boost::error_info<struct RetcodeErrorInfoTag, int>;
 }
