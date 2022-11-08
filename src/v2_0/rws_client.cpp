@@ -315,7 +315,7 @@ std::optional<int> tryParseRetcode(std::string const& content) noexcept
     std::string code_str = xmlFindTextContent(xml, XMLAttribute{"class", "code"});
     if (!code_str.empty())
         result = std::stoi(code_str);
-  } 
+  }
   catch (Poco::XML::XMLException const&) {}
   catch (std::invalid_argument const&) {}
   catch (std::out_of_range const&) {}
@@ -369,6 +369,7 @@ POCOResult RWSClient::httpPost(const std::string& uri, const std::string& conten
     auto exception = ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"POST"}
       << UriErrorInfo {uri}
+      << HttpRequestContentErrorInfo {content}
       << HttpStatusErrorInfo {result.httpStatus()}
       << HttpResponseContentErrorInfo {result.content()}
       << HttpReasonErrorInfo {result.reason()};
@@ -397,6 +398,7 @@ POCOResult RWSClient::httpPut(const std::string& uri, const std::string& content
     auto exception = ProtocolError {"HTTP response status not accepted"}
       << HttpMethodErrorInfo {"PUT"}
       << UriErrorInfo {uri}
+      << HttpRequestContentErrorInfo {content}
       << HttpStatusErrorInfo {result.httpStatus()}
       << HttpResponseContentErrorInfo {result.content()}
       << HttpReasonErrorInfo {result.reason()};
