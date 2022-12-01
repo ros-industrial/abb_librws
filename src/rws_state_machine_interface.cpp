@@ -765,7 +765,8 @@ bool RWSStateMachineInterface::toggleIOSignal(const std::string& iosignal)
   bool result = false;
   int max_number_of_attempts = 5;
 
-  if (isAutoMode().isTrue())
+  //if (isAutoMode().isTrue())
+  // Remove Auto Mode control EGM can be run also in Manual Mode
   {
     for (int i = 0; i < max_number_of_attempts && !result; ++i)
     {
