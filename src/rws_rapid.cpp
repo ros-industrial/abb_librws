@@ -34,6 +34,7 @@
  ***********************************************************************************************************************
  */
 
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -131,7 +132,6 @@ void RAPIDAtomic<RAPID_STRING>::parseString(const std::string& value_string)
   {
     temp.erase(position, 1);
   }
-
   std::stringstream ss(temp);
   ss >> value;
 }

@@ -41,6 +41,9 @@
 #include "abb_librws/rws_interface.h"
 #include "abb_librws/rws_rapid.h"
 
+#include <Poco/DOM/DOMWriter.h>
+#include <iostream>
+
 namespace
 {
 static const char EXCEPTION_GET_CFG[]{"Failed to get configuration instances"};
@@ -1046,6 +1049,30 @@ bool RWSInterface::registerRemoteUser(const std::string& username,
 {
   return rws_client_.registerRemoteUser(username, application, location).success;
 }
+
+bool RWSInterface::requestRMMP()
+{
+  return rws_client_.requestRMMP().success;
+}
+
+bool RWSInterface::getRMMPState(RMMPState &rmmp_state)
+{
+  RWSClient::RWSResult rws_result = rws_client_.getRMMPState();
+
+  if(rws_result.success)
+  {
+    std::stringstream ss(xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "userid")));
+    ss >> rmmp_state.userid;
+    //rmmp_state.userid = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "userid"));
+    rmmp_state.alias = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "alias"));
+    rmmp_state.location = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "location"));
+    rmmp_state.application = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "application"));
+    rmmp_state.privilege = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "privilege"));
+    rmmp_state.rmmpheldbyme = xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rmmpheldbyme")) == "true";
+  }  
+  return rws_result.success;
+}
+
 
 std::string RWSInterface::getLogText(const bool verbose)
 {

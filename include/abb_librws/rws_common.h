@@ -506,6 +506,11 @@ struct SystemConstants
        * \brief Class & type.
        */
       static const XMLAttribute CLASS_TYPE;
+      
+      /**
+       * \brief Class User RMMP.
+       */
+      static const XMLAttribute CLASS_USER_RMMP;
 
       /**
        * \brief Class & value.
@@ -677,6 +682,11 @@ struct SystemConstants
        * \brief Type.
        */
       static const std::string TYPE;
+      
+      /**
+       * \brief User RMMP.
+       */
+      static const std::string USER_RMMP;
 
       /**
        * \brief Value.
@@ -855,6 +865,12 @@ struct SystemConstants
        * \brief User service.
        */
       static const std::string USERS;
+
+      /**
+       * \brief RMMP Request Manual Mode Privileges.
+       */
+      static const std::string RMMP;
+
     };
   };
 };

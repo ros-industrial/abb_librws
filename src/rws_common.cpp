@@ -288,6 +288,7 @@ const std::string Identifiers::SYS_OPTION_LI                  = "sys-option-li";
 const std::string Identifiers::SYS_SYSTEM_LI                  = "sys-system-li";
 const std::string Identifiers::TITLE                          = "title";
 const std::string Identifiers::TYPE                           = "type";
+const std::string Identifiers::USER_RMMP                      = "user-rmmp";
 const std::string Identifiers::VALUE                          = "value";
 const std::string Identifiers::CLASS                          = "class";
 const std::string Identifiers::OPTION                         = "option";
@@ -305,6 +306,7 @@ const std::string Services::FILESERVICE                       = "/fileservice";
 const std::string Services::RW                                = "/rw";
 const std::string Services::SUBSCRIPTION                      = "/subscription";
 const std::string Services::USERS                             = "/users";
+const std::string Services::RMMP                              = "/users/rmmp";
 const std::string Resources::INSTANCES                        = "/instances";
 const std::string Resources::JOINTTARGET                      = "/jointtarget";
 const std::string Resources::LOGOUT                           = "/logout";
@@ -342,6 +344,7 @@ const XMLAttribute XMLAttributes::CLASS_STATE(Identifiers::CLASS             , I
 const XMLAttribute XMLAttributes::CLASS_SYS_OPTION_LI(Identifiers::CLASS     , Identifiers::SYS_OPTION_LI);
 const XMLAttribute XMLAttributes::CLASS_SYS_SYSTEM_LI(Identifiers::CLASS     , Identifiers::SYS_SYSTEM_LI);
 const XMLAttribute XMLAttributes::CLASS_TYPE(Identifiers::CLASS              , Identifiers::TYPE);
+const XMLAttribute XMLAttributes::CLASS_USER_RMMP(Identifiers::CLASS         , Identifiers::USER_RMMP);
 const XMLAttribute XMLAttributes::CLASS_VALUE(Identifiers::CLASS             , Identifiers::VALUE);
 const XMLAttribute XMLAttributes::CLASS_OPTION(Identifiers::CLASS            , Identifiers::OPTION);
 
