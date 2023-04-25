@@ -14,4 +14,21 @@ namespace abb :: rws :: v2_0 :: rw :: ctrl
 
         client.httpPost(uri.str(), content.str(), content_type);
     }
+
+    SafetyViolation getSafetyViolationInfo(RWSClient& client)
+    {
+        std::stringstream uri;
+        uri << Services::CTRL << "/safety/violation";
+
+        RWSResult rws_result = parseXml(client.httpGet(uri.str()).content());
+        
+        SafetyViolation result;
+        result.unsynchronized = std::stoi(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "unsynchronized"))) == 1;
+        result.toolPosViolation = std::stoi(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "tool-pos-violation-status"))) == 1;
+        result.armViolation = std::stoi(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "upper-arm-violation-status"))) == 1;
+        result.axisRangeViolation = std::stoi(xmlFindTextContent(rws_result, XMLAttribute(Identifiers::CLASS, "axis-range-violation-status"))) == 1;
+
+        return result;
+    }
+
 }

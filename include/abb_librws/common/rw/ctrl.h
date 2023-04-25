@@ -23,4 +23,17 @@ namespace abb :: rws :: rw
     };
 
     std::ostream& operator<<(std::ostream& os, RestartMode mode);
+
+    struct SafetyViolation
+    {
+        // Robot is unsynchronized
+        bool unsynchronized = 0;
+        // Robot tool is outside allowed area
+        bool toolPosViolation = 0;
+        // Robot arm is outside allowed area
+        bool armViolation = 0;
+        //One of the robot axes is outside allowed area
+        bool axisRangeViolation = 0;
+    };
+
 }

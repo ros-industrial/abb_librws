@@ -26,4 +26,15 @@ namespace abb :: rws :: v2_0 :: rw :: ctrl
      * \throw \a RWSError if something goes wrong.
      */
     void restartController(RWSClient& client, Mastership const& mastership, RestartMode const& restartMode = RestartMode::restart);
+
+    /**
+     * \brief A function for retrieving the robot controller's info about any safety violation event that potentially is active.
+     *
+     * \param client RWS client
+     *
+     * \return RWSResult containing the result.
+     *
+     * \throw \a RWSError if something goes wrong.
+     */
+    SafetyViolation getSafetyViolationInfo(RWSClient& client);
 }
