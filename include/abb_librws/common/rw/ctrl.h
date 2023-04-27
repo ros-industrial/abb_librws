@@ -27,13 +27,13 @@ namespace abb :: rws :: rw
     struct SafetyViolationInfo
     {
         // Robot is unsynchronized
-        bool unsynchronized = 0;
+        bool unsynchronized = false;
         // Robot tool is outside allowed area
-        bool toolPosViolation = 0;
+        bool toolPosViolation = false;
         // Robot arm is outside allowed area
-        bool armViolation = 0;
+        bool armViolation = false;
         //One of the robot axes is outside allowed area
-        bool axisRangeViolation = 0;
+        bool axisRangeViolation = false;
     };
 
 }
