@@ -36,5 +36,5 @@ namespace abb :: rws :: v2_0 :: rw :: ctrl
      *
      * \throw \a RWSError if something goes wrong.
      */
-    SafetyViolation getSafetyViolationInfo(RWSClient& client);
+    SafetyViolationInfo getSafetyViolationInfo(RWSClient& client);
 }

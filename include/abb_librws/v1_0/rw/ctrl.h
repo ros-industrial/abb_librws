@@ -26,4 +26,15 @@ namespace abb :: rws :: v1_0 :: rw :: ctrl
      */
     void restartController(RWSClient& client, RestartMode const& restartMode = RestartMode::restart);
 
+    /**
+     * \brief A function for retrieving the robot controller's info about any safety violation event that potentially is active.
+     *
+     * \param client RWS client
+     *
+     * \return RWSResult containing the result.
+     *
+     * \throw \a RWSError if something goes wrong.
+     */
+    SafetyViolationInfo getSafetyViolationInfo(RWSClient& client);
+
 }

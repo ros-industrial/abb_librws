@@ -24,7 +24,7 @@ namespace abb :: rws :: rw
 
     std::ostream& operator<<(std::ostream& os, RestartMode mode);
 
-    struct SafetyViolation
+    struct SafetyViolationInfo
     {
         // Robot is unsynchronized
         bool unsynchronized = 0;
