@@ -82,7 +82,7 @@ public:
    *
    * \throw \a RWSError if something goes wrong.
    */
-  explicit RWSClient(ConnectionOptions const& connection_options);
+  explicit RWSClient(ConnectionOptions  connection_options);
 
   /**
    * \brief Logs out the currently active RWS session.

@@ -11,14 +11,13 @@ namespace abb :: rws
 {
     struct ConnectionOptions
     {
-        ConnectionOptions(std::string const& ip_address,
+        ConnectionOptions(std::string  ip_address,
             unsigned short port,
-            std::string const& username,
+            std::string  username,
             std::string password,
             std::chrono::microseconds connection_timeout = std::chrono::milliseconds {400},
             std::chrono::microseconds send_timeout = std::chrono::milliseconds {400},
-            std::chrono::microseconds receive_timeout = std::chrono::milliseconds {400},
-            std::list<std::chrono::milliseconds> retry_backoff = std::list<std::chrono::milliseconds> {});
+            std::chrono::microseconds receive_timeout = std::chrono::milliseconds {400});
 
         /// \brief Robot controller's IP address.
         std::string ip_address;
@@ -40,8 +39,5 @@ namespace abb :: rws
 
         /// \brief HTTP receive timeout
         std::chrono::microseconds receive_timeout;
-
-        /// \brief HTTP backoff time between retry
-        std::list<std::chrono::milliseconds> retry_backoff;
     };
 }
