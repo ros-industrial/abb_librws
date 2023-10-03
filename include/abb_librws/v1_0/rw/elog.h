@@ -40,9 +40,9 @@ namespace abb ::rws ::v1_0 ::rw ::elog
      *
      * @param client RWSClient
      * @param domain domain number
-     * @param seqnum sequence number
+     * @param seqnum sequence number to start from. If -1, the last @param limit messages are returned. Default -1.
      * @param lang The language in which messages will be returned. English default.
      * @return ElogMessage structure
      */
-    ElogMessage getElogMessage(RWSClient &client, int const domain, int const seqnum, std::string const &lang = Language::ENGLISH);
+    std::vector<ElogMessage> getElogMessages(RWSClient& client, int const domain, int const seqnum = -1, std::string const& lang = Language::ENGLISH);
 }

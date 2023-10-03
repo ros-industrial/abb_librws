@@ -93,45 +93,89 @@ namespace abb ::rws ::v1_0 ::rw ::elog
         return parseDomains(rws_result);
     }
 
-    ElogMessage parseElogMessageXml(std::string const xml_string)
+    std::string concatTextFromNodes(std::vector<Poco::XML::Node*> nodes, std::string separator = " ")
     {
-        Poco::AutoPtr<Poco::XML::Document> rws_result = parseXml(xml_string);
-        ElogMessage message;
-        message.messageType = makeElogMessageType(std::stoi(xmlFindTextContent(rws_result, XMLAttribute("class", "msgtype"))));
-        message.code = std::stoi(xmlFindTextContent(rws_result, XMLAttribute("class", "code")));
-        message.sourceName;
-        std::istringstream ss(xmlFindTextContent(rws_result, XMLAttribute("class", "tstamp")));
-        ss >> std::get_time(&message.timestamp, "%Y-%m-%d T %H:%M:%S");
-        message.title = xmlFindTextContent(rws_result, XMLAttribute("class", "title"));
-        message.desc = xmlFindTextContent(rws_result, XMLAttribute("class", "desc"));
-        message.conseqs = xmlFindTextContent(rws_result, XMLAttribute("class", "conseqs"));
-        message.causes = xmlFindTextContent(rws_result, XMLAttribute("class", "causes"));
-        message.actions = xmlFindTextContent(rws_result, XMLAttribute("class", "actions"));
+        std::stringstream ss;
+        bool separator_flag = false;
+        for (auto node : nodes)
+        {
+            if (separator_flag)
+                ss << separator;
+            separator_flag = true;
+            ss << node->innerText();
+        }
+        return ss.str();
+    }
 
-        int argc = std::stoi(xmlFindTextContent(rws_result, XMLAttribute("class", "argc")));
+    ElogMessage parseElogNode(Poco::XML::Node* node)
+    {
+        ElogMessage message;
+
+        std::string title = xmlNodeGetAttributeValue(node, "title");
+        int sep_pos = title.find_last_of("/");
+
+        message.domain = 0;
+        message.sequenceNumber = 0;        
+        if (sep_pos != std::string::npos)
+        {
+            try {message.domain = std::stoi(title.substr(9, sep_pos - 9));}
+            catch (std::out_of_range const& e) {}
+            catch (std::bad_alloc const& e) {}
+            catch (std::invalid_argument const& e) {}
+
+            try {message.sequenceNumber = std::stoi(title.substr(sep_pos + 1));}
+            catch (std::out_of_range const& e) {}
+            catch (std::bad_alloc const& e) {}
+            catch (std::invalid_argument const& e) {}
+        }
+        
+        message.messageType = makeElogMessageType(std::stoi(xmlFindTextContent(node, XMLAttribute("class", "msgtype"))));
+        message.code = std::stoi(xmlFindTextContent(node, XMLAttribute("class", "code")));
+        message.sourceName = xmlFindTextContent(node, XMLAttribute("class", "src-name"));
+        std::istringstream ss(xmlFindTextContent(node, XMLAttribute("class", "tstamp")));
+        ss >> std::get_time(&message.timestamp, "%Y-%m-%d T %H:%M:%S");
+        message.title = concatTextFromNodes(xmlFindNodes(node, XMLAttribute("class", "title")));
+        message.desc = concatTextFromNodes(xmlFindNodes(node, XMLAttribute("class", "desc")));
+        message.conseqs = concatTextFromNodes(xmlFindNodes(node, XMLAttribute("class", "conseqs")));
+        message.causes = concatTextFromNodes(xmlFindNodes(node, XMLAttribute("class", "causes")));
+        message.actions = concatTextFromNodes(xmlFindNodes(node, XMLAttribute("class", "actions")));
+
+        int argc = std::stoi(xmlFindTextContent(node, XMLAttribute("class", "argc")));
 
         for (int i = 1; i <= argc; i++)
         {
             std::stringstream arg_name;
             arg_name << "arg" << i;
-            auto node = xmlFindNodes(rws_result, XMLAttribute("class", arg_name.str()))[0];
-
-            std::string value = node->innerText();
-            std::string valueType = xmlNodeGetAttributeValue(node, "type");
-
+            auto arg_nodes = xmlFindNodes(node, XMLAttribute("class", arg_name.str()));
+            std::string value = "";
+            std::string valueType = "STRING";
+            if (!arg_nodes.empty())
+            {
+                value = arg_nodes[0]->innerText();
+                valueType = xmlNodeGetAttributeValue(arg_nodes[0], "type");
+            }
             message.argv[i] = makeElogMessageArg(valueType, value);
         }
         return message;
     }
 
-    ElogMessage getElogMessage(RWSClient &client, int const domain, int const seqnum, std::string const &lang)
+    std::vector<ElogMessage> parseElogMessagesXml(std::string const xml_string)
+    {
+        Poco::AutoPtr<Poco::XML::Document> rws_result = parseXml(xml_string);
+        std::vector<ElogMessage> messages;
+        auto nodes = xmlFindNodes(rws_result, XMLAttribute("class", "elog-message-li"));
+        for (auto node : nodes)
+            messages.push_back(parseElogNode(node));
+        return messages;
+    }
+
+    std::vector<ElogMessage> getElogMessages(RWSClient& client, int const domain, int const seqnum, std::string const& lang)
     {
         std::stringstream uri;
-        uri << "/rw/elog/" << domain << "/" << seqnum << "?lang=" << lang;
+        uri << "/rw/elog/" << domain << "?lang=" << lang << "&order=lifo";
+        if (seqnum >= 0) uri << "&elogseqnum=" << seqnum;
         POCOResult poco_result = client.httpGet(uri.str());
-        ElogMessage message = parseElogMessageXml(poco_result.content());
-        message.domain = domain;
-        message.sequenceNumber = seqnum;
-        return message;
+        std::vector<ElogMessage> messages = parseElogMessagesXml(poco_result.content());
+        return messages;
     }
 }

@@ -43,7 +43,7 @@ namespace abb ::rws ::rw ::elog
     {
         int domain;                       // Domain of message.
         int sequenceNumber;               // Sequence number of message in domain.
-        ElogMessageType messageType;          // The elog message type.
+        ElogMessageType messageType;      // The elog message type.
         int code;                         // The elog message code.
         std::string sourceName;           // The elog message source.
         std::tm timestamp;                // The time stamp when the event log was generated.
