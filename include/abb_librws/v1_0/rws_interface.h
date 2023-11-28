@@ -474,6 +474,13 @@ public:
   void unloadModuleFromTask(const std::string& task, const FileResource& resource);
 
   /**
+   * @brief Save the config domain to the given file.
+   * @param resource File on the controller to save to.
+   * @param domain Paramters domain to save.
+   */
+  void saveConfigDomain(FileResource const& resource, std::string const& domain);
+
+  /**
    * \brief A method for retrieving a file from the robot controller.
    *
    * Note: Depending on the file, then the content can be in text or binary format.

@@ -858,6 +858,18 @@ void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResou
   rw::rapid::unloadModuleFromTask(rws_client_, task, resource);
 }
 
+void RWSInterface::saveConfigDomain(FileResource const& resource, std::string const& domain)
+{
+    std::stringstream uri;
+    uri << Resources::RW_CFG << "/" << domain << "?action=saveas";
+
+    std::string content =
+        "filepath=" + Services::FILESERVICE + "/" + resource.directory + "/" + resource.filename;
+
+    POCOResult result = rws_client_.httpPost(uri.str(), content, {Poco::Net::HTTPResponse::HTTP_NO_CONTENT});
+}
+
+
 std::string RWSInterface::getFile(const FileResource& resource)
 {
   return rws_client_.getFile(resource);

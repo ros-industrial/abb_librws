@@ -756,6 +756,18 @@ void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& v
   rws_client_.setIOSignal(iosignal, value);
 }
 
+void RWSInterface::saveConfigDomain(FileResource const& resource, std::string const& domain)
+{
+    std::stringstream uri;
+    uri << Resources::RW_CFG << "/" << domain << "/saveas";
+
+    std::string content =
+        "filepath=" + Services::FILESERVICE + "/" + resource.directory + "/" + resource.filename;
+    std::string content_type = "application/x-www-form-urlencoded;v=2.0";
+
+    POCOResult result = rws_client_.httpPost(uri.str(), content, content_type, {Poco::Net::HTTPResponse::HTTP_NO_CONTENT});
+}
+
 std::string RWSInterface::getFile(const FileResource& resource)
 {
   return rws_client_.getFile(resource);
