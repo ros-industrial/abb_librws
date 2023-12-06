@@ -51,4 +51,30 @@ std::ostream& operator<<(std::ostream& os, RAPIDResource const& resource)
         << ")";
 }
 
+std::ostream& operator<<(std::ostream& os, CFGDomain const& domain)
+{
+    return os << to_string(domain);
+}
+
+std::string to_string(CFGDomain domain)
+{
+    switch (domain)
+    {
+        case D_EIO:
+            return "EIO";
+        case D_MMC:
+            return "MMC";
+        case D_MOC:
+            return "MOC";
+        case D_PROC:
+            return "PROC";
+        case D_SIO:
+            return "SIO";
+        case D_SYS:
+            return "SYS";
+        default:
+            throw std::runtime_error("Unknown CFGDomain");
+    }
+}
+
 } // end namespace abb::rws

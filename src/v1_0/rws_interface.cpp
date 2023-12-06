@@ -858,7 +858,7 @@ void RWSInterface::unloadModuleFromTask(const std::string& task, const FileResou
   rw::rapid::unloadModuleFromTask(rws_client_, task, resource);
 }
 
-void RWSInterface::saveConfigDomain(FileResource const& resource, std::string const& domain)
+void RWSInterface::saveConfigDomain(FileResource const& resource, abb::rws::CFGDomain const& domain)
 {
     std::stringstream uri;
     uri << Resources::RW_CFG << "/" << domain << "?action=saveas";

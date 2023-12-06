@@ -268,7 +268,7 @@ public:
    * @param resource File on the controller to save to.
    * @param domain Paramters domain to save.
    */
-  void saveConfigDomain(FileResource const& resource, std::string const& domain);
+  void saveConfigDomain(FileResource const& resource, abb::rws::CFGDomain const& domain);
 
   /**
    * \brief A method for retrieving a file from the robot controller.

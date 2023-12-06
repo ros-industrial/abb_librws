@@ -137,4 +137,19 @@ namespace abb :: rws
   };
 
   std::ostream& operator<<(std::ostream& os, RAPIDResource const& resource);
+
+  enum CFGDomain
+  {
+    D_EIO = 1,
+    D_MMC = 2,
+    D_MOC = 3,
+    D_PROC = 4,
+    D_SIO = 5,
+    D_SYS = 6,
+  };
+
+  std::ostream& operator<<(std::ostream& os, CFGDomain const& domain);
+
+  std::string to_string(CFGDomain domain);
+
 } // end of namespace abb::rws

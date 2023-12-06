@@ -756,7 +756,7 @@ void RWSInterface::setIOSignal(const std::string& iosignal, const std::string& v
   rws_client_.setIOSignal(iosignal, value);
 }
 
-void RWSInterface::saveConfigDomain(FileResource const& resource, std::string const& domain)
+void RWSInterface::saveConfigDomain(FileResource const& resource, abb::rws::CFGDomain const& domain)
 {
     std::stringstream uri;
     uri << Resources::RW_CFG << "/" << domain << "/saveas";
