@@ -763,6 +763,26 @@ public:
   bool setSpeedRatio(unsigned int ratio);
 
   /**
+   * \brief A method for loading a program to the robot controller.
+   *
+   * \param task specifying the RAPID task.
+   * \param resource specifying the file's directory and name.
+   * \param replace indicating if the actual program into the controller must be replaced by the new one or not.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */ 
+  bool loadProgramIntoTask(const std::string& task, const RWSClient::FileResource& resource, const bool replace = false);
+  
+  /**
+   * \brief A method for unloading a program to the robot controller.
+   *
+   * \param task specifying the RAPID task.
+   *
+   * \return bool indicating if the communication was successful or not.
+   */ 
+  bool unloadProgramFromTask(const std::string& task);
+  
+  /**
    * \brief A method for retrieving a file from the robot controller.
    *
    * Note: Depending on the file, then the content can be in text or binary format.

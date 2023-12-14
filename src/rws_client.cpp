@@ -474,6 +474,30 @@ RWSClient::RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
   return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
+RWSClient::RWSResult RWSClient::loadProgramIntoTask(const std::string& task, const FileResource& resource, const bool replace)
+{
+  std::string uri = generateRAPIDTasksProgramPath(task) + "?" + Queries::ACTION_LOAD_PROGRAM;
+  std::string content = Identifiers::PROGRAM_PATH + "=" + generateFilePath(resource) + "&loadmod=" + ((replace) ? "replace" : "add");
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = false;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
+
+  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+}
+
+RWSClient::RWSResult RWSClient::unloadProgramFromTask(const std::string& task)
+{
+  std::string uri = generateRAPIDTasksProgramPath(task) + "?" + Queries::ACTION_UNLOAD_PROGRAM;
+  std::string content = "";
+
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = false;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
+
+  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+}
+
 RWSClient::RWSResult RWSClient::getFile(const FileResource& resource, std::string* p_file_content)
 {
   RWSResult rws_result;
@@ -796,6 +820,16 @@ std::string RWSClient::generateRAPIDPropertiesPath(const RAPIDResource& resource
 std::string RWSClient::generateFilePath(const FileResource& resource)
 {
   return Services::FILESERVICE + "/" + resource.directory + "/" + resource.filename;
+}
+
+std::string RWSClient::generateRAPIDTasksPath(const std::string& task)
+{
+  return Resources::RW_RAPID_TASKS + "/" + task;
+}
+
+std::string RWSClient::generateRAPIDTasksProgramPath(const std::string& task)
+{
+  return generateRAPIDTasksPath(task) + Resources::PROGRAM;
 }
 
 } // end namespace rws
