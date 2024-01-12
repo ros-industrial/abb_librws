@@ -593,6 +593,25 @@ public:
   RWSResult setSpeedRatio(unsigned int ratio);
 
   /**
+   * \brief A method for retrieving the lead-through state of the controller.
+   *
+   * \param mechunit for the mechanical unit's name.
+   *   
+   * \return RWSResult containing the result.
+   */  
+  RWSResult getLeadThrough(const std::string& mechunit);
+
+  /**
+   * \brief A method for setting the lead-through state of the controller.
+   *
+   * \param mechunit for the mechanical unit's name.
+   * \param value for the lead-through new value.
+   *
+   * \return RWSResult containing the result.
+   */  
+  RWSResult setLeadThrough(const std::string& mechunit, const std::string& value);
+
+  /**
    * \brief A method for retrieving a file from the robot controller.
    *
    * Note: Depending on the file, then the content can be in text or binary format.

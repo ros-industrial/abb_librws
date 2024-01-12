@@ -474,6 +474,29 @@ RWSClient::RWSResult RWSClient::setSpeedRatio(unsigned int ratio)
   return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
 }
 
+RWSClient::RWSResult RWSClient::getLeadThrough(const std::string& mechunit)
+{
+  std::string uri = generateMechanicalUnitPath(mechunit) + "?" + Queries::RESOURCE_LEAD_THROUGH;
+  
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = true;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_OK);
+  
+  return evaluatePOCOResult(httpGet(uri), evaluation_conditions);
+}
+
+RWSClient::RWSResult RWSClient::setLeadThrough(const std::string& mechunit, const std::string& value)
+{
+  std::string uri = generateMechanicalUnitPath(mechunit) + "?" + Queries::ACTION_SET_LEAD_THROUGH;
+  std::string content = Identifiers::STATUS + "=" + value;
+  
+  EvaluationConditions evaluation_conditions;
+  evaluation_conditions.parse_message_into_xml = false;
+  evaluation_conditions.accepted_outcomes.push_back(HTTPResponse::HTTP_NO_CONTENT);
+  
+  return evaluatePOCOResult(httpPost(uri, content), evaluation_conditions);
+}
+
 RWSClient::RWSResult RWSClient::getFile(const FileResource& resource, std::string* p_file_content)
 {
   RWSResult rws_result;

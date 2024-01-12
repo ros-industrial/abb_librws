@@ -162,6 +162,11 @@ struct SystemConstants
   struct ABB_LIBRWS_EXPORT ContollerStates
   {
     /**
+     * \brief Robot controller active state.
+     */
+    static const std::string ACTIVE;
+
+    /**
      * \brief Robot controller motor on.
      */
     static const std::string CONTROLLER_MOTOR_ON;
@@ -493,6 +498,11 @@ struct SystemConstants
       static const XMLAttribute CLASS_STATE;
 
       /**
+       * \brief Class & status.
+       */
+      static const XMLAttribute CLASS_STATUS;
+
+      /**
        * \brief Class & sys-option-li.
        */
       static const XMLAttribute CLASS_SYS_OPTION_LI;
@@ -579,6 +589,11 @@ struct SystemConstants
       static const std::string HOME_DIRECTORY;
 
       /**
+       * \brief Inactive type.
+       */
+      static const std::string INACTIVE;
+
+      /**
        * \brief IO signal.
        */
       static const std::string IOS_SIGNAL;
@@ -654,6 +669,11 @@ struct SystemConstants
       static const std::string STATE;
 
       /**
+       * \brief Status.
+       */
+      static const std::string STATUS;
+
+      /**
        * \brief Controller topic in the system configurations (abbreviated as sys).
        */
       static const std::string SYS;
@@ -710,6 +730,11 @@ struct SystemConstants
       static const std::string ACTION_RESETPP;
 
       /**
+       * \brief Get lead-through resource query.
+       */
+      static const std::string RESOURCE_LEAD_THROUGH;
+
+      /**
        * \brief Set action query.
        */
       static const std::string ACTION_SET;
@@ -718,6 +743,11 @@ struct SystemConstants
        * \brief Set controller state action query.
        */
       static const std::string ACTION_SETCTRLSTATE;
+
+      /**
+       * \brief Set lead-through action query.
+       */
+      static const std::string ACTION_SET_LEAD_THROUGH;
 
       /**
        * \brief Set locale.
